@@ -3,16 +3,15 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.OrderManager;
 	import com.potmo.tdm.asset.button.KeepButton_Asset;
-	import com.potmo.tdm.visuals.ScreenSize;
 	import com.potmo.tdm.visuals.buildings.Camp;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
 	public class CampHud extends BuildingBaseHud
 	{
 
-		private static const keepButtonGraphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new KeepButton_Asset() );
-		private var keepButton:BitmapAnimation;
+		private static const keepButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new KeepButton_Asset() );
+		private var keepButton:TextureAnimation;
 		private var camp:Camp;
 
 
@@ -27,7 +26,7 @@ package com.potmo.tdm.visuals.hud
 		override protected function setupGui():void
 		{
 			super.setupGui();
-			keepButton = new BitmapAnimation( keepButtonGraphics );
+			keepButton = new TextureAnimation( keepButtonGraphics );
 
 			addButtonLast( keepButton );
 		}
@@ -36,7 +35,7 @@ package com.potmo.tdm.visuals.hud
 		public override function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
 
-			if ( keepButton.getRect( this ).contains( x, y ) )
+			if ( keepButton.getBounds( this ).contains( x, y ) )
 			{
 				orderManager.requestUpgradeBuilding( camp );
 				return true;

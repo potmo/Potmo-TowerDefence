@@ -3,47 +3,98 @@ package com.potmo.tdm.visuals.maps
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.units.UnitBase;
-	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.math.StrictMath;
 
-	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
+	import flash.geom.Rectangle;
 
-	public class MapBase extends Bitmap
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Image;
+	import starling.textures.Texture;
+
+	public class MapBase extends DisplayObjectContainer
 	{
 
 		protected var checkpoints:Vector.<PathCheckpoint>;
 
 
-		public function MapBase( graphics:BitmapData )
+		public function MapBase( bitmap:BitmapData )
 		{
-			super( graphics );
+			super();
+			var textureParts:Vector.<Texture>;
+			textureParts = splitBitmapIntoTextures( bitmap );
+
+			var image:Image;
+			var o:int = 0;
+
+			for each ( var texture:Texture in textureParts )
+			{
+				image = new Image( texture );
+
+				addChild( image );
+				image.x = o;
+				o += image.width;
+			}
+
 			this.initialize();
 			this.setCheckpoints();
 			this.drawCheckPoints();
-			this.cacheAsBitmap = true;
+
+		}
+
+
+		private function splitBitmapIntoTextures( bitmap:BitmapData ):Vector.<Texture>
+		{
+			var img:BitmapData;
+			var texture:Texture;
+			var textures:Vector.<Texture> = new Vector.<Texture>();
+
+			var max:int = 1024;
+			var o:int = 0;
+			var left:int = bitmap.width;
+			var cut:int;
+			var height:int = bitmap.height;
+			var rect:Rectangle = new Rectangle();
+			var p:Point = new Point();
+
+			while ( left > 0 )
+			{
+				cut = StrictMath.min( left, max ); // take as mutch as possible but stay within max
+				img = new BitmapData( cut, height, false, 0xFF0000 );
+				rect.setTo( o, 0, cut, height );
+				img.copyPixels( bitmap, rect, p );
+				texture = Texture.fromBitmapData( img, false, false );
+				img.dispose();
+				textures.push( texture );
+				o += cut;
+				left -= cut;
+			}
+
+			return textures;
+
 		}
 
 
 		protected function drawCheckPoints():void
 		{
-			var checkpoint:PathCheckpoint;
-			var lastCheckPoint:PathCheckpoint;
+		/*
+		   var checkpoint:PathCheckpoint;
+		   var lastCheckPoint:PathCheckpoint;
 
-			bitmapData.lock();
+		   bitmapData.lock();
 
-			for each ( checkpoint in checkpoints )
-			{
-				BitmapUtil.drawCirlce( checkpoint.x, checkpoint.y, 5, 0xFFFFFFFF, bitmapData );
+		   for each ( checkpoint in checkpoints )
+		   {
+		   BitmapUtil.drawCirlce( checkpoint.x, checkpoint.y, 5, 0xFFFFFFFF, bitmapData );
 
-				if ( lastCheckPoint )
-				{
-					BitmapUtil.drawLine( checkpoint.x, checkpoint.y, lastCheckPoint.x, lastCheckPoint.y, 0xFFFFFFFF, bitmapData );
-				}
-				lastCheckPoint = checkpoint;
-			}
-			bitmapData.unlock();
+		   if ( lastCheckPoint )
+		   {
+		   BitmapUtil.drawLine( checkpoint.x, checkpoint.y, lastCheckPoint.x, lastCheckPoint.y, 0xFFFFFFFF, bitmapData );
+		   }
+		   lastCheckPoint = checkpoint;
+		   }
+		   bitmapData.unlock();*/
 		}
 
 

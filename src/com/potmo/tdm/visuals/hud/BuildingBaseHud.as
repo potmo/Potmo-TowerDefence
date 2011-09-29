@@ -6,18 +6,18 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.asset.button.DemolishButton_Asset;
 	import com.potmo.tdm.asset.button.DeployFlag_Button;
 	import com.potmo.tdm.visuals.buildings.BuildingBase;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
 	public class BuildingBaseHud extends HudBase
 	{
 
-		private static const demolishButtonGraphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new DemolishButton_Asset() );
-		private static const attackButtonGraphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new AttackButton_Asset() );
-		private static const deployFlagButtonGraphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new DeployFlag_Button() );
-		protected var demolishButton:BitmapAnimation;
-		protected var attackButton:BitmapAnimation;
-		protected var deployFlagButton:BitmapAnimation;
+		private static const demolishButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new DemolishButton_Asset() );
+		private static const attackButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new AttackButton_Asset() );
+		private static const deployFlagButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new DeployFlag_Button() );
+		protected var demolishButton:TextureAnimation;
+		protected var attackButton:TextureAnimation;
+		protected var deployFlagButton:TextureAnimation;
 		private var building:BuildingBase;
 
 
@@ -31,15 +31,15 @@ package com.potmo.tdm.visuals.hud
 
 		protected function setupGui():void
 		{
-			demolishButton = new BitmapAnimation( demolishButtonGraphics );
+			demolishButton = new TextureAnimation( demolishButtonGraphics );
 
 			addButtonLast( demolishButton, false );
 
-			deployFlagButton = new BitmapAnimation( deployFlagButtonGraphics );
+			deployFlagButton = new TextureAnimation( deployFlagButtonGraphics );
 
 			addButtonFirst( deployFlagButton, true );
 
-			attackButton = new BitmapAnimation( attackButtonGraphics );
+			attackButton = new TextureAnimation( attackButtonGraphics );
 
 			addButtonFirst( attackButton, true );
 
@@ -48,19 +48,19 @@ package com.potmo.tdm.visuals.hud
 
 		public override function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
-			if ( demolishButton.getRect( this ).contains( x, y ) )
+			if ( demolishButton.getBounds( this ).contains( x, y ) )
 			{
 				orderManager.requestDemolishHouse( building );
 				return true;
 			}
 
-			if ( attackButton.getRect( this ).contains( x, y ) )
+			if ( attackButton.getBounds( this ).contains( x, y ) )
 			{
 				orderManager.requestAttack( building );
 				return true;
 			}
 
-			if ( deployFlagButton.getRect( this ).contains( x, y ) )
+			if ( deployFlagButton.getBounds( this ).contains( x, y ) )
 			{
 				orderManager.requestShowDeployFlag( building );
 				return true;

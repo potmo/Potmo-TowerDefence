@@ -2,15 +2,11 @@ package com.potmo.tdm.visuals.units
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.asset.unit.Archer_Asset;
-	import com.potmo.tdm.player.Player;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
-	import com.potmo.util.image.BitmapUtil;
-
-	import flash.display.BitmapData;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
 	public class Archer extends UnitBase
 	{
-		private static const asset:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new Archer_Asset() );
+		private static const asset:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Archer_Asset() );
 
 
 		public function Archer()

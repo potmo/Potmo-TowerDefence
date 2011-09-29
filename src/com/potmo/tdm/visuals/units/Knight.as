@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.units
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.asset.unit.Knight_Asset;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.image.BitmapAnimationCacheObject;
 	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.math.StrictMath;
@@ -12,7 +13,7 @@ package com.potmo.tdm.visuals.units
 	public class Knight extends UnitBase
 	{
 
-		private static const asset:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new Knight_Asset() );
+		private static const asset:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
 
 
 		public function Knight()
@@ -37,7 +38,7 @@ package com.potmo.tdm.visuals.units
 			{
 				case UnitState.CHARGING:
 				case UnitState.DEPLOYING:
-					setFrameFromName( "WALKING" );
+					setFrameFromName( "WALK" );
 					break;
 
 				case UnitState.GUARDING:

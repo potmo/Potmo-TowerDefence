@@ -2,12 +2,12 @@ package com.potmo.tdm.visuals.buildings
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.tdm.visuals.units.UnitBase;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
 	import com.potmo.util.math.StrictMath;
 
-	public class BuildingBase extends BitmapAnimation
+	public class BuildingBase extends TextureAnimation
 	{
 		protected static const MAX_UNITS:uint = 15;
 
@@ -22,7 +22,7 @@ package com.potmo.tdm.visuals.buildings
 		protected var units:Vector.<UnitBase> = new Vector.<UnitBase>();
 
 
-		public function BuildingBase( graphics:BitmapAnimationCacheObject )
+		public function BuildingBase( graphics:TextureAnimationCacheObject )
 		{
 			super( graphics );
 

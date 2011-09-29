@@ -3,11 +3,11 @@ package com.potmo.tdm.visuals.units
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.maps.PathCheckpoint;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.math.StrictMath;
 
-	public class UnitBase extends BitmapAnimation
+	public class UnitBase extends TextureAnimation
 	{
 
 		private var type:UnitType;
@@ -37,7 +37,7 @@ package com.potmo.tdm.visuals.units
 		private var _pathOffsetY:int;
 
 
-		public function UnitBase( graphics:BitmapAnimationCacheObject )
+		public function UnitBase( graphics:TextureAnimationCacheObject )
 		{
 			super( graphics );
 

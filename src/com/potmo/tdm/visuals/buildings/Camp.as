@@ -2,14 +2,10 @@ package com.potmo.tdm.visuals.buildings
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.asset.building.Camp_Asset;
-	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.hud.CampHud;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.tdm.visuals.units.UnitType;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
-	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.logger.Logger;
-
-	import flash.display.BitmapData;
 
 	/**
 	 * Camp
@@ -21,7 +17,7 @@ package com.potmo.tdm.visuals.buildings
 	public class Camp extends BuildingBase
 	{
 
-		private static const graphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new Camp_Asset() );
+		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Camp_Asset() );
 
 		private static const UNIT_DEPLOY_DELAY:uint = 30;
 		private var unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;;

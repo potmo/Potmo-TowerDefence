@@ -1,19 +1,21 @@
 package com.potmo.tdm
 {
+	import com.potmo.tdm.visuals.ScreenSize;
 	import com.potmo.tdm.visuals.buildings.BuildingBase;
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.maps.MapBase;
 	import com.potmo.tdm.visuals.maps.MapItem;
-	import com.potmo.tdm.visuals.maps.MapZero;
+	import com.potmo.tdm.visuals.starling.SortingSprite;
 	import com.potmo.tdm.visuals.units.UnitBase;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.DisplayObject;
-	import flash.display.Sprite;
 	import flash.geom.Point;
+
+	import starling.display.DisplayObject;
+	import starling.display.Image;
+	import starling.display.Sprite;
+	import starling.textures.Texture;
 
 	/**
 	 * This is the gameview that will contain the map and all the units and so on
@@ -37,12 +39,11 @@ package com.potmo.tdm
 		private var dragStartCamera:Number = 0;
 		private var startDragFrame:uint = 0;
 
-		private var screenSize:Number;
-
 		private var currentFrame:uint = 0;
 		private var map:MapBase;
 
 		private var mapCanvas:Sprite;
+		private var inbetweenItems:SortingSprite;
 
 		private var gameLogics:GameLogics;
 		private var orderManager:OrderManager;
@@ -51,15 +52,15 @@ package com.potmo.tdm
 
 		private var ignoreMapInteraction:Boolean = false;
 
-		private var objectsToSort:Vector.<DisplayObject> = new Vector.<DisplayObject>();
 
-
-		public function GameView( screenSize:uint )
+		public function GameView()
 		{
 			super();
-			this.screenSize = screenSize;
 			mapCanvas = new Sprite();
 			addChild( mapCanvas );
+
+			inbetweenItems = new SortingSprite();
+			mapCanvas.addChild( inbetweenItems );
 
 		}
 
@@ -101,52 +102,63 @@ package com.potmo.tdm
 		public function addMap( map:MapBase ):void
 		{
 			this.map = map;
-			mapCanvas.addChild( map );
+
+			/*var mapParts:Vector.<Image> = map.getMapParts();
+
+			   for each ( var part:Image in mapParts )
+			   {
+			   mapCanvas.addChildAt( part, 0 );
+			   }*/
+
+			mapCanvas.addChildAt( map, 0 );
+
+		/*			var container:Sprite = new Sprite();
+		   container.addChild( new Image( Texture.empty( 256, 256, 0xFF00FF00 ) ) );
+
+
+		   mapCanvas.addChildAt( container, 0 );*/
 		}
 
 
 		public function addUnit( unit:UnitBase ):void
 		{
-			mapCanvas.addChild( unit );
-			objectsToSort.push( unit );
+			inbetweenItems.addChild( unit );
+
 		}
 
 
 		public function addBuilding( building:BuildingBase ):void
 		{
-			mapCanvas.addChild( building );
-			objectsToSort.push( building );
+			inbetweenItems.addChild( building );
+
 		}
 
 
 		public function removeBuilding( building:BuildingBase ):void
 		{
-			mapCanvas.removeChild( building );
-			var index:int = objectsToSort.indexOf( building );
-			objectsToSort.splice( index, 1 );
+			inbetweenItems.removeChild( building );
+
 		}
 
 
 		public function removeUnit( unit:UnitBase ):void
 		{
-			mapCanvas.removeChild( unit );
-			var index:int = objectsToSort.indexOf( unit );
-			objectsToSort.splice( index, 1 );
+			inbetweenItems.removeChild( unit );
+
 		}
 
 
 		public function addMapItem( mapItem:MapItem ):void
 		{
-			mapCanvas.addChild( mapItem );
-			objectsToSort.push( mapItem );
+			inbetweenItems.addChild( mapItem );
+
 		}
 
 
 		public function removeMapItem( mapItem:MapItem ):void
 		{
-			mapCanvas.removeChild( mapItem );
-			var index:int = objectsToSort.indexOf( mapItem );
-			objectsToSort.splice( index, 1 );
+			inbetweenItems.removeChild( mapItem );
+
 		}
 
 
@@ -218,34 +230,8 @@ package com.potmo.tdm
 
 			// z sort units and buildings
 
-			zSortObjects();
+			inbetweenItems.sortChildren();
 
-		}
-
-
-		private final function zSortObjects():void
-		{
-			objectsToSort.sort( zSortCompareFunction );
-
-			var e:int = mapCanvas.numChildren - objectsToSort.length;
-			var r:int;
-
-			for ( var i:int = objectsToSort.length - 1; i > 0; i-- )
-			{
-				r = e + i;
-
-				// if the index is wrong then set it right
-				if ( objectsToSort[ i ] != mapCanvas.getChildAt( r ) )
-				{
-					mapCanvas.setChildIndex( objectsToSort[ i ], r );
-				}
-			}
-		}
-
-
-		private final function zSortCompareFunction( a:DisplayObject, b:DisplayObject ):int
-		{
-			return ( a.y - b.y );
 		}
 
 
@@ -287,9 +273,9 @@ package com.potmo.tdm
 				return true;
 			}
 
-			if ( cameraPosition > map.getMapSize() - screenSize )
+			if ( cameraPosition > map.getMapSize() - ScreenSize.WIDTH )
 			{
-				cameraPosition = map.getMapSize() - screenSize;
+				cameraPosition = map.getMapSize() - ScreenSize.WIDTH;
 				return true;
 			}
 

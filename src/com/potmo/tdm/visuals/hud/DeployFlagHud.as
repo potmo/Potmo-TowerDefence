@@ -7,8 +7,8 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.asset.button.CancelButton_Asset;
 	import com.potmo.tdm.visuals.buildings.BuildingBase;
 	import com.potmo.tdm.visuals.maps.DeployFlag;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.input.MouseManager;
 
 	import flash.geom.Point;
@@ -19,11 +19,11 @@ package com.potmo.tdm.visuals.hud
 		private var building:BuildingBase;
 		private var gameView:GameView;
 
-		public static const AFFIRM_BUTTON_GRAPHICS:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new AffirmButton_Asset() );
-		public static const CANCEL_BUTTON_GRAPHICS:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new CancelButton_Asset() );
+		public static const AFFIRM_BUTTON_GRAPHICS:TextureAnimationCacheObject = new TextureAnimationCacheObject( new AffirmButton_Asset() );
+		public static const CANCEL_BUTTON_GRAPHICS:TextureAnimationCacheObject = new TextureAnimationCacheObject( new CancelButton_Asset() );
 
-		private var affirmButton:BitmapAnimation;
-		private var cancelButton:BitmapAnimation;
+		private var affirmButton:TextureAnimation;
+		private var cancelButton:TextureAnimation;
 
 
 		public function DeployFlagHud( flag:DeployFlag, building:BuildingBase, gameView:GameView )
@@ -39,8 +39,8 @@ package com.potmo.tdm.visuals.hud
 			// stop the map from getting clicks
 			gameView.startIgnoreMapInteraction();
 
-			affirmButton = new BitmapAnimation( AFFIRM_BUTTON_GRAPHICS );
-			cancelButton = new BitmapAnimation( CANCEL_BUTTON_GRAPHICS );
+			affirmButton = new TextureAnimation( AFFIRM_BUTTON_GRAPHICS );
+			cancelButton = new TextureAnimation( CANCEL_BUTTON_GRAPHICS );
 
 			addButtonFirst( affirmButton );
 			addButtonFirst( cancelButton, false );
@@ -51,12 +51,12 @@ package com.potmo.tdm.visuals.hud
 		{
 			if ( MouseManager.isDown )
 			{
-				if ( affirmButton.getRect( this ).contains( MouseManager.pos.x, MouseManager.pos.y ) )
+				if ( affirmButton.getBounds( this ).contains( MouseManager.pos.x, MouseManager.pos.y ) )
 				{
 					return;
 				}
 
-				if ( cancelButton.getRect( this ).contains( MouseManager.pos.x, MouseManager.pos.y ) )
+				if ( cancelButton.getBounds( this ).contains( MouseManager.pos.x, MouseManager.pos.y ) )
 				{
 					return;
 				}
@@ -69,7 +69,7 @@ package com.potmo.tdm.visuals.hud
 
 		override public function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
-			if ( affirmButton.getRect( this ).contains( x, y ) )
+			if ( affirmButton.getBounds( this ).contains( x, y ) )
 			{
 				//send new positions
 				orderManager.requestSetDeployFlag( flag.x, flag.y, building );
@@ -81,7 +81,7 @@ package com.potmo.tdm.visuals.hud
 				return true;
 			}
 
-			if ( cancelButton.getRect( this ).contains( x, y ) )
+			if ( cancelButton.getBounds( this ).contains( x, y ) )
 			{
 				gameView.removeMapItem( flag );
 				gameLogics.removeHud();

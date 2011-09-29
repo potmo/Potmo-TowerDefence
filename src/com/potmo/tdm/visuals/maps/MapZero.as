@@ -1,11 +1,13 @@
 package com.potmo.tdm.visuals.maps
 {
 	import com.potmo.tdm.asset.map.MapZero_Asset;
-	import com.potmo.tdm.visuals.buildings.BuildingBase;
 	import com.potmo.util.image.BitmapUtil;
 
 	import flash.display.BitmapData;
 	import flash.geom.Point;
+
+	import starling.display.Image;
+	import starling.textures.Texture;
 
 	public class MapZero extends MapBase
 	{

@@ -1,18 +1,17 @@
 package com.potmo.tdm.visuals.maps
 {
 	import com.potmo.tdm.asset.map.DeployFlag_Asset;
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
 	public class DeployFlag extends MapItem
 	{
 
-		private static const DEPLOY_FLAG_GRAPHICS:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new DeployFlag_Asset() );
+		private static const asset:TextureAnimationCacheObject = new TextureAnimationCacheObject( new DeployFlag_Asset() );
 
 
 		public function DeployFlag()
 		{
-			super( DEPLOY_FLAG_GRAPHICS );
+			super( asset );
 		}
 	}
 }

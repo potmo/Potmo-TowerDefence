@@ -8,17 +8,19 @@ package com.potmo.tdm
 	import com.potmo.util.math.StrictMath;
 
 	import flash.display.Sprite;
+	import flash.display.StageAlign;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.system.Capabilities;
 
-	[SWF( backgroundColor="0xCCCCCC", frameRate="30", width="960", height="640" )]
-	public class TowerDefenceMulti extends Sprite
-	{
+	import starling.core.Starling;
+	import starling.display.Sprite;
 
-		private var connector:Connector;
-		private var gameView:GameView;
-		private var gameLogics:GameLogics;
-		private var orderManager:OrderManager;
+	[SWF( backgroundColor = "0xCCCCCC", frameRate = "30", width = "960", height = "640" )]
+	public class TowerDefenceMulti extends flash.display.Sprite
+	{
+		private var starlingInstance:Starling;
+
 		private var frameRateCounter:FPSCounter;
 
 
@@ -26,44 +28,23 @@ package com.potmo.tdm
 		{
 			Logger.log( "Startup" );
 
-			addGame();
+			stage.scaleMode = StageScaleMode.NO_SCALE;
+			stage.align = StageAlign.TOP_LEFT;
 
 			this.frameRateCounter = new FPSCounter();
 			addChild( frameRateCounter );
 
-			this.addEventListener( Event.ENTER_FRAME, onEnterFrame );
-			MouseManager.initialize( this );
+			Starling.multitouchEnabled = true;
+
+			starlingInstance = new Starling( Main, stage );
+			starlingInstance.antiAliasing = 0;
+			starlingInstance.simulateMultitouch = false;
+			starlingInstance.enableErrorChecking = false;
+			starlingInstance.start();
+
+			MouseManager.initialize( stage );
 
 		}
 
-
-		private function onEnterFrame( event:Event ):void
-		{
-			gameLogics.update();
-			gameView.update();
-		}
-
-
-		private function connect():void
-		{
-			connector = new Connector();
-			connector.connect( "testGroup", ( Math.round( Math.random() * 1000 ) ).toString() );
-		}
-
-
-		private function addGame():void
-		{
-			orderManager = new OrderManager();
-
-			gameView = new GameView( ScreenSize.WIDTH );
-			addChild( gameView );
-
-			gameLogics = new GameLogics( gameView, orderManager );
-
-			gameView.setGameLogics( gameLogics );
-			gameView.setOrderManager( orderManager );
-			orderManager.setGameLogics( gameLogics );
-
-		}
 	}
 }

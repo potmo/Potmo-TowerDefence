@@ -3,12 +3,10 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
-	import com.potmo.util.image.BitmapAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.util.logger.Logger;
 
-	import flash.display.Bitmap;
-	import flash.display.BitmapData;
-	import flash.display.Sprite;
+	import starling.display.Sprite;
 
 	public class HudBase extends Sprite
 	{
@@ -17,8 +15,8 @@ package com.potmo.tdm.visuals.hud
 		private static const BUTTON_RIGHT_PADDING:int = 20;
 		private static const BUTTON_BOTTOM_SPACING:int = 10;
 
-		private var leftButtons:Vector.<BitmapAnimation> = new Vector.<BitmapAnimation>();
-		private var rightButtons:Vector.<BitmapAnimation> = new Vector.<BitmapAnimation>();
+		private var leftButtons:Vector.<TextureAnimation> = new Vector.<TextureAnimation>();
+		private var rightButtons:Vector.<TextureAnimation> = new Vector.<TextureAnimation>();
 
 
 		public function HudBase()
@@ -33,7 +31,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		protected function addButtonLast( button:BitmapAnimation, toLeft:Boolean = true ):void
+		protected function addButtonLast( button:TextureAnimation, toLeft:Boolean = true ):void
 		{
 			if ( toLeft )
 			{
@@ -50,7 +48,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		protected function addButtonFirst( button:BitmapAnimation, toLeft:Boolean = true ):void
+		protected function addButtonFirst( button:TextureAnimation, toLeft:Boolean = true ):void
 		{
 			if ( toLeft )
 			{
@@ -71,7 +69,7 @@ package com.potmo.tdm.visuals.hud
 		{
 			var x:int;
 			var y:int;
-			var button:BitmapAnimation;
+			var button:TextureAnimation;
 
 			x = BUTTON_LEFT_PADDING;
 			y = ScreenSize.HEIGHT - BUTTON_BOTTOM_SPACING;

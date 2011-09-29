@@ -1,11 +1,11 @@
 package com.potmo.tdm.visuals.maps
 {
-	import com.potmo.util.image.BitmapAnimation;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimation;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
-	public class MapItem extends BitmapAnimation
+	public class MapItem extends TextureAnimation
 	{
-		public function MapItem( source:BitmapAnimationCacheObject )
+		public function MapItem( source:TextureAnimationCacheObject )
 		{
 			super( source );
 		}

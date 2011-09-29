@@ -3,7 +3,7 @@ package com.potmo.tdm.visuals.buildings
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.asset.building.ConstructionSite_Asset;
 	import com.potmo.tdm.visuals.hud.ConstructionSiteHud;
-	import com.potmo.util.image.BitmapAnimationCacheObject;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.logger.Logger;
 
 	/**
@@ -13,7 +13,7 @@ package com.potmo.tdm.visuals.buildings
 	public class ConstructionSite extends BuildingBase
 	{
 
-		private static const graphics:BitmapAnimationCacheObject = new BitmapAnimationCacheObject( new ConstructionSite_Asset() );
+		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new ConstructionSite_Asset() );
 
 
 		public function ConstructionSite()
