@@ -9,7 +9,7 @@ package com.potmo.tdm.visuals.buildings
 
 	public class BuildingBase extends TextureAnimation
 	{
-		protected static const MAX_UNITS:uint = 15;
+		protected static const MAX_UNITS:uint = 3;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;
@@ -72,6 +72,7 @@ package com.potmo.tdm.visuals.buildings
 			unit.y = this.y + 50;
 			//TODO: Set deploy area from variables
 			unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( units.length - 1 ), _deployFlagY + getPathOffsetYForNthUnit( units.length - 1 ) );
+			unit.setHomeBuilding( this );
 		}
 
 
@@ -116,11 +117,25 @@ package com.potmo.tdm.visuals.buildings
 			{
 				unit.chargeTowardsEnemy();
 				unit.setPathOffset( getPathOffsetXForNthUnit( i ), getPathOffsetYForNthUnit( i ) );
+				unit.setHomeBuilding( null );
 				i++;
 			}
 
 			// clear units
 			units.splice( 0, units.length );
+		}
+
+
+		public function onUnitDied( unit:UnitBase ):void
+		{
+			var index:int = units.indexOf( unit );
+
+			if ( index == -1 )
+			{
+				throw new Error( "Unit does not belong to this Building" );
+			}
+			units.splice( index, 1 );
+			unit.setHomeBuilding( null );
 		}
 
 

@@ -19,7 +19,7 @@ package com.potmo.tdm.visuals.buildings
 
 		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Camp_Asset() );
 
-		private static const UNIT_DEPLOY_DELAY:uint = 30;
+		private static const UNIT_DEPLOY_DELAY:uint = 120;
 		private var unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;;
 
 

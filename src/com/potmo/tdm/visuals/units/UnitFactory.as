@@ -34,9 +34,15 @@ package com.potmo.tdm.visuals.units
 			}
 
 			unit = getUnitFromPool( pool, clazz, type );
-			unit.reset();
 			unit.setOwningPlayer( player );
 			return unit;
+		}
+
+
+		public function returnUnit( unit:UnitBase ):void
+		{
+			unit.reset();
+			getPool( unit.getType() ).push( unit );
 		}
 
 
@@ -58,7 +64,7 @@ package com.potmo.tdm.visuals.units
 		{
 			if ( pool.length == 0 )
 			{
-				populatePool( pool, clazz, type, 1 );
+				populatePool( pool, clazz, type, 5 );
 			}
 			return pool.pop();
 		}
@@ -77,11 +83,5 @@ package com.potmo.tdm.visuals.units
 			}
 		}
 
-
-		public function returnUnit( unit:UnitBase ):void
-		{
-			unit.setOwningPlayer( null );
-			getPool( unit.getType() ).push( unit );
-		}
 	}
 }

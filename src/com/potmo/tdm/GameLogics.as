@@ -311,7 +311,7 @@ package com.potmo.tdm
 						if ( other.isAlreadyTargeted() )
 						{
 							// targeted must be double as close
-							if ( dist * 2 <= inRange )
+							if ( dist * 4 <= inRange )
 							{
 								if ( dist < bestTargetedDist )
 								{

@@ -2,27 +2,41 @@ package com.potmo.tdm.visuals.units
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.buildings.BuildingBase;
 	import com.potmo.tdm.visuals.maps.PathCheckpoint;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.math.StrictMath;
 
-	public class UnitBase extends TextureAnimation
+	import starling.display.DisplayObjectContainer;
+	import starling.display.Quad;
+
+	public class UnitBase extends DisplayObjectContainer
 	{
 
-		private var type:UnitType;
+		private var _type:UnitType;
 
-		protected var owningPlayer:Player;
-		protected var _state:UnitState;
+		private var _owningPlayer:Player;
+		private var _state:UnitState = UnitState.NONE;
 
 		protected var targetedUnit:UnitBase = null;
 		protected var targetedByUnits:Vector.<UnitBase> = new Vector.<UnitBase>();
 
-		protected var walkingSpeed:Number = 1; // set to other in subclass if you like
+		protected var walkingSpeed:Number = 3; // set to other in subclass if you like
 		protected var targetingRange:int = 200; // the distance at witch the unit will start changing against the enemy
 		protected var attackingRange:int = 10; // the distance at witch the unit can attack an enemy
+		protected var radius:Number = 10;
+		protected var maxHealth:int = 15;
+		protected var hitDelay:int = 10;
+		protected var hitDamage:int = 1;
+		protected var healDelay:int = 15;
 
-		protected var currentCheckpoint:PathCheckpoint = null; // when null it will look for the closest checkpoint on walk()
+		private var _currentCheckpoint:PathCheckpoint = null; // when null it will look for the closest checkpoint on walk()
+
+		private var _health:int = maxHealth;
+
+		private var _framesToNextHit:int = hitDelay;
+		private var _framesToNextHeal:int = healDelay;
 
 		private var _x:Number = 0;
 		private var _y:Number = 0;
@@ -36,11 +50,30 @@ package com.potmo.tdm.visuals.units
 		private var _pathOffsetX:int;
 		private var _pathOffsetY:int;
 
+		private var _mainGraphics:TextureAnimation;
+		private var _healthBarBackground:Quad;
+		private var _healthBar:Quad;
+
+		private var _homeBuilding:BuildingBase;
+
+		private static const HEALTH_BAR_HEIGHT:int = 6;
+		private static const HEALTH_BAR_WIDTH:int = 20;
+
 
 		public function UnitBase( graphics:TextureAnimationCacheObject )
 		{
-			super( graphics );
+			_mainGraphics = new TextureAnimation( graphics );
+			this.addChild( _mainGraphics );
 
+			_healthBarBackground = new Quad( HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, 0xFFCCCCCC );
+			_healthBarBackground.x = -_healthBarBackground.width / 2;
+			_healthBarBackground.y = -_mainGraphics.height - _healthBarBackground.height;
+			this.addChild( _healthBarBackground );
+
+			_healthBar = new Quad( HEALTH_BAR_WIDTH - 2, HEALTH_BAR_HEIGHT - 2, 0xFF00CC00 );
+			_healthBar.x = _healthBarBackground.x + 1;
+			_healthBar.y = _healthBarBackground.y + 1;
+			this.addChild( _healthBar );
 		}
 
 
@@ -48,8 +81,11 @@ package com.potmo.tdm.visuals.units
 		{
 			changeState( UnitState.NONE );
 			targetedUnit = null
-			targetedByUnits = new Vector.<UnitBase>();
-			currentCheckpoint = null;
+
+			targetedByUnits.splice( 0, targetedByUnits.length );
+
+			_owningPlayer = null;
+			_currentCheckpoint = null;
 			_velx = 0;
 			_vely = 0;
 			_deployFlagX = 0;
@@ -58,18 +94,30 @@ package com.potmo.tdm.visuals.units
 			_y = 0;
 			_pathOffsetX = 0;
 			_pathOffsetY = 0;
+			setHealth( maxHealth );
+			_homeBuilding = null;
 		}
 
 
 		public function setOwningPlayer( owningPlayer:Player ):void
 		{
-			this.owningPlayer = owningPlayer;
+			this._owningPlayer = owningPlayer;
+
+			if ( owningPlayer.isMe() )
+			{
+				this._mainGraphics.color = 0xFFFF0000;
+			}
+			else
+			{
+				this._mainGraphics.color = 0xFF0000FF;
+			}
+
 		}
 
 
 		public function getOwningPlayer():Player
 		{
-			return owningPlayer;
+			return _owningPlayer;
 		}
 
 
@@ -79,7 +127,7 @@ package com.potmo.tdm.visuals.units
 		 */
 		public function getCurrentCheckpoint():PathCheckpoint
 		{
-			return currentCheckpoint;
+			return _currentCheckpoint;
 		}
 
 
@@ -90,13 +138,20 @@ package com.potmo.tdm.visuals.units
 			{
 				case ( UnitState.NONE ):
 				{
-					calculateVelocityToDeployArea();
+					calculateAndSetVelocityTowardsDeployArea();
 					changeState( UnitState.DEPLOYING );
 					break;
 				}
 				case ( UnitState.DEPLOYING ):
 				{
+
 					walkToDeployArea();
+
+					if ( !isTargeting() )
+					{
+						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
+					}
+
 					break;
 				}
 				case ( UnitState.CHARGING ):
@@ -106,52 +161,145 @@ package com.potmo.tdm.visuals.units
 					// if this unit is not targeting a unit the search for a unit to target
 					if ( !isTargeting() )
 					{
-						searchForNearbyEnemies( gameLogics );
+						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
 					}
 					break;
 				}
 				case ( UnitState.GUARDING ):
 				{
+					onIdleUnit();
+
 					// if this unit is not targeting a unit the search for a unit to target
 					if ( !isTargeting() )
 					{
-						searchForNearbyEnemies( gameLogics );
-
+						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
 					}
 					break;
 				}
 				case ( UnitState.ENGAGING_ATTACK ):
 				{
-					if ( isTargetEnemyCloseEnoughToHit() )
+					if ( isTargeting() )
 					{
-						changeState( UnitState.ATTACKING );
+						if ( isTargetEnemyCloseEnoughToHit() )
+						{
+							changeState( UnitState.ATTACKING );
+						}
+						else if ( isTargetedUnitTooFarToTarget() )
+						{
+							stopTargetUnit();
+							forceFindNewCheckpoint( gameLogics );
+							changeState( UnitState.CHARGING );
+						}
+						else
+						{
+							calculateAndSetVelocityTowardsTargetedUnit();
+							walk();
+						}
 					}
 					else
 					{
-						calculateVelocityTowardsTargetedUnit();
-						walk();
+						forceFindNewCheckpoint( gameLogics );
+						changeState( UnitState.CHARGING );
 					}
 
 					break;
 				}
 				case ( UnitState.ENGAGING_DEFEND ):
 				{
-					if ( isTargetEnemyCloseEnoughToHit() )
+					if ( isTargeting() )
 					{
-						changeState( UnitState.DEFENDING );
+						//TODO: Check if unit is defending to far away from the deploy flag. Then return to deploy flag
+						if ( isTargetEnemyCloseEnoughToHit() )
+						{
+							changeState( UnitState.DEFENDING );
+						}
+						else
+						{
+							calculateAndSetVelocityTowardsTargetedUnit();
+							walk();
+						}
 					}
 					else
 					{
-						calculateVelocityTowardsTargetedUnit();
-						walk();
+						calculateAndSetVelocityTowardsDeployArea();
+						changeState( UnitState.DEPLOYING );
 					}
 
 					break;
 				}
 
+				case ( UnitState.ATTACKING ):
+				{
+					if ( isTargeting() )
+					{
+						if ( isTargetEnemyCloseEnoughToHit() )
+						{
+							hitTargetUnit( gameLogics );
+						}
+						else
+						{
+							if ( isTargetedUnitTooFarToTarget() )
+							{
+								stopTargetUnit();
+								forceFindNewCheckpoint( gameLogics );
+								changeState( UnitState.CHARGING );
+							}
+							else
+							{
+								changeState( UnitState.ENGAGING_ATTACK );
+							}
+						}
+
+					}
+					else
+					{
+						forceFindNewCheckpoint( gameLogics );
+						changeState( UnitState.CHARGING );
+					}
+					break;
+				}
+				case ( UnitState.DEFENDING ):
+				{
+					if ( isTargeting() )
+					{
+						hitTargetUnit( gameLogics );
+					}
+					else
+					{
+						calculateAndSetVelocityTowardsDeployArea();
+						changeState( UnitState.DEPLOYING );
+					}
+					break;
+				}
+
 			}
 
-			nextFrame();
+			_mainGraphics.nextFrame();
+		}
+
+
+		private function hitTargetUnit( gameLogics:GameLogics ):void
+		{
+			_framesToNextHit--;
+
+			if ( _framesToNextHit <= 0 )
+			{
+				targetedUnit.hurt( hitDamage, gameLogics );
+				_framesToNextHit = hitDelay;
+			}
+
+		}
+
+
+		private function onIdleUnit():void
+		{
+			_framesToNextHeal--;
+
+			if ( _framesToNextHeal <= 0 )
+			{
+				this.heal();
+				_framesToNextHeal = healDelay;
+			}
 		}
 
 
@@ -162,18 +310,30 @@ package com.potmo.tdm.visuals.units
 		{
 			if ( isTargeting() )
 			{
-				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, attackingRange );
+				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, this.radius + targetedUnit.radius + attackingRange );
 			}
 
 			return false;
 		}
 
 
+		protected function isTargetedUnitTooFarToTarget():Boolean
+		{
+			if ( isTargeting() )
+			{
+				return !StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, targetingRange );
+			}
+
+			return true;
+		}
+
+
 		/**
 		 * Search for enemy units that are close and target them if they are close enough
 		 */
-		protected function searchForNearbyEnemies( gameLogics:GameLogics ):void
+		protected function searchForNearbyEnemiesAndTargetIfPossible( gameLogics:GameLogics ):void
 		{
+			//TODO: When changing we should not look back for units. If we passed them we sprint away
 			var targetUnit:UnitBase = gameLogics.getEnemyUnitCloseEnough( this, targetingRange );
 
 			if ( targetUnit )
@@ -190,14 +350,14 @@ package com.potmo.tdm.visuals.units
 		protected function walkToNextCheckpoint( gameLogics:GameLogics ):void
 		{
 
-			if ( !currentCheckpoint )
+			if ( !_currentCheckpoint )
 			{
 				updateCheckpoint( gameLogics );
 			}
 
 			walk();
 
-			if ( StrictMath.isCloseEnough( this.x, this.y, currentCheckpoint.x + _pathOffsetX, currentCheckpoint.y + _pathOffsetY, walkingSpeed ) )
+			if ( StrictMath.isCloseEnough( this.x, this.y, _currentCheckpoint.x + _pathOffsetX, _currentCheckpoint.y + _pathOffsetY, walkingSpeed ) )
 			{
 				updateCheckpoint( gameLogics );
 			}
@@ -215,7 +375,7 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		private function calculateVelocityTowardsTargetedUnit():void
+		protected function calculateAndSetVelocityTowardsTargetedUnit():void
 		{
 
 			// get the koifficient squared 
@@ -234,11 +394,11 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Calculate the velocity to be used to move to the next checkpoint
 		 */
-		protected function calculateVelocityToCurrentCheckpoint():void
+		protected function calculateAndSetVelocityTowardsCurrentCheckpoint():void
 		{
 			// get the koifficient squared 
-			var dirx:Number = ( currentCheckpoint.x + _pathOffsetX ) - this.x;
-			var diry:Number = ( currentCheckpoint.y + _pathOffsetY ) - this.y;
+			var dirx:Number = ( _currentCheckpoint.x + _pathOffsetX ) - this.x;
+			var diry:Number = ( _currentCheckpoint.y + _pathOffsetY ) - this.y;
 
 			// get the distance 
 			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
@@ -249,6 +409,13 @@ package com.potmo.tdm.visuals.units
 		}
 
 
+		protected function forceFindNewCheckpoint( gameLogics:GameLogics ):void
+		{
+			_currentCheckpoint = null;
+			updateCheckpoint( gameLogics );
+		}
+
+
 		/**
 		 * Update and get the next checkpoint
 		 */
@@ -256,7 +423,7 @@ package com.potmo.tdm.visuals.units
 		{
 			var newCheckpoint:PathCheckpoint = gameLogics.getNextCheckpointForUnit( this );
 
-			if ( currentCheckpoint && newCheckpoint.id == currentCheckpoint.id )
+			if ( _currentCheckpoint && newCheckpoint.id == _currentCheckpoint.id )
 			{
 				// okay we have reached goal. Do not move any more
 				//TODO: Take life from other player when units reach goal
@@ -265,8 +432,8 @@ package com.potmo.tdm.visuals.units
 			}
 			else
 			{
-				currentCheckpoint = newCheckpoint;
-				calculateVelocityToCurrentCheckpoint();
+				_currentCheckpoint = newCheckpoint;
+				calculateAndSetVelocityTowardsCurrentCheckpoint();
 			}
 		}
 
@@ -278,7 +445,7 @@ package com.potmo.tdm.visuals.units
 
 			if ( _state == UnitState.DEPLOYING || _state == UnitState.GUARDING || _state == UnitState.NONE )
 			{
-				calculateVelocityToDeployArea();
+				calculateAndSetVelocityTowardsDeployArea();
 				changeState( UnitState.DEPLOYING );
 			}
 		}
@@ -309,7 +476,70 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		protected function calculateVelocityToDeployArea():void
+		protected function setHealth( value:int ):void
+		{
+			var newHealth:int = StrictMath.clamp( value, 0, maxHealth );
+
+			if ( newHealth != _health )
+			{
+				_health = newHealth;
+				_healthBar.width = ( _health / maxHealth ) * ( HEALTH_BAR_WIDTH - 2 );
+			}
+		}
+
+
+		protected function getHealth():int
+		{
+			return _health;
+		}
+
+
+		/**
+		 * Give the unit damage
+		 */
+		public function hurt( amount:int, gameLogics:GameLogics ):void
+		{
+			setHealth( getHealth() - amount );
+
+			if ( getHealth() <= 0 )
+			{
+				die( gameLogics );
+			}
+		}
+
+
+		public function heal():void
+		{
+			if ( _health != maxHealth )
+			{
+				setHealth( getHealth() + 1 );
+			}
+		}
+
+
+		public function die( gameLogics:GameLogics ):void
+		{
+			//TODO: I guess we need a little animation when the unit dies
+			if ( targetedUnit )
+			{
+				this.stopTargetUnit();
+			}
+
+			for ( var i:int = targetedByUnits.length - 1; i >= 0; i-- )
+			{
+				targetedByUnits[ i ].stopTargetUnit();
+			}
+
+			if ( _homeBuilding )
+			{
+				_homeBuilding.onUnitDied( this );
+			}
+
+			gameLogics.removeUnit( this );
+		}
+
+
+		protected function calculateAndSetVelocityTowardsDeployArea():void
 		{
 			// get the koifficient
 			var dirx:Number = _deployFlagX - this.x;
@@ -326,7 +556,10 @@ package com.potmo.tdm.visuals.units
 
 		public function chargeTowardsEnemy():void
 		{
-			changeState( UnitState.CHARGING );
+			if ( _state == UnitState.GUARDING || _state == UnitState.DEPLOYING )
+			{
+				changeState( UnitState.CHARGING );
+			}
 		}
 
 
@@ -394,7 +627,7 @@ package com.potmo.tdm.visuals.units
 			// if we are walking (i.e. walking towards the enemy)
 			// we should attack
 
-			if ( _state == UnitState.GUARDING )
+			if ( _state == UnitState.GUARDING || _state == UnitState.DEPLOYING )
 			{
 				changeState( UnitState.ENGAGING_DEFEND );
 			}
@@ -403,6 +636,19 @@ package com.potmo.tdm.visuals.units
 				changeState( UnitState.ENGAGING_ATTACK );
 			}
 
+		}
+
+
+		protected function setFrameFromName( name:String ):void
+		{
+			_mainGraphics.setFrameFromName( name );
+
+		}
+
+
+		protected function nextFrame():void
+		{
+			_mainGraphics.nextFrame();
 		}
 
 
@@ -424,13 +670,13 @@ package com.potmo.tdm.visuals.units
 
 		public function getType():UnitType
 		{
-			return type;
+			return _type;
 		}
 
 
 		public function setType( type:UnitType ):void
 		{
-			this.type = type;
+			this._type = type;
 		}
 
 
@@ -460,10 +706,23 @@ package com.potmo.tdm.visuals.units
 		}
 
 
+		public function getRadius():Number
+		{
+			return radius;
+		}
+
+
 		public function setPathOffset( x:int, y:int ):void
 		{
 			_pathOffsetX = x;
 			_pathOffsetY = y;
+		}
+
+
+		public function setHomeBuilding( building:BuildingBase ):void
+		{
+			this._homeBuilding = building;
+
 		}
 	}
 }
