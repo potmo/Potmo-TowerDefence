@@ -19,23 +19,19 @@ package com.potmo.tdm.visuals.units
 		private var _owningPlayer:Player;
 		private var _state:UnitState = UnitState.NONE;
 
-		protected var targetedUnit:UnitBase = null;
-		protected var targetedByUnits:Vector.<UnitBase> = new Vector.<UnitBase>();
+		protected var targetedByUnits:Vector.<FightingUnitBase> = new Vector.<FightingUnitBase>();
 
+		//TODO: Make all the protected fields be getter functions to be implemeted by UnitImlementation
 		protected var walkingSpeed:Number = 3; // set to other in subclass if you like
-		protected var targetingRange:int = 200; // the distance at witch the unit will start changing against the enemy
-		protected var attackingRange:int = 10; // the distance at witch the unit can attack an enemy
 		protected var radius:Number = 10;
 		protected var maxHealth:int = 15;
-		protected var hitDelay:int = 10;
-		protected var hitDamage:int = 1;
+
 		protected var healDelay:int = 15;
 
 		private var _currentCheckpoint:PathCheckpoint = null; // when null it will look for the closest checkpoint on walk()
 
 		private var _health:int = maxHealth;
 
-		private var _framesToNextHit:int = hitDelay;
 		private var _framesToNextHeal:int = healDelay;
 
 		private var _x:Number = 0;
@@ -80,7 +76,6 @@ package com.potmo.tdm.visuals.units
 		public function reset():void
 		{
 			changeState( UnitState.NONE );
-			targetedUnit = null
 
 			targetedByUnits.splice( 0, targetedByUnits.length );
 
@@ -142,135 +137,6 @@ package com.potmo.tdm.visuals.units
 					changeState( UnitState.DEPLOYING );
 					break;
 				}
-				case ( UnitState.DEPLOYING ):
-				{
-
-					walkToDeployArea();
-
-					if ( !isTargeting() )
-					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
-					}
-
-					break;
-				}
-				case ( UnitState.CHARGING ):
-				{
-					walkToNextCheckpoint( gameLogics );
-
-					// if this unit is not targeting a unit the search for a unit to target
-					if ( !isTargeting() )
-					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
-					}
-					break;
-				}
-				case ( UnitState.GUARDING ):
-				{
-					onIdleUnit();
-
-					// if this unit is not targeting a unit the search for a unit to target
-					if ( !isTargeting() )
-					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
-					}
-					break;
-				}
-				case ( UnitState.ENGAGING_ATTACK ):
-				{
-					if ( isTargeting() )
-					{
-						if ( isTargetEnemyCloseEnoughToHit() )
-						{
-							changeState( UnitState.ATTACKING );
-						}
-						else if ( isTargetedUnitTooFarToTarget() )
-						{
-							stopTargetUnit();
-							forceFindNewCheckpoint( gameLogics );
-							changeState( UnitState.CHARGING );
-						}
-						else
-						{
-							calculateAndSetVelocityTowardsTargetedUnit();
-							walk();
-						}
-					}
-					else
-					{
-						forceFindNewCheckpoint( gameLogics );
-						changeState( UnitState.CHARGING );
-					}
-
-					break;
-				}
-				case ( UnitState.ENGAGING_DEFEND ):
-				{
-					if ( isTargeting() )
-					{
-						//TODO: Check if unit is defending to far away from the deploy flag. Then return to deploy flag
-						if ( isTargetEnemyCloseEnoughToHit() )
-						{
-							changeState( UnitState.DEFENDING );
-						}
-						else
-						{
-							calculateAndSetVelocityTowardsTargetedUnit();
-							walk();
-						}
-					}
-					else
-					{
-						calculateAndSetVelocityTowardsDeployArea();
-						changeState( UnitState.DEPLOYING );
-					}
-
-					break;
-				}
-
-				case ( UnitState.ATTACKING ):
-				{
-					if ( isTargeting() )
-					{
-						if ( isTargetEnemyCloseEnoughToHit() )
-						{
-							hitTargetUnit( gameLogics );
-						}
-						else
-						{
-							if ( isTargetedUnitTooFarToTarget() )
-							{
-								stopTargetUnit();
-								forceFindNewCheckpoint( gameLogics );
-								changeState( UnitState.CHARGING );
-							}
-							else
-							{
-								changeState( UnitState.ENGAGING_ATTACK );
-							}
-						}
-
-					}
-					else
-					{
-						forceFindNewCheckpoint( gameLogics );
-						changeState( UnitState.CHARGING );
-					}
-					break;
-				}
-				case ( UnitState.DEFENDING ):
-				{
-					if ( isTargeting() )
-					{
-						hitTargetUnit( gameLogics );
-					}
-					else
-					{
-						calculateAndSetVelocityTowardsDeployArea();
-						changeState( UnitState.DEPLOYING );
-					}
-					break;
-				}
 
 			}
 
@@ -278,20 +144,7 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		private function hitTargetUnit( gameLogics:GameLogics ):void
-		{
-			_framesToNextHit--;
-
-			if ( _framesToNextHit <= 0 )
-			{
-				targetedUnit.hurt( hitDamage, gameLogics );
-				_framesToNextHit = hitDelay;
-			}
-
-		}
-
-
-		private function onIdleUnit():void
+		protected function onIdleUnit():void
 		{
 			_framesToNextHeal--;
 
@@ -299,46 +152,6 @@ package com.potmo.tdm.visuals.units
 			{
 				this.heal();
 				_framesToNextHeal = healDelay;
-			}
-		}
-
-
-		/**
-		 * Check if a unit is close enough to engage in a fight with it
-		 */
-		protected function isTargetEnemyCloseEnoughToHit():Boolean
-		{
-			if ( isTargeting() )
-			{
-				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, this.radius + targetedUnit.radius + attackingRange );
-			}
-
-			return false;
-		}
-
-
-		protected function isTargetedUnitTooFarToTarget():Boolean
-		{
-			if ( isTargeting() )
-			{
-				return !StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, targetingRange );
-			}
-
-			return true;
-		}
-
-
-		/**
-		 * Search for enemy units that are close and target them if they are close enough
-		 */
-		protected function searchForNearbyEnemiesAndTargetIfPossible( gameLogics:GameLogics ):void
-		{
-			//TODO: When changing we should not look back for units. If we passed them we sprint away
-			var targetUnit:UnitBase = gameLogics.getEnemyUnitCloseEnough( this, targetingRange );
-
-			if ( targetUnit )
-			{
-				this.startTargetUnit( targetUnit );
 			}
 		}
 
@@ -372,22 +185,6 @@ package com.potmo.tdm.visuals.units
 			// move
 			this.x += _velx;
 			this.y += _vely;
-		}
-
-
-		protected function calculateAndSetVelocityTowardsTargetedUnit():void
-		{
-
-			// get the koifficient squared 
-			var dirx:Number = targetedUnit.x - this.x;
-			var diry:Number = targetedUnit.y - this.y;
-
-			// get the distance 
-			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
-
-			// normalize the direction and multiply by speed 
-			_velx = ( dirx / dist ) * walkingSpeed;
-			_vely = ( diry / dist ) * walkingSpeed;
 		}
 
 
@@ -519,16 +316,6 @@ package com.potmo.tdm.visuals.units
 
 		public function die( gameLogics:GameLogics ):void
 		{
-			//TODO: I guess we need a little animation when the unit dies
-			if ( targetedUnit )
-			{
-				this.stopTargetUnit();
-			}
-
-			for ( var i:int = targetedByUnits.length - 1; i >= 0; i-- )
-			{
-				targetedByUnits[ i ].stopTargetUnit();
-			}
 
 			if ( _homeBuilding )
 			{
@@ -556,7 +343,8 @@ package com.potmo.tdm.visuals.units
 
 		public function chargeTowardsEnemy():void
 		{
-			if ( _state == UnitState.GUARDING || _state == UnitState.DEPLOYING )
+			//TODO: Charge towards enemy should be called something like walk on path to other side
+			if ( state == UnitState.GUARDING || state == UnitState.DEPLOYING )
 			{
 				changeState( UnitState.CHARGING );
 			}
@@ -566,25 +354,16 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Checks if this unit is already targeted by a unit
 		 */
-		public function isAlreadyTargeted():Boolean
+		public function isTargetedByAnyUnit():Boolean
 		{
 			return targetedByUnits.length > 0;
 		}
 
 
 		/**
-		 * Checks if this unit is targeting another unit
-		 */
-		public function isTargeting():Boolean
-		{
-			return targetedUnit != null;
-		}
-
-
-		/**
 		 *Tell this unit that it is targeted by another unit
 		 */
-		public function startTargetByUnit( unit:UnitBase ):void
+		public function startBeingTargetedByUnit( unit:UnitBase ):void
 		{
 			var index:int = targetedByUnits.indexOf( unit );
 
@@ -598,7 +377,7 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Tell this unit that another unit stopped targeting it
 		 */
-		public function stopTargetByUnit( unit:UnitBase ):void
+		public function stopBeingTargetedByUnit( unit:UnitBase ):void
 		{
 			var index:int = targetedByUnits.indexOf( unit );
 
@@ -606,36 +385,6 @@ package com.potmo.tdm.visuals.units
 			{
 				targetedByUnits.splice( index, 1 );
 			}
-		}
-
-
-		/**
-		 * Make this unit target another unit. If this unit is already targeting another unit it will stop with that first
-		 */
-		public function startTargetUnit( unit:UnitBase ):void
-		{
-			if ( targetedUnit )
-			{
-				stopTargetUnit();
-			}
-
-			targetedUnit = unit;
-			targetedUnit.startTargetByUnit( this );
-
-			// if we are idle (i.e. standing outside the building)
-			// we should defend
-			// if we are walking (i.e. walking towards the enemy)
-			// we should attack
-
-			if ( _state == UnitState.GUARDING || _state == UnitState.DEPLOYING )
-			{
-				changeState( UnitState.ENGAGING_DEFEND );
-			}
-			else if ( _state == UnitState.CHARGING )
-			{
-				changeState( UnitState.ENGAGING_ATTACK );
-			}
-
 		}
 
 
@@ -649,22 +398,6 @@ package com.potmo.tdm.visuals.units
 		protected function nextFrame():void
 		{
 			_mainGraphics.nextFrame();
-		}
-
-
-		/**
-		 * Make this unit stop targeting its taget unit.
-		 * If it's not targeting any unit this function has no effect.
-		 */
-		public function stopTargetUnit():void
-		{
-			if ( !targetedUnit )
-			{
-				return;
-			}
-
-			targetedUnit.stopTargetByUnit( this );
-			targetedUnit = null;
 		}
 
 
@@ -706,6 +439,54 @@ package com.potmo.tdm.visuals.units
 		}
 
 
+		protected function set velx( value:Number ):void
+		{
+			_velx = value;
+		}
+
+
+		protected function get velx():Number
+		{
+			return _velx;
+		}
+
+
+		protected function set vely( value:Number ):void
+		{
+			_vely = value;
+		}
+
+
+		protected function get vely():Number
+		{
+			return _vely;
+		}
+
+
+		protected function get deployFlagX():Number
+		{
+			return _deployFlagX;
+		}
+
+
+		protected function get deployFlagY():Number
+		{
+			return _deployFlagY;
+		}
+
+
+		protected function get currentCheckpoint():PathCheckpoint
+		{
+			return _currentCheckpoint;
+		}
+
+
+		protected function get state():UnitState
+		{
+			return _state;
+		}
+
+
 		public function getRadius():Number
 		{
 			return radius;
@@ -714,6 +495,7 @@ package com.potmo.tdm.visuals.units
 
 		public function setPathOffset( x:int, y:int ):void
 		{
+			return;
 			_pathOffsetX = x;
 			_pathOffsetY = y;
 		}

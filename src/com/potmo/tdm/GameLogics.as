@@ -308,7 +308,7 @@ package com.potmo.tdm
 					// check if it is in range
 					if ( dist <= inRange )
 					{
-						if ( other.isAlreadyTargeted() )
+						if ( other.isTargetedByAnyUnit() )
 						{
 							// targeted must be double as close
 							if ( dist * 4 <= inRange )

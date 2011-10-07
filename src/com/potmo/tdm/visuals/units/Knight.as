@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.units
 
 	import flash.display.BitmapData;
 
-	public class Knight extends UnitBase
+	public class Knight extends FightingUnitBase
 	{
 
 		private static const asset:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );

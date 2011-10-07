@@ -11,6 +11,7 @@ package com.potmo.tdm.visuals.maps
 
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
+	import starling.display.Quad;
 	import starling.textures.Texture;
 
 	public class MapBase extends DisplayObjectContainer
@@ -78,23 +79,34 @@ package com.potmo.tdm.visuals.maps
 
 		protected function drawCheckPoints():void
 		{
-		/*
-		   var checkpoint:PathCheckpoint;
-		   var lastCheckPoint:PathCheckpoint;
+			/*
+			   var checkpoint:PathCheckpoint;
+			   var lastCheckPoint:PathCheckpoint;
 
-		   bitmapData.lock();
+			   bitmapData.lock();
 
-		   for each ( checkpoint in checkpoints )
-		   {
-		   BitmapUtil.drawCirlce( checkpoint.x, checkpoint.y, 5, 0xFFFFFFFF, bitmapData );
+			   for each ( checkpoint in checkpoints )
+			   {
+			   BitmapUtil.drawCirlce( checkpoint.x, checkpoint.y, 5, 0xFFFFFFFF, bitmapData );
 
-		   if ( lastCheckPoint )
-		   {
-		   BitmapUtil.drawLine( checkpoint.x, checkpoint.y, lastCheckPoint.x, lastCheckPoint.y, 0xFFFFFFFF, bitmapData );
-		   }
-		   lastCheckPoint = checkpoint;
-		   }
-		   bitmapData.unlock();*/
+			   if ( lastCheckPoint )
+			   {
+			   BitmapUtil.drawLine( checkpoint.x, checkpoint.y, lastCheckPoint.x, lastCheckPoint.y, 0xFFFFFFFF, bitmapData );
+			   }
+			   lastCheckPoint = checkpoint;
+			   }
+			   bitmapData.unlock();*/
+
+			var checkpoint:PathCheckpoint;
+			var quad:Quad;
+
+			for each ( checkpoint in checkpoints )
+			{
+				quad = new Quad( 10, 10, 0xFFFFFFFF );
+				quad.x = checkpoint.x - 5;
+				quad.y = checkpoint.y - 5;
+				addChild( quad );
+			}
 		}
 
 
