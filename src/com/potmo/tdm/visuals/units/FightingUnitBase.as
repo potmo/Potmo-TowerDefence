@@ -1,8 +1,8 @@
 package com.potmo.tdm.visuals.units
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.maps.PathCheckpoint;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.tdm.visuals.units.settings.IUnitSetting;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
@@ -10,112 +10,99 @@ package com.potmo.tdm.visuals.units
 	{
 		//TODO: Make all the protected fields be getter functions to be implemeted by UnitImlementation
 		protected var targetedUnit:UnitBase = null;
-		protected var targetingRange:int = 200; // the distance at witch the unit will start changing against the enemy
-		protected var attackingRange:int = 10; // the distance at witch the unit can attack an enemy
-		protected var hitDelay:int = 10;
-		protected var hitDamage:int = 1;
 
-		private var _framesToNextHit:int = hitDelay;
+		private var _framesToNextHit:int;
 
 
-		public function FightingUnitBase( graphics:TextureAnimationCacheObject )
+		public function FightingUnitBase( graphics:TextureAnimationCacheObject, settings:IUnitSetting )
 		{
-			super( graphics );
+			super( graphics, settings );
+			_framesToNextHit = settings.hitDelay;
 		}
 
 
-		override public function reset():void
+		override public function reset( gameLogics:GameLogics ):void
 		{
-			super.reset();
+			super.reset( gameLogics );
 			targetedUnit = null
 		}
 
 
 		override public function update( gameLogics:GameLogics ):void
 		{
+			//TODO: This great switch case should be broken out
 			switch ( state )
 			{
 				case ( UnitState.DEPLOYING ):
-				{
-
-					walkToDeployArea();
-
-					if ( !isTargeting() )
-					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
-					}
-
-					break;
-				}
 				case ( UnitState.CHARGING ):
 				{
-					walkToNextCheckpoint( gameLogics );
 
-					// if this unit is not targeting a unit the search for a unit to target
-					if ( !isTargeting() )
+					move( gameLogics );
+
+					if ( !isTargetingUnit() )
 					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
+						tagetAnyNearbyTargetableUnit( gameLogics );
 					}
+
 					break;
 				}
 				case ( UnitState.GUARDING ):
 				{
-					onIdleUnit();
+					handleIdlingUnit( gameLogics );
 
 					// if this unit is not targeting a unit the search for a unit to target
-					if ( !isTargeting() )
+					if ( !isTargetingUnit() )
 					{
-						searchForNearbyEnemiesAndTargetIfPossible( gameLogics );
+						tagetAnyNearbyTargetableUnit( gameLogics );
 					}
 					break;
 				}
-				case ( UnitState.ENGAGING_ATTACK ):
+				case ( UnitState.APPROACH_ATTACK ):
 				{
-					if ( isTargeting() )
+					if ( isTargetingUnit() )
 					{
-						if ( isTargetEnemyCloseEnoughToHit() )
+						if ( isTargetetUnitCloseEnoughToEngage() )
 						{
-							changeState( UnitState.ATTACKING );
+							setState( UnitState.ATTACKING, gameLogics );
 						}
-						else if ( isTargetedUnitCloseEnoughtToTarget() )
+						else if ( isTargetedUnitStillWithinTargetRange() )
 						{
-							stopTargetUnit();
-							forceFindNewCheckpoint( gameLogics );
-							changeState( UnitState.CHARGING );
+							stopTargetingUnit();
+							forgetCurrentCheckpoint( gameLogics );
+							moveToNextCheckpoint( gameLogics );
 						}
 						else
 						{
-							calculateAndSetVelocityTowardsTargetedUnit();
-							walk();
+							setVelocityTowardsTargetedUnit();
+							move( gameLogics );
 						}
 					}
 					else
 					{
-						forceFindNewCheckpoint( gameLogics );
-						changeState( UnitState.CHARGING );
+						forgetCurrentCheckpoint( gameLogics );
+						moveToNextCheckpoint( gameLogics );
 					}
 
 					break;
 				}
-				case ( UnitState.ENGAGING_DEFEND ):
+				case ( UnitState.APPROACH_DEFEND ):
 				{
-					if ( isTargeting() && isTargetInsideDefenceRange() )
+					if ( isTargetingUnit() && isTargetedUnitStillWithinTargetRange() )
 					{
-						if ( isTargetEnemyCloseEnoughToHit() )
+						if ( isTargetetUnitCloseEnoughToEngage() )
 						{
-							changeState( UnitState.DEFENDING );
+							setState( UnitState.DEFENDING, gameLogics );
 						}
 						else
 						{
-							calculateAndSetVelocityTowardsTargetedUnit();
-							walk();
+							setVelocityTowardsTargetedUnit();
+							move( gameLogics );
 						}
 					}
 					else
 					{
-						stopTargetUnit();
-						calculateAndSetVelocityTowardsDeployArea();
-						changeState( UnitState.DEPLOYING );
+						stopTargetingUnit();
+						moveToDeployArea( gameLogics );
 					}
 
 					break;
@@ -123,51 +110,50 @@ package com.potmo.tdm.visuals.units
 
 				case ( UnitState.ATTACKING ):
 				{
-					if ( isTargeting() )
+					if ( isTargetingUnit() )
 					{
-						if ( isTargetEnemyCloseEnoughToHit() )
+						if ( isTargetetUnitCloseEnoughToEngage() )
 						{
-							hitTargetUnit( gameLogics );
+							beginEngageTargetUnit( gameLogics );
 						}
 						else
 						{
-							if ( isTargetedUnitCloseEnoughtToTarget() )
+							if ( isTargetedUnitStillWithinTargetRange() )
 							{
-								stopTargetUnit();
-								forceFindNewCheckpoint( gameLogics );
-								changeState( UnitState.CHARGING );
+								stopTargetingUnit();
+								forgetCurrentCheckpoint( gameLogics );
+								moveToNextCheckpoint( gameLogics );
 							}
 							else
 							{
-								changeState( UnitState.ENGAGING_ATTACK );
+								setState( UnitState.APPROACH_ATTACK, gameLogics );
 							}
 						}
 
 					}
 					else
 					{
-						forceFindNewCheckpoint( gameLogics );
-						changeState( UnitState.CHARGING );
+						forgetCurrentCheckpoint( gameLogics );
+						moveToNextCheckpoint( gameLogics );
 					}
 					break;
 				}
 				case ( UnitState.DEFENDING ):
 				{
-					if ( isTargeting() )
+					if ( isTargetingUnit() )
 					{
-						if ( isTargetEnemyCloseEnoughToHit() )
+						if ( isTargetetUnitCloseEnoughToEngage() )
 						{
-							hitTargetUnit( gameLogics );
+							beginEngageTargetUnit( gameLogics );
 						}
 						else
 						{
-							changeState( UnitState.ENGAGING_DEFEND );
+							setState( UnitState.APPROACH_DEFEND, gameLogics );
 						}
 					}
 					else
 					{
-						calculateAndSetVelocityTowardsDeployArea();
-						changeState( UnitState.DEPLOYING );
+						moveToDeployArea( gameLogics );
 					}
 					break;
 				}
@@ -177,57 +163,57 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		protected function hitTargetUnit( gameLogics:GameLogics ):void
+		final private function beginEngageTargetUnit( gameLogics:GameLogics ):void
 		{
 			_framesToNextHit--;
 
 			if ( _framesToNextHit <= 0 )
 			{
-				targetedUnit.hurt( hitDamage, gameLogics );
-				_framesToNextHit = hitDelay;
+				onEngageTargetUnit( gameLogics );
+				_framesToNextHit = settings.hitDelay;
 			}
-
 		}
 
 
-		/**
-		 * Check if the target is to far away from the deploy flag
-		 */
-		protected function isTargetInsideDefenceRange():Boolean
+		final protected function hurtTargetedUnit( gameLogics:GameLogics ):void
 		{
-			return StrictMath.isCloseEnough( this.deployFlagX, this.deployFlagY, targetedUnit.x, targetedUnit.y, this.getRadius() + targetedUnit.getRadius() + targetingRange );
+			if ( isTargetingUnit() )
+			{
+				//TODO: There should be a chance of missing a hit
+				targetedUnit.hurt( settings.hitDamage, gameLogics );
+			}
 		}
 
 
 		/**
 		 * Check if a unit is close enough to engage in a fight with it
 		 */
-		protected function isTargetEnemyCloseEnoughToHit():Boolean
+		final protected function isTargetetUnitCloseEnoughToEngage():Boolean
 		{
-			if ( isTargeting() )
+			if ( isTargetingUnit() )
 			{
-				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, this.getRadius() + targetedUnit.getRadius() + attackingRange );
+				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, this.getRadius() + targetedUnit.getRadius() + settings.attackingRange );
 			}
 
 			return false;
 		}
 
 
-		protected function isTargetedUnitCloseEnoughtToTarget():Boolean
+		final protected function isTargetedUnitStillWithinTargetRange():Boolean
 		{
-			if ( isTargeting() )
+			if ( isTargetingUnit() )
 			{
-				return StrictMath.isCloseEnough( this.x, this.y, targetedUnit.x, targetedUnit.y, this.getRadius() + targetedUnit.getRadius() + targetingRange );
+				return StrictMath.isCloseEnough( this.deployFlagX, this.deployFlagY, targetedUnit.x, targetedUnit.y, this.getRadius() + targetedUnit.getRadius() + settings.targetingRange );
 			}
 
-			return true;
+			return false;
 		}
 
 
 		/**
 		 * Calculate if the targeted unit is behind this unit on the path
 		 */
-		protected function isUnitBehindOnPath( other:UnitBase ):Boolean
+		final protected function isUnitBehindOnPath( other:UnitBase ):Boolean
 		{
 			if ( !currentCheckpoint )
 			{
@@ -258,23 +244,23 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Search for enemy units that are close and target them if they are close enough
 		 */
-		protected function searchForNearbyEnemiesAndTargetIfPossible( gameLogics:GameLogics ):void
+		final protected function tagetAnyNearbyTargetableUnit( gameLogics:GameLogics ):void
 		{
 
-			var targetUnit:UnitBase = gameLogics.getEnemyUnitCloseEnough( this, targetingRange );
+			var targetUnit:UnitBase = gameLogics.getEnemyUnitCloseEnough( this, settings.targetingRange );
 
 			if ( targetUnit )
 			{
 				if ( !isUnitBehindOnPath( targetUnit ) )
 				{
-					this.startTargetUnit( targetUnit );
+					this.startTargetUnit( targetUnit, gameLogics );
 				}
 
 			}
 		}
 
 
-		protected function calculateAndSetVelocityTowardsTargetedUnit():void
+		final protected function setVelocityTowardsTargetedUnit():void
 		{
 
 			// get the koifficient squared 
@@ -285,22 +271,21 @@ package com.potmo.tdm.visuals.units
 			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
 
 			// normalize the direction and multiply by speed 
-			velx = ( dirx / dist ) * walkingSpeed;
-			vely = ( diry / dist ) * walkingSpeed;
+			velx = ( dirx / dist ) * settings.movingSpeed;
+			vely = ( diry / dist ) * settings.movingSpeed;
 		}
 
 
-		override public function die( gameLogics:GameLogics ):void
+		final override protected function die( gameLogics:GameLogics ):void
 		{
-			//TODO: I guess we need a little animation when the unit dies
 			if ( targetedUnit )
 			{
-				this.stopTargetUnit();
+				this.stopTargetingUnit();
 			}
 
 			for ( var i:int = targetedByUnits.length - 1; i >= 0; i-- )
 			{
-				targetedByUnits[ i ].stopTargetUnit();
+				targetedByUnits[ i ].stopTargetingUnit();
 			}
 
 			super.die( gameLogics );
@@ -310,7 +295,7 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Checks if this unit is targeting another unit
 		 */
-		public function isTargeting():Boolean
+		final public function isTargetingUnit():Boolean
 		{
 			return targetedUnit != null;
 		}
@@ -319,11 +304,11 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Make this unit target another unit. If this unit is already targeting another unit it will stop with that first
 		 */
-		public function startTargetUnit( unit:UnitBase ):void
+		final public function startTargetUnit( unit:UnitBase, gameLogics:GameLogics ):void
 		{
 			if ( targetedUnit )
 			{
-				stopTargetUnit();
+				stopTargetingUnit();
 			}
 
 			targetedUnit = unit;
@@ -336,11 +321,11 @@ package com.potmo.tdm.visuals.units
 
 			if ( state == UnitState.GUARDING || state == UnitState.DEPLOYING )
 			{
-				changeState( UnitState.ENGAGING_DEFEND );
+				setState( UnitState.APPROACH_DEFEND, gameLogics );
 			}
 			else if ( state == UnitState.CHARGING )
 			{
-				changeState( UnitState.ENGAGING_ATTACK );
+				setState( UnitState.APPROACH_ATTACK, gameLogics );
 			}
 
 		}
@@ -350,7 +335,7 @@ package com.potmo.tdm.visuals.units
 		 * Make this unit stop targeting its taget unit.
 		 * If it's not targeting any unit this function has no effect.
 		 */
-		public function stopTargetUnit():void
+		final public function stopTargetingUnit():void
 		{
 			if ( !targetedUnit )
 			{
@@ -359,6 +344,13 @@ package com.potmo.tdm.visuals.units
 
 			targetedUnit.stopBeingTargetedByUnit( this );
 			targetedUnit = null;
+		}
+
+
+		////// TRIGGERS TO UNIT IMPLEMENTATION ///////
+		protected function onEngageTargetUnit( gameLogics:GameLogics ):void
+		{
+			// override
 		}
 
 	}

@@ -128,7 +128,7 @@ package com.potmo.tdm
 		{
 
 			var owner:Player = building.getOwningPlayer();
-			var newBuilding:BuildingBase = buildingFactory.createBuilding( type, owner );
+			var newBuilding:BuildingBase = buildingFactory.getBuilding( type, owner );
 
 			var index:int = buildings.indexOf( building );
 
@@ -150,7 +150,9 @@ package com.potmo.tdm
 
 			var closestPointOnPath:Point = map.getPointOnPathClosestToPoint( newBuilding.x, newBuilding.y );
 
-			newBuilding.setDeployFlag( closestPointOnPath.x, closestPointOnPath.y );
+			newBuilding.setDeployFlag( closestPointOnPath.x, closestPointOnPath.y, this );
+
+			buildingFactory.returnBuilding( building );
 
 			return newBuilding;
 		}
@@ -161,15 +163,16 @@ package com.potmo.tdm
 			var currentType:BuildingType = building.getType();
 			var upgradeType:BuildingType = BuildingType.getUpgrade( currentType );
 
+			//TODO: Upgrade all the units as well when updgrading building
 			swapBuildingType( building, upgradeType );
-			//TODO: Upgrade all the units as well
+
 		}
 
 
 		public function demolishBuilding( building:BuildingBase ):void
 		{
 			// make all the units attack first
-			building.chargeWithAllUnits( this );
+			building.killAllUnits( this );
 
 			// swap the building to a contruction site again
 			swapBuildingType( building, BuildingType.CONSTRUCTION_SITE );
@@ -182,7 +185,7 @@ package com.potmo.tdm
 			var unit:UnitBase = unitFactory.getUnit( type, owner );
 
 			units.push( unit );
-			building.deployUnit( unit );
+			building.deployUnit( unit, this );
 			gameView.addUnit( unit );
 
 			return unit;
@@ -194,7 +197,7 @@ package com.potmo.tdm
 			var index:int = units.indexOf( unit );
 			units.splice( index, 1 );
 			gameView.removeUnit( unit );
-			unitFactory.returnUnit( unit );
+			unitFactory.returnUnit( unit, this );
 		}
 
 
@@ -209,7 +212,7 @@ package com.potmo.tdm
 
 			for each ( spot in buildingSpots )
 			{
-				building = buildingFactory.createBuilding( BuildingType.CONSTRUCTION_SITE, playerRed );
+				building = buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerRed );
 				building.x = spot.x;
 				building.y = spot.y;
 				buildings.push( building );
@@ -220,7 +223,7 @@ package com.potmo.tdm
 
 			for each ( spot in buildingSpots )
 			{
-				building = buildingFactory.createBuilding( BuildingType.CONSTRUCTION_SITE, playerBlue );
+				building = buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerBlue );
 				building.x = spot.x;
 				building.y = spot.y;
 				buildings.push( building );
@@ -256,7 +259,7 @@ package com.potmo.tdm
 
 		public function setDeployFlag( x:int, y:int, building:BuildingBase ):void
 		{
-			building.setDeployFlag( x, y );
+			building.setDeployFlag( x, y, this );
 		}
 
 

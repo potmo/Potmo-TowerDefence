@@ -9,7 +9,7 @@ package com.potmo.tdm.visuals.buildings
 
 	public class BuildingBase extends TextureAnimation
 	{
-		protected static const MAX_UNITS:uint = 3;
+		protected static const MAX_UNITS:uint = 30;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;
@@ -65,18 +65,18 @@ package com.potmo.tdm.visuals.buildings
 		}
 
 
-		public function deployUnit( unit:UnitBase ):void
+		public function deployUnit( unit:UnitBase, gameLogics:GameLogics ):void
 		{
 			units.push( unit );
 			unit.x = this.x;
 			unit.y = this.y + 50;
 			//TODO: Set deploy area from variables
-			unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( units.length - 1 ), _deployFlagY + getPathOffsetYForNthUnit( units.length - 1 ) );
+			unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( units.length - 1 ), _deployFlagY + getPathOffsetYForNthUnit( units.length - 1 ), gameLogics );
 			unit.setHomeBuilding( this );
 		}
 
 
-		public function setDeployFlag( x:int, y:int ):void
+		public function setDeployFlag( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			_deployFlagX = x;
 			_deployFlagY = y;
@@ -85,7 +85,7 @@ package com.potmo.tdm.visuals.buildings
 			for each ( var unit:UnitBase in units )
 			{
 				//unit.setDeployFlag( _deployFlagX + unitDeployOffset[ 0 ][ i ], _deployFlagY + unitDeployOffset[ 1 ][ i ] );
-				unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( i ), _deployFlagY + getPathOffsetYForNthUnit( i ) );
+				unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( i ), _deployFlagY + getPathOffsetYForNthUnit( i ), gameLogics );
 				i++;
 			}
 		}
@@ -115,7 +115,7 @@ package com.potmo.tdm.visuals.buildings
 
 			for each ( var unit:UnitBase in units )
 			{
-				unit.chargeTowardsEnemy();
+				unit.startWalkPath( gameLogics );
 				unit.setPathOffset( getPathOffsetXForNthUnit( i ), getPathOffsetYForNthUnit( i ) );
 				unit.setHomeBuilding( null );
 				i++;
@@ -123,6 +123,20 @@ package com.potmo.tdm.visuals.buildings
 
 			// clear units
 			units.splice( 0, units.length );
+		}
+
+
+		public function killAllUnits( gameLogics:GameLogics ):void
+		{
+			var i:int = 0;
+
+			for each ( var unit:UnitBase in units )
+			{
+				unit.kill( gameLogics );
+				i++;
+			}
+
+			// units will be removed from units when they die
 		}
 
 

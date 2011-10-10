@@ -35,20 +35,29 @@ package com.potmo.tdm.visuals.starling
 		 */
 		public function setFrameFromName( name:String ):void
 		{
-			currentFrame = getFrameFromName( name );
+			var newFrame:int = getFrameFromName( name );
+
+			if ( newFrame == -1 )
+			{
+				throw new Error( "No frame called " + name );
+			}
+
+			currentFrame = newFrame;
 		}
 
 
 		/**
 		 * Goes to the next frame. If loop is true (default) it will loop if the end is reached
+		 * @returns the name if the current frame if any otherwise null
 		 */
-		public function nextFrame():void
+		public function nextFrame():String
 		{
 
 			// check if it is a label decorator to loop
 			var frameName:String = getNameOfFrame( currentFrame );
+			var newFrame:int;
 
-			if ( frameName != "" )
+			if ( frameName )
 			{
 				// split the name 
 				// LOOP_NAME means loop on the frame
@@ -67,25 +76,59 @@ package com.potmo.tdm.visuals.starling
 						// join the rest so we get the underscore but without the first one
 						var rest:String = parts.join( "_" );
 
-						var newFrame:int = getFrameFromName( rest );
+						var jumpToFrame:int = getFrameFromName( rest );
 
-						if ( newFrame != -1 )
+						if ( jumpToFrame != -1 )
 						{
-							currentFrame = newFrame;
-							return;
+							newFrame = jumpToFrame;
+						}
+						else
+						{
+							throw Error( "There are no frame called " + rest + " to loop back to" );
 						}
 					}
 					else if ( instruction == "LOOP" )
 					{
-						return;
+						newFrame = currentFrame;
 					}
-
+					else
+					{
+						newFrame = currentFrame + 1;
+					}
 				}
-
+				else
+				{
+					newFrame = currentFrame + 1;
+				}
+			}
+			else
+			{
+				newFrame = currentFrame + 1;
 			}
 
-			// just step ahead
-			currentFrame++;
+			// regular loop when hitting last frame
+			if ( newFrame >= graphicsCache.numFrames )
+			{
+				if ( loop )
+				{
+					newFrame = 0;
+				}
+				else
+				{
+					newFrame = currentFrame;
+				}
+			}
+
+			if ( newFrame != currentFrame )
+			{
+				currentFrame = newFrame;
+				return getNameOfFrame( currentFrame );
+			}
+			else
+			{
+				return null;
+			}
+
 		}
 
 
@@ -95,6 +138,7 @@ package com.potmo.tdm.visuals.starling
 		 */
 		public function getFrameFromName( name:String ):int
 		{
+			//TODO: FrameNames should be stored in a map or something so we dont have to traverse the list
 			for each ( var frameLabel:FrameLabel in graphicsCache.frameLabels )
 			{
 				if ( frameLabel.name == name )
@@ -110,10 +154,11 @@ package com.potmo.tdm.visuals.starling
 
 		/**
 		 * Gets the first found name of a frame
-		 * @returns the name if found and empty string otherwise
+		 * @returns the name if found null otherwise
 		 */
 		public function getNameOfFrame( frame:uint ):String
 		{
+			//TODO: This should be a map lookup instead
 			for each ( var label:FrameLabel in graphicsCache.frameLabels )
 			{
 				// remember the flash indexes from 1 but I do from 0
@@ -123,7 +168,7 @@ package com.potmo.tdm.visuals.starling
 				}
 			}
 
-			return "";
+			return null;
 		}
 
 	}

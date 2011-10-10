@@ -1,5 +1,6 @@
 package com.potmo.tdm.visuals.units
 {
+	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
 
 	public final class UnitFactory
@@ -39,9 +40,9 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		public function returnUnit( unit:UnitBase ):void
+		public function returnUnit( unit:UnitBase, gameLogics:GameLogics ):void
 		{
-			unit.reset();
+			unit.reset( gameLogics );
 			getPool( unit.getType() ).push( unit );
 		}
 

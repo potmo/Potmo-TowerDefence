@@ -6,6 +6,7 @@ package com.potmo.tdm.visuals.units
 	import com.potmo.tdm.visuals.maps.PathCheckpoint;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.tdm.visuals.units.settings.IUnitSetting;
 	import com.potmo.util.math.StrictMath;
 
 	import starling.display.DisplayObjectContainer;
@@ -21,18 +22,9 @@ package com.potmo.tdm.visuals.units
 
 		protected var targetedByUnits:Vector.<FightingUnitBase> = new Vector.<FightingUnitBase>();
 
-		//TODO: Make all the protected fields be getter functions to be implemeted by UnitImlementation
-		protected var walkingSpeed:Number = 3; // set to other in subclass if you like
-		protected var radius:Number = 10;
-		protected var maxHealth:int = 15;
-
-		protected var healDelay:int = 15;
+		protected var settings:IUnitSetting;
 
 		private var _currentCheckpoint:PathCheckpoint = null; // when null it will look for the closest checkpoint on walk()
-
-		private var _health:int = maxHealth;
-
-		private var _framesToNextHeal:int = healDelay;
 
 		private var _x:Number = 0;
 		private var _y:Number = 0;
@@ -49,6 +41,8 @@ package com.potmo.tdm.visuals.units
 		private var _mainGraphics:TextureAnimation;
 		private var _healthBarBackground:Quad;
 		private var _healthBar:Quad;
+		private var _health:int;
+		private var _framesToNextHeal:int;
 
 		private var _homeBuilding:BuildingBase;
 
@@ -56,8 +50,13 @@ package com.potmo.tdm.visuals.units
 		private static const HEALTH_BAR_WIDTH:int = 20;
 
 
-		public function UnitBase( graphics:TextureAnimationCacheObject )
+		public function UnitBase( graphics:TextureAnimationCacheObject, settings:IUnitSetting )
 		{
+			this.settings = settings;
+
+			_health = settings.maxHealth;
+			_framesToNextHeal = settings.healDelay;
+
 			_mainGraphics = new TextureAnimation( graphics );
 			this.addChild( _mainGraphics );
 
@@ -73,9 +72,9 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		public function reset():void
+		public function reset( gameLogics:GameLogics ):void
 		{
-			changeState( UnitState.NONE );
+			setState( UnitState.NONE, gameLogics );
 
 			targetedByUnits.splice( 0, targetedByUnits.length );
 
@@ -89,12 +88,12 @@ package com.potmo.tdm.visuals.units
 			_y = 0;
 			_pathOffsetX = 0;
 			_pathOffsetY = 0;
-			setHealth( maxHealth );
+			setHealth( settings.maxHealth );
 			_homeBuilding = null;
 		}
 
 
-		public function setOwningPlayer( owningPlayer:Player ):void
+		final public function setOwningPlayer( owningPlayer:Player ):void
 		{
 			this._owningPlayer = owningPlayer;
 
@@ -104,13 +103,13 @@ package com.potmo.tdm.visuals.units
 			}
 			else
 			{
-				this._mainGraphics.color = 0xFF0000FF;
+				this._mainGraphics.color = 0xFF00FF00;
 			}
 
 		}
 
 
-		public function getOwningPlayer():Player
+		final public function getOwningPlayer():Player
 		{
 			return _owningPlayer;
 		}
@@ -120,7 +119,7 @@ package com.potmo.tdm.visuals.units
 		 * Return the current checkpoint that the unit is aiming for.
 		 * @return null if current checkpoint is not known else the checkpoint
 		 */
-		public function getCurrentCheckpoint():PathCheckpoint
+		final public function getCurrentCheckpoint():PathCheckpoint
 		{
 			return _currentCheckpoint;
 		}
@@ -133,25 +132,29 @@ package com.potmo.tdm.visuals.units
 			{
 				case ( UnitState.NONE ):
 				{
-					calculateAndSetVelocityTowardsDeployArea();
-					changeState( UnitState.DEPLOYING );
+					moveToDeployArea( gameLogics );
 					break;
 				}
 
 			}
 
-			_mainGraphics.nextFrame();
+			var frameName:String = _mainGraphics.nextFrame();
+
+			if ( frameName )
+			{
+				onEnterNamedFrame( frameName, gameLogics );
+			}
 		}
 
 
-		protected function onIdleUnit():void
+		final protected function handleIdlingUnit( gameLogics:GameLogics ):void
 		{
 			_framesToNextHeal--;
 
 			if ( _framesToNextHeal <= 0 )
 			{
-				this.heal();
-				_framesToNextHeal = healDelay;
+				onHeal( 1, gameLogics );
+				_framesToNextHeal = settings.healDelay;
 			}
 		}
 
@@ -160,17 +163,76 @@ package com.potmo.tdm.visuals.units
 		 * Walk towards the next checkpoint.
 		 * If there are no checkpoint this function will get one
 		 */
-		protected function walkToNextCheckpoint( gameLogics:GameLogics ):void
+		final protected function moveToNextCheckpoint( gameLogics:GameLogics ):void
 		{
+
+			setState( UnitState.CHARGING, gameLogics );
 
 			if ( !_currentCheckpoint )
 			{
 				updateCheckpoint( gameLogics );
 			}
 
-			walk();
+		}
 
-			if ( StrictMath.isCloseEnough( this.x, this.y, _currentCheckpoint.x + _pathOffsetX, _currentCheckpoint.y + _pathOffsetY, walkingSpeed ) )
+
+		final protected function moveToDeployArea( gameLogics:GameLogics ):void
+		{
+
+			setState( UnitState.DEPLOYING, gameLogics );
+
+			// get the koifficient
+			var dirx:Number = _deployFlagX - this.x;
+			var diry:Number = _deployFlagY - this.y;
+
+			// get the real distance distance
+			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
+
+			// normalize the direction and multiply by speed
+			_velx = ( dirx / dist ) * settings.movingSpeed;
+			_vely = ( diry / dist ) * settings.movingSpeed;
+
+		}
+
+
+		/**
+		 * Move the unit along its velocity
+		 */
+		final protected function move( gameLogics:GameLogics ):void
+		{
+			//TODO: Units should try to keep away from eachother so they don't overlap
+			// move
+			this.x += _velx;
+			this.y += _vely;
+
+			switch ( state )
+			{
+				case ( UnitState.CHARGING ):
+				{
+					checkIfUnitReachedAndShouldUpdateCheckpoint( gameLogics );
+					break;
+				}
+				case ( UnitState.DEPLOYING ):
+				{
+					checkIfUnitReachedDeployArea( gameLogics );
+					break;
+				}
+			}
+		}
+
+
+		final private function checkIfUnitReachedDeployArea( gameLogics:GameLogics ):void
+		{
+			if ( StrictMath.isCloseEnough( this.x, this.y, _deployFlagX, _deployFlagY, 5 ) )
+			{
+				setState( UnitState.GUARDING, gameLogics );
+			}
+		}
+
+
+		final private function checkIfUnitReachedAndShouldUpdateCheckpoint( gameLogics:GameLogics ):void
+		{
+			if ( StrictMath.isCloseEnough( this.x, this.y, _currentCheckpoint.x + _pathOffsetX, _currentCheckpoint.y + _pathOffsetY, settings.movingSpeed ) )
 			{
 				updateCheckpoint( gameLogics );
 			}
@@ -178,21 +240,15 @@ package com.potmo.tdm.visuals.units
 
 
 		/**
-		 * Move the unit along its velocity
-		 */
-		protected function walk():void
-		{
-			// move
-			this.x += _velx;
-			this.y += _vely;
-		}
-
-
-		/**
 		 * Calculate the velocity to be used to move to the next checkpoint
 		 */
-		protected function calculateAndSetVelocityTowardsCurrentCheckpoint():void
+		final private function setVelocityTowardsCurrentCheckpoint():void
 		{
+			if ( !currentCheckpoint )
+			{
+				return;
+			}
+
 			// get the koifficient squared 
 			var dirx:Number = ( _currentCheckpoint.x + _pathOffsetX ) - this.x;
 			var diry:Number = ( _currentCheckpoint.y + _pathOffsetY ) - this.y;
@@ -201,22 +257,21 @@ package com.potmo.tdm.visuals.units
 			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
 
 			// normalize the direction and multiply by speed 
-			_velx = ( dirx / dist ) * walkingSpeed;
-			_vely = ( diry / dist ) * walkingSpeed;
+			_velx = ( dirx / dist ) * settings.movingSpeed;
+			_vely = ( diry / dist ) * settings.movingSpeed;
 		}
 
 
-		protected function forceFindNewCheckpoint( gameLogics:GameLogics ):void
+		final protected function forgetCurrentCheckpoint( gameLogics:GameLogics ):void
 		{
 			_currentCheckpoint = null;
-			updateCheckpoint( gameLogics );
 		}
 
 
 		/**
 		 * Update and get the next checkpoint
 		 */
-		protected function updateCheckpoint( gameLogics:GameLogics ):void
+		final protected function updateCheckpoint( gameLogics:GameLogics ):void
 		{
 			var newCheckpoint:PathCheckpoint = gameLogics.getNextCheckpointForUnit( this );
 
@@ -230,62 +285,52 @@ package com.potmo.tdm.visuals.units
 			else
 			{
 				_currentCheckpoint = newCheckpoint;
-				calculateAndSetVelocityTowardsCurrentCheckpoint();
+				setVelocityTowardsCurrentCheckpoint();
 			}
 		}
 
 
-		public function setDeployFlag( x:int, y:int ):void
+		final public function setDeployFlag( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			this._deployFlagX = x;
 			this._deployFlagY = y;
 
 			if ( _state == UnitState.DEPLOYING || _state == UnitState.GUARDING || _state == UnitState.NONE )
 			{
-				calculateAndSetVelocityTowardsDeployArea();
-				changeState( UnitState.DEPLOYING );
+				moveToDeployArea( gameLogics );
 			}
 		}
 
 
-		protected function walkToDeployArea():void
+		final protected function setState( state:UnitState, gameLogics:GameLogics ):void
 		{
-			// move
-			this.x += _velx;
-			this.y += _vely;
-
-			if ( StrictMath.isCloseEnough( this.x, this.y, _deployFlagX, _deployFlagY, 5 ) )
+			if ( _state != state )
 			{
-				changeState( UnitState.GUARDING );
+				_state = state;
+				onStateSet( state, gameLogics );
 			}
 		}
 
 
-		protected function changeState( state:UnitState ):void
-		{
-			_state = state;
-		}
-
-
-		protected function getState():UnitState
+		final protected function getState():UnitState
 		{
 			return _state;
 		}
 
 
-		protected function setHealth( value:int ):void
+		final protected function setHealth( value:int ):void
 		{
-			var newHealth:int = StrictMath.clamp( value, 0, maxHealth );
+			var newHealth:int = StrictMath.clamp( value, 0, settings.maxHealth );
 
 			if ( newHealth != _health )
 			{
 				_health = newHealth;
-				_healthBar.width = ( _health / maxHealth ) * ( HEALTH_BAR_WIDTH - 2 );
+				_healthBar.width = ( _health / settings.maxHealth ) * ( HEALTH_BAR_WIDTH - 2 );
 			}
 		}
 
 
-		protected function getHealth():int
+		final protected function getHealth():int
 		{
 			return _health;
 		}
@@ -294,27 +339,46 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Give the unit damage
 		 */
-		public function hurt( amount:int, gameLogics:GameLogics ):void
+		final public function hurt( amount:int, gameLogics:GameLogics ):void
 		{
+			if ( getHealth() <= 0 )
+			{
+				return;
+			}
+
 			setHealth( getHealth() - amount );
 
 			if ( getHealth() <= 0 )
 			{
-				die( gameLogics );
+				kill( gameLogics );
 			}
 		}
 
 
-		public function heal():void
+		final public function heal( maxAmount:int, gameLogics:GameLogics ):void
 		{
-			if ( _health != maxHealth )
+			if ( _health != settings.maxHealth )
 			{
-				setHealth( getHealth() + 1 );
+				setHealth( getHealth() + maxAmount );
 			}
+
 		}
 
 
-		public function die( gameLogics:GameLogics ):void
+		/**
+		 * Call this to kill a unit
+		 */
+		public function kill( gameLogics:GameLogics ):void
+		{
+			setState( UnitState.WALKING_DEAD, gameLogics );
+			onDie( gameLogics );
+		}
+
+
+		/**
+		 * This is the internal call to really kill the unit when its all over
+		 */
+		protected function die( gameLogics:GameLogics ):void
 		{
 
 			if ( _homeBuilding )
@@ -326,27 +390,12 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		protected function calculateAndSetVelocityTowardsDeployArea():void
-		{
-			// get the koifficient
-			var dirx:Number = _deployFlagX - this.x;
-			var diry:Number = _deployFlagY - this.y;
-
-			// get the real distance distance
-			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
-
-			// normalize the direction and multiply by speed
-			_velx = ( dirx / dist ) * walkingSpeed;
-			_vely = ( diry / dist ) * walkingSpeed;
-		}
-
-
-		public function chargeTowardsEnemy():void
+		final public function startWalkPath( gameLogics:GameLogics ):void
 		{
 			//TODO: Charge towards enemy should be called something like walk on path to other side
 			if ( state == UnitState.GUARDING || state == UnitState.DEPLOYING )
 			{
-				changeState( UnitState.CHARGING );
+				moveToNextCheckpoint( gameLogics );
 			}
 		}
 
@@ -354,7 +403,7 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Checks if this unit is already targeted by a unit
 		 */
-		public function isTargetedByAnyUnit():Boolean
+		final public function isTargetedByAnyUnit():Boolean
 		{
 			return targetedByUnits.length > 0;
 		}
@@ -363,7 +412,7 @@ package com.potmo.tdm.visuals.units
 		/**
 		 *Tell this unit that it is targeted by another unit
 		 */
-		public function startBeingTargetedByUnit( unit:UnitBase ):void
+		final public function startBeingTargetedByUnit( unit:UnitBase ):void
 		{
 			var index:int = targetedByUnits.indexOf( unit );
 
@@ -377,7 +426,7 @@ package com.potmo.tdm.visuals.units
 		/**
 		 * Tell this unit that another unit stopped targeting it
 		 */
-		public function stopBeingTargetedByUnit( unit:UnitBase ):void
+		final public function stopBeingTargetedByUnit( unit:UnitBase ):void
 		{
 			var index:int = targetedByUnits.indexOf( unit );
 
@@ -388,112 +437,87 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		protected function setFrameFromName( name:String ):void
+		final protected function setFrameFromName( name:String ):void
 		{
+
 			_mainGraphics.setFrameFromName( name );
 
 		}
 
 
-		protected function nextFrame():void
+		final protected function nextFrame():void
 		{
 			_mainGraphics.nextFrame();
 		}
 
 
-		public function getType():UnitType
+		final public function getType():UnitType
 		{
 			return _type;
 		}
 
 
-		public function setType( type:UnitType ):void
+		final public function setType( type:UnitType ):void
 		{
 			this._type = type;
 		}
 
 
-		override public function set x( value:Number ):void
-		{
-			this._x = value;
-			super.x = int( value );
-		}
-
-
-		override public function get x():Number
-		{
-			return _x;
-		}
-
-
-		override public function set y( value:Number ):void
-		{
-			this._y = value;
-			super.y = int( value );
-		}
-
-
-		override public function get y():Number
-		{
-			return _y;
-		}
-
-
-		protected function set velx( value:Number ):void
+		final protected function set velx( value:Number ):void
 		{
 			_velx = value;
 		}
 
 
-		protected function get velx():Number
+		final protected function get velx():Number
 		{
 			return _velx;
 		}
 
 
-		protected function set vely( value:Number ):void
+		final protected function set vely( value:Number ):void
 		{
 			_vely = value;
 		}
 
 
-		protected function get vely():Number
+		final protected function get vely():Number
 		{
 			return _vely;
 		}
 
 
-		protected function get deployFlagX():Number
+		final protected function get deployFlagX():Number
 		{
 			return _deployFlagX;
 		}
 
 
-		protected function get deployFlagY():Number
+		final protected function get deployFlagY():Number
 		{
 			return _deployFlagY;
 		}
 
 
-		protected function get currentCheckpoint():PathCheckpoint
+		final protected function get currentCheckpoint():PathCheckpoint
 		{
 			return _currentCheckpoint;
 		}
 
 
-		protected function get state():UnitState
+		final protected function get state():UnitState
 		{
 			return _state;
 		}
 
 
-		public function getRadius():Number
+		final public function getRadius():Number
 		{
-			return radius;
+			return settings.radius;
 		}
 
 
-		public function setPathOffset( x:int, y:int ):void
+		final public function setPathOffset( x:int, y:int ):void
 		{
 			return;
 			_pathOffsetX = x;
@@ -501,10 +525,36 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		public function setHomeBuilding( building:BuildingBase ):void
+		final public function setHomeBuilding( building:BuildingBase ):void
 		{
 			this._homeBuilding = building;
 
 		}
+
+
+		/////// TRIGGERS TO UNIT IMPLEMENTATION //////////
+		protected function onEnterNamedFrame( frameName:String, gameLogics:GameLogics ):void
+		{
+			// override
+		}
+
+
+		protected function onHeal( maxAmount:int, gameLogics:GameLogics ):void
+		{
+			heal( maxAmount, gameLogics );
+		}
+
+
+		protected function onStateSet( state:UnitState, gameLogics:GameLogics ):void
+		{
+			// override
+		}
+
+
+		protected function onDie( gameLogics:GameLogics ):void
+		{
+			die( gameLogics );
+		}
+
 	}
 }

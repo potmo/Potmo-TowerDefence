@@ -15,6 +15,7 @@ package com.potmo.tdm.visuals.starling
 		private var _offsetX:int;
 		private var _offsetY:int;
 		private var _frameLabels:Vector.<FrameLabel>;
+		private var _numFrames:int;
 
 
 		public function TextureAnimationCacheObject( clip:MovieClip )
@@ -30,6 +31,8 @@ package com.potmo.tdm.visuals.starling
 				_frames.push( Texture.fromBitmapData( bitFrame, false, false ) );
 			}
 
+			_numFrames = _frames.length;
+
 			var enclosingRect:Rectangle = BitmapUtil.getEnclosingRect( clip );
 			_offsetX = enclosingRect.x;
 			_offsetY = enclosingRect.y;
@@ -41,6 +44,12 @@ package com.potmo.tdm.visuals.starling
 		public function get frames():Vector.<Texture>
 		{
 			return _frames;
+		}
+
+
+		public function get numFrames():int
+		{
+			return _numFrames;
 		}
 
 
