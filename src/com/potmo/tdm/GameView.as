@@ -16,6 +16,7 @@ package com.potmo.tdm
 	import starling.display.Image;
 	import starling.display.Sprite;
 	import starling.textures.Texture;
+	import com.potmo.tdm.visuals.units.projectiles.Projectile;
 
 	/**
 	 * This is the gameview that will contain the map and all the units and so on
@@ -127,6 +128,13 @@ package com.potmo.tdm
 		}
 
 
+		public function removeUnit( unit:UnitBase ):void
+		{
+			inbetweenItems.removeChild( unit );
+
+		}
+
+
 		public function addBuilding( building:BuildingBase ):void
 		{
 			inbetweenItems.addChild( building );
@@ -141,10 +149,15 @@ package com.potmo.tdm
 		}
 
 
-		public function removeUnit( unit:UnitBase ):void
+		public function addProjectile( projectile:Projectile ):void
 		{
-			inbetweenItems.removeChild( unit );
+			inbetweenItems.addChild( projectile );
+		}
 
+
+		public function removeProjectile( projectile:Projectile ):void
+		{
+			inbetweenItems.removeChild( projectile );
 		}
 
 

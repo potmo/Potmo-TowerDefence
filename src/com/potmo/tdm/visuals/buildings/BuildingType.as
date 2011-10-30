@@ -4,24 +4,32 @@ package com.potmo.tdm.visuals.buildings
 	public class BuildingType
 	{
 
-		public static const CONSTRUCTION_SITE:BuildingType = new BuildingType( "CONSTRUCTION_SITE" );
+		public static const CONSTRUCTION_SITE:BuildingType = new BuildingType( "CONSTRUCTION_SITE", ConstructionSite );
 
 		// buildings making fotmen with sword and alike
-		public static const CAMP:BuildingType = new BuildingType( "CAMP" );
-		public static const KEEP:BuildingType = new BuildingType( "KEEP" );
-		public static const FORTRESS:BuildingType = new BuildingType( "FORTRESS" );
-		public static const CASTLE:BuildingType = new BuildingType( "CASTLE" );
-		public static const CITADELL:BuildingType = new BuildingType( "CITADELL" );
+		public static const CAMP:BuildingType = new BuildingType( "CAMP", Camp );
+		public static const KEEP:BuildingType = new BuildingType( "KEEP", null );
+		public static const FORTRESS:BuildingType = new BuildingType( "FORTRESS", null );
+		public static const CASTLE:BuildingType = new BuildingType( "CASTLE", null );
+		public static const CITADELL:BuildingType = new BuildingType( "CITADELL", null );
 
 		// Builings making archers with arrows and alike
-		public static const ARCHERY:BuildingType = new BuildingType( "ARCHERY" );
+		public static const ARCHERY:BuildingType = new BuildingType( "ARCHERY", Archery );
 
 		private var name:String;
+		private var clazz:Class;
 
 
-		public function BuildingType( name:String )
+		public function BuildingType( name:String, clazz:Class )
 		{
 			this.name = name;
+			this.clazz = clazz;
+		}
+
+
+		public function getClass():Class
+		{
+			return clazz;
 		}
 
 

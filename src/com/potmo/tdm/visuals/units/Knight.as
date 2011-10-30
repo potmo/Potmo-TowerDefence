@@ -16,7 +16,7 @@ package com.potmo.tdm.visuals.units
 
 		public function Knight()
 		{
-			super( ASSET, SETTINGS );
+			super( ASSET, UnitType.KNIGHT, SETTINGS );
 
 		}
 

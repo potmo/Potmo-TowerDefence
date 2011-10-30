@@ -11,30 +11,17 @@ package com.potmo.tdm.visuals.units
 
 		public function UnitFactory()
 		{
-			populatePool( knightPool, Knight, UnitType.KNIGHT, 10 );
-			populatePool( archerPool, Archer, UnitType.ARCHER, 10 );
+			populatePool( knightPool, UnitType.KNIGHT, 10 );
+			populatePool( archerPool, UnitType.ARCHER, 10 );
 		}
 
 
 		public function getUnit( type:UnitType, player:Player ):UnitBase
 		{
 			var unit:UnitBase;
-			var clazz:Class;
 			var pool:Vector.<UnitBase> = getPool( type );
 
-			switch ( type )
-			{
-				case UnitType.KNIGHT:
-					clazz = Knight;
-					break;
-				case UnitType.ARCHER:
-					clazz = Archer;
-					break;
-				default:
-					throw new Error( "Not possible to create unit of type: " + type );
-			}
-
-			unit = getUnitFromPool( pool, clazz, type );
+			unit = getUnitFromPool( pool, type );
 			unit.setOwningPlayer( player );
 			return unit;
 		}
@@ -61,24 +48,24 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		private function getUnitFromPool( pool:Vector.<UnitBase>, clazz:Class, type:UnitType ):UnitBase
+		private function getUnitFromPool( pool:Vector.<UnitBase>, type:UnitType ):UnitBase
 		{
 			if ( pool.length == 0 )
 			{
-				populatePool( pool, clazz, type, 5 );
+				populatePool( pool, type, 5 );
 			}
 			return pool.pop();
 		}
 
 
-		private function populatePool( pool:Vector.<UnitBase>, clazz:Class, type:UnitType, units:uint ):void
+		private function populatePool( pool:Vector.<UnitBase>, type:UnitType, units:uint ):void
 		{
 			var unit:UnitBase;
+			var clazz:Class = type.getClass();
 
 			while ( units > 0 )
 			{
 				unit = new clazz();
-				unit.setType( type );
 				pool.push( unit );
 				units--;
 			}

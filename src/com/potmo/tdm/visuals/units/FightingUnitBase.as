@@ -14,9 +14,9 @@ package com.potmo.tdm.visuals.units
 		private var _framesToNextHit:int;
 
 
-		public function FightingUnitBase( graphics:TextureAnimationCacheObject, settings:IUnitSetting )
+		public function FightingUnitBase( graphics:TextureAnimationCacheObject, type:UnitType, settings:IUnitSetting )
 		{
-			super( graphics, settings );
+			super( graphics, type, settings );
 			_framesToNextHit = settings.hitDelay;
 		}
 
@@ -179,8 +179,7 @@ package com.potmo.tdm.visuals.units
 		{
 			if ( isTargetingUnit() )
 			{
-				//TODO: There should be a chance of missing a hit
-				targetedUnit.hurt( settings.hitDamage, gameLogics );
+				targetedUnit.damage( settings.hitDamage, gameLogics );
 			}
 		}
 
@@ -271,8 +270,8 @@ package com.potmo.tdm.visuals.units
 			var dist:Number = StrictMath.sqrt( StrictMath.sqr( dirx ) + StrictMath.sqr( diry ) );
 
 			// normalize the direction and multiply by speed 
-			velx = ( dirx / dist ) * settings.movingSpeed;
-			vely = ( diry / dist ) * settings.movingSpeed;
+			setVelx( ( dirx / dist ) * settings.movingSpeed );
+			setVely( ( diry / dist ) * settings.movingSpeed );
 		}
 
 

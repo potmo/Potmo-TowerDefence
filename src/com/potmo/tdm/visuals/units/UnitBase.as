@@ -29,8 +29,8 @@ package com.potmo.tdm.visuals.units
 		private var _x:Number = 0;
 		private var _y:Number = 0;
 
-		private var _velx:Number;
-		private var _vely:Number;
+		private var _velx:Number = 0;
+		private var _vely:Number = 0;
 
 		private var _deployFlagX:int;
 		private var _deployFlagY:int;
@@ -50,9 +50,10 @@ package com.potmo.tdm.visuals.units
 		private static const HEALTH_BAR_WIDTH:int = 20;
 
 
-		public function UnitBase( graphics:TextureAnimationCacheObject, settings:IUnitSetting )
+		public function UnitBase( graphics:TextureAnimationCacheObject, type:UnitType, settings:IUnitSetting )
 		{
 			this.settings = settings;
+			this._type = type;
 
 			_health = settings.maxHealth;
 			_framesToNextHeal = settings.healDelay;
@@ -153,7 +154,7 @@ package com.potmo.tdm.visuals.units
 
 			if ( _framesToNextHeal <= 0 )
 			{
-				onHeal( 1, gameLogics );
+				aid( 1, gameLogics );
 				_framesToNextHeal = settings.healDelay;
 			}
 		}
@@ -225,7 +226,10 @@ package com.potmo.tdm.visuals.units
 		{
 			if ( StrictMath.isCloseEnough( this.x, this.y, _deployFlagX, _deployFlagY, 5 ) )
 			{
+				_velx = 0;
+				_vely = 0;
 				setState( UnitState.GUARDING, gameLogics );
+
 			}
 		}
 
@@ -336,11 +340,9 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		/**
-		 * Give the unit damage
-		 */
-		final public function hurt( amount:int, gameLogics:GameLogics ):void
+		public function damage( amount:int, gameLogics:GameLogics ):void
 		{
+
 			if ( getHealth() <= 0 )
 			{
 				return;
@@ -355,13 +357,30 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		final public function heal( maxAmount:int, gameLogics:GameLogics ):void
+		/**
+		 * Give the unit damage
+		 */
+		final protected function hurt( amount:int, gameLogics:GameLogics ):void
+		{
+			onHurt( amount, gameLogics );
+		}
+
+
+		public final function aid( maxAmount:int, gameLogics:GameLogics ):void
+		{
+			onHeal( maxAmount, gameLogics )
+		}
+
+
+		/**
+		 * Really damage a unit
+		 */
+		final protected function heal( maxAmount:int, gameLogics:GameLogics ):void
 		{
 			if ( _health != settings.maxHealth )
 			{
 				setHealth( getHealth() + maxAmount );
 			}
-
 		}
 
 
@@ -451,37 +470,25 @@ package com.potmo.tdm.visuals.units
 		}
 
 
-		final public function getType():UnitType
-		{
-			return _type;
-		}
-
-
-		final public function setType( type:UnitType ):void
-		{
-			this._type = type;
-		}
-
-
-		final protected function set velx( value:Number ):void
+		final protected function setVelx( value:Number ):void
 		{
 			_velx = value;
 		}
 
 
-		final protected function get velx():Number
+		final public function getVelx():Number
 		{
 			return _velx;
 		}
 
 
-		final protected function set vely( value:Number ):void
+		final protected function setVely( value:Number ):void
 		{
 			_vely = value;
 		}
 
 
-		final protected function get vely():Number
+		final public function getVely():Number
 		{
 			return _vely;
 		}
@@ -532,6 +539,12 @@ package com.potmo.tdm.visuals.units
 		}
 
 
+		final public function getType():UnitType
+		{
+			return _type;
+		}
+
+
 		/////// TRIGGERS TO UNIT IMPLEMENTATION //////////
 		protected function onEnterNamedFrame( frameName:String, gameLogics:GameLogics ):void
 		{
@@ -554,6 +567,12 @@ package com.potmo.tdm.visuals.units
 		protected function onDie( gameLogics:GameLogics ):void
 		{
 			die( gameLogics );
+		}
+
+
+		protected function onHurt( hitDamage:int, gameLogics:GameLogics ):void
+		{
+			hurt( hitDamage, gameLogics );
 		}
 
 	}

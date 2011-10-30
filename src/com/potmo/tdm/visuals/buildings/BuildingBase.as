@@ -9,7 +9,7 @@ package com.potmo.tdm.visuals.buildings
 
 	public class BuildingBase extends TextureAnimation
 	{
-		protected static const MAX_UNITS:uint = 30;
+		protected static const MAX_UNITS:uint = 1;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;
@@ -70,7 +70,6 @@ package com.potmo.tdm.visuals.buildings
 			units.push( unit );
 			unit.x = this.x;
 			unit.y = this.y + 50;
-			//TODO: Set deploy area from variables
 			unit.setDeployFlag( _deployFlagX + getPathOffsetXForNthUnit( units.length - 1 ), _deployFlagY + getPathOffsetYForNthUnit( units.length - 1 ), gameLogics );
 			unit.setHomeBuilding( this );
 		}

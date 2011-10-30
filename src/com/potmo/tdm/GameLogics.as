@@ -9,11 +9,16 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.maps.DeployFlag;
 	import com.potmo.tdm.visuals.maps.MapBase;
+	import com.potmo.tdm.visuals.maps.MapItem;
 	import com.potmo.tdm.visuals.maps.MapZero;
+	import com.potmo.tdm.visuals.maps.Marker;
 	import com.potmo.tdm.visuals.maps.PathCheckpoint;
 	import com.potmo.tdm.visuals.units.UnitBase;
 	import com.potmo.tdm.visuals.units.UnitFactory;
 	import com.potmo.tdm.visuals.units.UnitType;
+	import com.potmo.tdm.visuals.units.projectiles.Projectile;
+	import com.potmo.tdm.visuals.units.projectiles.ProjectileFactory;
+	import com.potmo.tdm.visuals.units.projectiles.ProjectileType;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
@@ -31,6 +36,8 @@ package com.potmo.tdm
 
 		private var units:Vector.<UnitBase> = new Vector.<UnitBase>();
 
+		private var projectiles:Vector.<Projectile> = new Vector.<Projectile>();
+
 		private var map:MapBase;
 		private var hud:HudBase;
 
@@ -39,6 +46,7 @@ package com.potmo.tdm
 
 		private var unitFactory:UnitFactory;
 		private var buildingFactory:BuildingFactory;
+		private var projectileFactory:ProjectileFactory;
 
 
 		public function GameLogics( view:GameView, orderManager:OrderManager )
@@ -57,6 +65,7 @@ package com.potmo.tdm
 
 			unitFactory = new UnitFactory();
 			buildingFactory = new BuildingFactory();
+			projectileFactory = new ProjectileFactory();
 
 			createDefaultConstructionSites();
 
@@ -67,10 +76,17 @@ package com.potmo.tdm
 		{
 			var unit:UnitBase;
 			var building:BuildingBase;
+			var projectile:Projectile;
 
 			for each ( building in buildings )
 			{
 				building.update( this );
+			}
+
+			for each ( projectile in projectiles )
+			{
+				projectile.update( this );
+
 			}
 
 			for each ( unit in units )
@@ -198,6 +214,20 @@ package com.potmo.tdm
 			units.splice( index, 1 );
 			gameView.removeUnit( unit );
 			unitFactory.returnUnit( unit, this );
+		}
+
+
+		public function shootProjectile( type:ProjectileType, fromX:int, fromY:int, toX:int, toY:int ):void
+		{
+			var projectile:Projectile = projectileFactory.getProjectile( type );
+			projectiles.push( projectile );
+			gameView.addProjectile( projectile );
+			projectile.launch( fromX, fromY, toX, toY );
+
+		/*var marker:MapItem = new Marker();
+		   marker.x = toX;
+		   marker.y = toY;
+		   gameView.addMapItem( marker );*/
 		}
 
 

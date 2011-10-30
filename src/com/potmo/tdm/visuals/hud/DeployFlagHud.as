@@ -49,6 +49,7 @@ package com.potmo.tdm.visuals.hud
 
 		override public function update():void
 		{
+			//TODO: Make the flag restrict to not be too far from building
 			if ( MouseManager.isDown )
 			{
 				if ( affirmButton.getBounds( this ).contains( MouseManager.pos.x, MouseManager.pos.y ) )
