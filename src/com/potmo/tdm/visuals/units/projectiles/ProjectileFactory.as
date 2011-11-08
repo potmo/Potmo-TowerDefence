@@ -52,7 +52,7 @@ package com.potmo.tdm.visuals.units.projectiles
 
 		public function returnProjectile( projectile:Projectile ):void
 		{
-			var pool:Vector.<Projectile> = getPool( projectile.type );
+			var pool:Vector.<Projectile> = getPool( projectile.getType() );
 			projectile.reset();
 			pool.push( projectile );
 

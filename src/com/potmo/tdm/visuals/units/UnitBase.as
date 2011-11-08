@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.units
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.tdm.visuals.units.settings.IUnitSetting;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import starling.display.DisplayObjectContainer;
@@ -277,14 +278,18 @@ package com.potmo.tdm.visuals.units
 		 */
 		final protected function updateCheckpoint( gameLogics:GameLogics ):void
 		{
+			Logger.log( "Unit " + this + " updating checkpoint" );
 			var newCheckpoint:PathCheckpoint = gameLogics.getNextCheckpointForUnit( this );
 
 			if ( _currentCheckpoint && newCheckpoint.id == _currentCheckpoint.id )
 			{
 				// okay we have reached goal. Do not move any more
-				//TODO: Take life from other player when units reach goal
+
 				_velx = 0;
 				_vely = 0;
+
+				//TODO: Take life from other player when units reach goal instead of killing the unit
+				this.kill( gameLogics );
 			}
 			else
 			{
@@ -312,6 +317,8 @@ package com.potmo.tdm.visuals.units
 			{
 				_state = state;
 				onStateSet( state, gameLogics );
+
+				Logger.log( "Unit " + this + " changing state to: " + state );
 			}
 		}
 
@@ -573,6 +580,12 @@ package com.potmo.tdm.visuals.units
 		protected function onHurt( hitDamage:int, gameLogics:GameLogics ):void
 		{
 			hurt( hitDamage, gameLogics );
+		}
+
+
+		public function toString():String
+		{
+			return "UnitBase[" + _type + "]"
 		}
 
 	}

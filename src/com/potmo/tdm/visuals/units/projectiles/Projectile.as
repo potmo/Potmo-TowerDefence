@@ -13,7 +13,7 @@ package com.potmo.tdm.visuals.units.projectiles
 
 	public class Projectile extends TextureAnimation
 	{
-		public var type:ProjectileType;
+		private var _type:ProjectileType;
 		private var _velX:Number;
 		private var _velY:Number;
 		private var _targetX:Number;
@@ -23,14 +23,17 @@ package com.potmo.tdm.visuals.units.projectiles
 		private var _trajectory:Vector.<Point>;
 		private var _trajectoryFrame:int;
 		private var _trajectoryFrames:int;
+		private var _reachedTarget:Boolean;
 
 		//TODO: Do not hardcode speed of projectile. Use setting
 		private static const SPEED:int = 40;
+		private static const HIT_RADIUS:int = 10;
+		private static const DAMAGE:int = 1;
 
 
 		public function Projectile( graphics:TextureAnimationCacheObject, type:ProjectileType )
 		{
-			this.type = type;
+			this._type = type;
 			super( graphics );
 		}
 
@@ -44,13 +47,15 @@ package com.potmo.tdm.visuals.units.projectiles
 		 */
 		public function launch( fromX:Number, fromY:Number, toX:Number, toY:Number ):void
 		{
-			Logger.log( "Launching: " + this + " from " + fromX + "," + fromY + " to " + toX + "," + toY );
+			//Logger.log( "Launching: " + this + " from " + fromX + "," + fromY + " to " + toX + "," + toY );
 			this.x = fromX;
 			this.y = fromY;
 			_targetX = toX;
 			_targetY = toY;
 
-			//TODO: Set speed from projectile type
+			_reachedTarget = false;
+
+			//TODO: Set speed, damage, hitradius from settings or projectile type 
 			_trajectory = getTrajectory( fromX, fromY, toX, toY, SPEED );
 			_trajectoryFrame = 0;
 			_trajectoryFrames = _trajectory.length;
@@ -145,11 +150,15 @@ package com.potmo.tdm.visuals.units.projectiles
 				this.y = trajectoryPos.y;
 
 			}
-			else
+			else if ( _trajectoryFrame == _trajectoryFrames - 1 )
 			{
 				this.x = _targetX;
 				this.y = _targetY;
-					//TODO: Projectile should hurt units in close enough range
+
+				gameLogics.projectileReachedTarget( this );
+
+				this._reachedTarget = true;
+
 			}
 
 		}
@@ -161,6 +170,42 @@ package com.potmo.tdm.visuals.units.projectiles
 			_velY = 0;
 
 			_trajectory = null;
+		}
+
+
+		public function getHitRadius():int
+		{
+			return HIT_RADIUS;
+		}
+
+
+		public function getTargetX():int
+		{
+			return _targetX;
+		}
+
+
+		public function getTargetY():int
+		{
+			return _targetY;
+		}
+
+
+		public function getDamage():int
+		{
+			return DAMAGE;
+		}
+
+
+		public function toString():String
+		{
+			return "Projectile[" + _type + "]";
+		}
+
+
+		public function getType():ProjectileType
+		{
+			return _type;
 		}
 	}
 }

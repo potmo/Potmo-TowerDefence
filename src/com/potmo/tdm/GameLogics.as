@@ -231,6 +231,35 @@ package com.potmo.tdm
 		}
 
 
+		public function projectileReachedTarget( projectile:Projectile ):void
+		{
+			var hitRadius:int = projectile.getHitRadius();
+			var hitX:int = projectile.getTargetX();
+			var hitY:int = projectile.getTargetY();
+			var damage:int = projectile.getDamage();
+
+			var unit:UnitBase = getClosestUnitToPointWithinRange( hitX, hitY, hitRadius );
+
+			if ( unit )
+			{
+				unit.damage( damage, this );
+				removeProjectile( projectile );
+			}
+
+			//TODO: Projectiles that miss should be stuck in the ground for a while
+
+		}
+
+
+		public function removeProjectile( projectile:Projectile ):void
+		{
+			var index:int = projectiles.indexOf( projectile );
+			projectiles.splice( index, 1 );
+			gameView.removeProjectile( projectile );
+			projectileFactory.returnProjectile( projectile );
+		}
+
+
 		private function createDefaultConstructionSites():void
 		{
 			var buildingSpots:Vector.<Point> = new Vector.<Point>();
@@ -313,6 +342,36 @@ package com.potmo.tdm
 
 
 		/**
+		 * Finds the unit that is closest to the point and within the range from the point
+		 * @returns the closest unit or null
+		 */
+		public function getClosestUnitToPointWithinRange( x:Number, y:Number, range:Number ):UnitBase
+		{
+			// sqraure
+			range *= range;
+
+			var dist:Number;
+			var closestUnitDist:Number = Number.MAX_VALUE;
+			var closestUnit:UnitBase;
+
+			for each ( var unit:UnitBase in units )
+			{
+				dist = StrictMath.distSquared( unit.x, unit.y, x, y );
+
+				if ( dist <= range )
+				{
+					if ( dist < closestUnitDist )
+					{
+						closestUnit = unit;
+					}
+				}
+			}
+
+			return closestUnit;
+		}
+
+
+		/**
 		 * Find units that is in range and that are in the other team
 		 * Return the closest
 		 * @returns the best unit to attack or null if none
@@ -329,7 +388,7 @@ package com.potmo.tdm
 			var bestTargetedDist:int = int.MAX_VALUE;
 			var bestUntargetedDist:int = int.MAX_VALUE;
 
-			var dist:int;
+			var dist:Number;
 
 			for each ( var other:UnitBase in units )
 			{
@@ -382,5 +441,6 @@ package com.potmo.tdm
 			}
 
 		}
+
 	}
 }

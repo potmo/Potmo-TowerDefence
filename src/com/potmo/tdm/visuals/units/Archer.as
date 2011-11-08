@@ -40,5 +40,6 @@ package com.potmo.tdm.visuals.units
 		{
 			super.update( gameLogics );
 		}
+
 	}
 }

@@ -11,13 +11,13 @@ package com.potmo.tdm.visuals.units.settings
 
 		public function get targetingRange():int
 		{
-			return 1000;
+			return 400;
 		}
 
 
 		public function get attackingRange():int
 		{
-			return 1000;
+			return this.targetingRange;
 		}
 
 

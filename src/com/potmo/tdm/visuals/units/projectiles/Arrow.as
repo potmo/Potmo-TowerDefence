@@ -12,5 +12,6 @@ package com.potmo.tdm.visuals.units.projectiles
 		{
 			super( ASSET, ProjectileType.ARROW );
 		}
+
 	}
 }

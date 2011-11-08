@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.maps
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.units.UnitBase;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.display.BitmapData;
@@ -160,6 +161,7 @@ package com.potmo.tdm.visuals.maps
 			// the next checkpoint and just wants to go to the closest
 			if ( !currentCheckpoint )
 			{
+				Logger.log( "Unit " + unit + " has no current checkpoint" );
 				return getNextCheckpointClosestAheadOfPointOnPathClosestToPoint( unit.x, unit.y, unit.getOwningPlayer() );
 			}
 
@@ -185,6 +187,23 @@ package com.potmo.tdm.visuals.maps
 
 		public function getClosestCheckpoint( unit:UnitBase ):PathCheckpoint
 		{
+			var checkpointDir:int = 0;
+			var firstCheckPointId:int = 0;
+			var lastCheckpointId:int = 0;
+
+			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
+			{
+				checkpointDir = +1;
+				firstCheckPointId = 0;
+				lastCheckpointId = checkpoints.length - 1;
+			}
+			else
+			{
+				checkpointDir = -1;
+				firstCheckPointId = checkpoints.length - 1;
+				lastCheckpointId = 0;
+			}
+
 			var checkpoint:PathCheckpoint;
 			var best:int;
 			var bestDist:Number = Number.MAX_VALUE;
@@ -192,7 +211,9 @@ package com.potmo.tdm.visuals.maps
 
 			var l:uint = checkpoints.length;
 
-			for ( var i:int = 0; i < l; i++ )
+			var i:int = firstCheckPointId;
+
+			while ( i != lastCheckpointId + checkpointDir )
 			{
 
 				checkpoint = checkpoints[ i ];
@@ -205,6 +226,8 @@ package com.potmo.tdm.visuals.maps
 					best = i;
 					bestDist = currDist;
 				}
+
+				i += checkpointDir;
 
 			}
 
@@ -282,16 +305,17 @@ package com.potmo.tdm.visuals.maps
 			var bestDist:Number = Number.MAX_VALUE;
 			var bestNextCheckpoint:PathCheckpoint;
 
-			for ( var i:int = start + dir; i != end; i += dir )
+			for ( var i:int = start + dir; i != end + dir; i += dir )
 			{
 				b = checkpoints[ i ];
 
 				// get the closest point on the line intersecting both checkpoints
 				t = StrictMath.getTOnLineClosestToPoint( x, y, a.x, a.y, b.x, b.y );
 
+				// make t be on the line
 				t = StrictMath.clamp( t, 0, 1 );
 
-				//check if its even on the line section
+				// calculate the closest point on the line
 				p.x = a.x + t * ( b.x - a.x );
 				p.y = a.y + t * ( b.y - a.y );
 				dSquared = StrictMath.sqr( p.x - x ) + StrictMath.sqr( p.y - y );
