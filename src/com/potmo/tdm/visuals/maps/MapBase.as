@@ -295,15 +295,15 @@ package com.potmo.tdm.visuals.maps
 				end = 0;
 			}
 
-			var a:PathCheckpoint = checkpoints[ start ];
-			var b:PathCheckpoint;
-
 			var c:int = checkpoints.length;
 			var t:Number;
 			var dSquared:Number;
 			var p:Point = new Point();
 			var bestDist:Number = Number.MAX_VALUE;
 			var bestNextCheckpoint:PathCheckpoint;
+
+			var a:PathCheckpoint = checkpoints[ start ];
+			var b:PathCheckpoint;
 
 			for ( var i:int = start + dir; i != end + dir; i += dir )
 			{
