@@ -1,9 +1,9 @@
 package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.OrderManager;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.asset.button.KeepButton_Asset;
-	import com.potmo.tdm.visuals.buildings.Camp;
+	import com.potmo.tdm.visuals.building.variant.Camp;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 

@@ -1,11 +1,11 @@
 package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.OrderManager;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.asset.button.AttackButton_Asset;
 	import com.potmo.tdm.asset.button.DemolishButton_Asset;
 	import com.potmo.tdm.asset.button.DeployFlag_Button;
-	import com.potmo.tdm.visuals.buildings.BuildingBase;
+	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 

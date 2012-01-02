@@ -4,6 +4,7 @@ package com.potmo.tdm
 
 	import starling.display.Sprite;
 	import starling.events.Event;
+	import com.potmo.tdm.player.OrderManager;
 
 	public class Main extends Sprite
 	{

@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.OrderManager;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.util.logger.Logger;

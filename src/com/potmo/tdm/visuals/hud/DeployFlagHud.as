@@ -2,11 +2,11 @@ package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
-	import com.potmo.tdm.OrderManager;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.asset.button.AffirmButton_Asset;
 	import com.potmo.tdm.asset.button.CancelButton_Asset;
-	import com.potmo.tdm.visuals.buildings.BuildingBase;
-	import com.potmo.tdm.visuals.maps.DeployFlag;
+	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.util.input.MouseManager;

@@ -1,11 +1,11 @@
 package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.OrderManager;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.asset.button.ArcheryButton_Asset;
 	import com.potmo.tdm.asset.button.CampButton_Asset;
-	import com.potmo.tdm.visuals.buildings.BuildingType;
-	import com.potmo.tdm.visuals.buildings.ConstructionSite;
+	import com.potmo.tdm.visuals.building.BuildingType;
+	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 

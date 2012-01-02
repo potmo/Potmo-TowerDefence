@@ -2,6 +2,7 @@ package com.potmo.tdm
 {
 	import com.potmo.tdm.connection.Connector;
 	import com.potmo.tdm.visuals.ScreenSize;
+	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.util.fpsCounter.FPSCounter;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;

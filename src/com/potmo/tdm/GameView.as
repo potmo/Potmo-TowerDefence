@@ -1,22 +1,21 @@
 package com.potmo.tdm
 {
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
-	import com.potmo.tdm.visuals.buildings.BuildingBase;
+	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.hud.HudBase;
-	import com.potmo.tdm.visuals.maps.MapBase;
-	import com.potmo.tdm.visuals.maps.MapItem;
+	import com.potmo.tdm.visuals.map.MapBase;
+	import com.potmo.tdm.visuals.map.MapItem;
 	import com.potmo.tdm.visuals.starling.SortingSprite;
-	import com.potmo.tdm.visuals.units.UnitBase;
+	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.projectile.Projectile;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
 
 	import flash.geom.Point;
 
 	import starling.display.DisplayObject;
-	import starling.display.Image;
 	import starling.display.Sprite;
-	import starling.textures.Texture;
-	import com.potmo.tdm.visuals.units.projectiles.Projectile;
 
 	/**
 	 * This is the gameview that will contain the map and all the units and so on
@@ -121,16 +120,16 @@ package com.potmo.tdm
 		}
 
 
-		public function addUnit( unit:UnitBase ):void
+		public function addUnit( unit:IUnit ):void
 		{
-			inbetweenItems.addChild( unit );
+			inbetweenItems.addChild( unit.getAsDisplayObject() );
 
 		}
 
 
-		public function removeUnit( unit:UnitBase ):void
+		public function removeUnit( unit:IUnit ):void
 		{
-			inbetweenItems.removeChild( unit );
+			inbetweenItems.removeChild( unit.getAsDisplayObject() );
 
 		}
 
