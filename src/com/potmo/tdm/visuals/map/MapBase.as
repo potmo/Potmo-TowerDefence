@@ -5,6 +5,7 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.map.force.Force;
 	import com.potmo.tdm.visuals.map.force.UnitCollisionForceCalculator;
+	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
@@ -25,6 +26,12 @@ package com.potmo.tdm.visuals.map
 
 		protected var checkpoints:Vector.<PathCheckpoint>;
 		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
+		protected var mapImageAnalyzer:MapImageAnalyzer;
+
+		protected var player1EndPoint:Point;
+		protected var player2EndPoint:Point;
+		protected var player0BuildingPositions:Vector.<Point>;
+		protected var player1BuildingPositions:Vector.<Point>;
 
 
 		public function MapBase( bitmap:BitmapData )
@@ -47,7 +54,13 @@ package com.potmo.tdm.visuals.map
 
 			unitCollisionForceCalculator = new UnitCollisionForceCalculator();
 
+			mapImageAnalyzer = new MapImageAnalyzer();
+
 			this.initialize();
+
+			this.setEndPoints();
+			this.setBuildingPositions();
+
 			this.setCheckpoints();
 			this.drawCheckPoints();
 
@@ -131,6 +144,18 @@ package com.potmo.tdm.visuals.map
 		}
 
 
+		protected function setEndPoints():void
+		{
+			throw new Error( "Override and set the endpoints" );
+		}
+
+
+		protected function setBuildingPositions():void
+		{
+			throw new Error( "Override and set the building positions" );
+		}
+
+
 		/**
 		 * Get the size of the map
 		 */
@@ -145,7 +170,7 @@ package com.potmo.tdm.visuals.map
 		 */
 		public function getPlayer0BuildingPositions():Vector.<Point>
 		{
-			throw new Error( "Override!" );
+			return player0BuildingPositions;
 		}
 
 
@@ -154,7 +179,7 @@ package com.potmo.tdm.visuals.map
 		 */
 		public function getPlayer1BuildingPositions():Vector.<Point>
 		{
-			throw new Error( "Override!" );
+			return player1BuildingPositions;
 		}
 
 

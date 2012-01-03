@@ -112,7 +112,7 @@ package com.potmo.tdm.visuals.unit
 				var unitY:Number = unit.getY();
 				maxDist = unit.getRadius() + radius;
 
-				if ( StrictMath.isCloseEnough( x, y, unitX, unitY, maxDist ) )
+				if ( StrictMath.isCloseEnough( x, y, unitX, unitY, maxDist, true ) )
 				{
 					output.push( unit );
 				}

@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.asset.map.MapZero_Asset;
 	import com.potmo.util.image.BitmapUtil;
 
+	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
@@ -14,11 +15,37 @@ package com.potmo.tdm.visuals.map
 
 		private static const graphics:Vector.<BitmapData> = BitmapUtil.rasterizeMovieClip( new MapZero_Asset() );
 
+		[Embed( source = "../assets/maps/map0-walkmap.png" )]
+		private static const WALKMAP_ASSET:Class;
+
 
 		public function MapZero()
 		{
 			super( graphics[ 0 ] );
 
+		}
+
+
+		override protected function setEndPoints():void
+		{
+			var walkMap:Bitmap = new WALKMAP_ASSET() as Bitmap;
+			var scale:Number = graphics[ 0 ].width / walkMap.width;
+
+			var endpoints:Vector.<Point> = mapImageAnalyzer.getEndPoints( walkMap.bitmapData, scale );
+			player1EndPoint = endpoints[ 0 ];
+			player2EndPoint = endpoints[ 1 ];
+
+		}
+
+
+		override protected function setBuildingPositions():void
+		{
+			var walkMap:Bitmap = new WALKMAP_ASSET() as Bitmap;
+			var scale:Number = graphics[ 0 ].width / walkMap.width;
+
+			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( walkMap.bitmapData, scale );
+			player0BuildingPositions = buildingPositions[ 0 ];
+			player1BuildingPositions = buildingPositions[ 1 ];
 		}
 
 
@@ -48,25 +75,24 @@ package com.potmo.tdm.visuals.map
 			checkpoints.push( new PathCheckpoint( 20, 3659, 188 ) );
 		}
 
+	/*public override function getPlayer0BuildingPositions():Vector.<Point>
+	   {
+	   var v:Vector.<Point> = new Vector.<Point>();
+	   v.push( new Point( 36, 273 ) );
+	   v.push( new Point( 505, 304 ) );
+	   return v;
+	   }
 
-		public override function getPlayer0BuildingPositions():Vector.<Point>
-		{
-			var v:Vector.<Point> = new Vector.<Point>();
-			v.push( new Point( 36, 273 ) );
-			v.push( new Point( 505, 304 ) );
-			return v;
-		}
 
+	   public override function getPlayer1BuildingPositions():Vector.<Point>
+	   {
+	   var v:Vector.<Point> = new Vector.<Point>();
+	   v.push( new Point( 3590, 336 ) );
+	   v.push( new Point( 3297, 238 ) );
 
-		public override function getPlayer1BuildingPositions():Vector.<Point>
-		{
-			var v:Vector.<Point> = new Vector.<Point>();
-			v.push( new Point( 3590, 336 ) );
-			v.push( new Point( 3297, 238 ) );
-
-			v.push( new Point( 805, 304 ) );
-			return v;
-		}
+	   v.push( new Point( 805, 304 ) );
+	   return v;
+	   }*/
 
 	}
 }

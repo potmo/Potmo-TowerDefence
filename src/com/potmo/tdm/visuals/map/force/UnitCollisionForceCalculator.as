@@ -54,9 +54,10 @@ package com.potmo.tdm.visuals.map.force
 				dx = unit.getX() - otherUnit.getX();
 				dy = unit.getY() - otherUnit.getY();
 
+				// if they are standing right on top of eachother then continue to the next
 				if ( dx == 0 && dy == 0 )
 				{
-					return new Force( 0, 0 );
+					continue;
 				}
 
 				combinedRadius = unit.getRadius() + otherUnit.getRadius();
@@ -68,13 +69,13 @@ package com.potmo.tdm.visuals.map.force
 				dx /= dist;
 				dy /= dist;
 
-				var magnitude:Number = -( 1.0 - dist / combinedRadius );
+				var magnitude:Number = ( 1.0 - dist / combinedRadius );
 				magnitude *= FORCE_SCALAR;
 				output.addComponents( dx * magnitude, dy * magnitude );
 			}
 
-			output.x = -output.x;
-			output.y = -output.y;
+			/*output.x = -output.x;
+			   output.y = -output.y;*/
 
 			return output;
 		}

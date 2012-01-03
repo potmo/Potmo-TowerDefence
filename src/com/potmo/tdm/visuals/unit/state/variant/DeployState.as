@@ -24,7 +24,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit = unit;
 
 			_unit.setX( deployX );
-			_unit.setVelY( deployY );
+			_unit.setY( deployY );
 
 			_unit.setFrameFromName( "WALK" );
 		}
