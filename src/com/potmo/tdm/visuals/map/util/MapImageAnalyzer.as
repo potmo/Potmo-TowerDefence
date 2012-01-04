@@ -1,5 +1,9 @@
+
 package com.potmo.tdm.visuals.map.util
 {
+	import com.potmo.tdm.visuals.map.forcemap.MapTileType;
+	import com.potmo.tdm.visuals.map.forcemap.TileMap;
+
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 
@@ -8,10 +12,46 @@ package com.potmo.tdm.visuals.map.util
 
 		private static const END_POINT_COLOR:uint = 0xFFFF0000;
 		private static const BUILDING_POSITION_COLOR:uint = 0xFFFF00FF;
+		private static const WALKABLE_COLOR_0:uint = 0xFF00FF00;
+		private static const WALKABLE_COLOR_1:uint = END_POINT_COLOR;
 
 
 		public function MapImageAnalyzer()
 		{
+		}
+
+
+		/**
+		 * Creates a map with walkable and non walkable tiles in depending on colors
+		 */
+		public function createMap( mapDataImage:BitmapData, tileWidth:int, tileHeight:int ):TileMap
+		{
+			var output:TileMap = new TileMap();
+
+			//start with a empty map
+			output.loadEmptyMap( mapDataImage.width, mapDataImage.height );
+
+			// go thru all the pixels to determine if the pixel/tile is walkable
+			for ( var x:int = 0; x < mapDataImage.width; x++ )
+			{
+				for ( var y:int = 0; y < mapDataImage.height; y++ )
+				{
+					var color:uint = mapDataImage.getPixel32( x, y );
+
+					// check if the tile is walkable and otherwise set it to unwalkable
+					if ( color != WALKABLE_COLOR_0 && color != WALKABLE_COLOR_1 )
+					{
+						output.setTypeAt( x, y, MapTileType.DEFAULT_UNWALKABLE_TILE );
+					}
+					else
+					{
+						continue;
+					}
+				}
+			}
+
+			return output;
+
 		}
 
 
@@ -25,7 +65,7 @@ package com.potmo.tdm.visuals.map.util
 		public function getEndPoints( referenceMapImage:BitmapData, mapScale:Number ):Vector.<Point>
 		{
 			var output:Vector.<Point> = getPlusShapePositionsScaled( referenceMapImage, mapScale, END_POINT_COLOR );
-			output.sort( leftToRightComparator );
+			output.sort( rightToLeftComparator );
 
 			if ( output.length != 2 )
 			{
@@ -66,6 +106,15 @@ package com.potmo.tdm.visuals.map.util
 		 * sort vector left to right
 		 **/
 		private function leftToRightComparator( a:Point, b:Point ):int
+		{
+			return a.x - b.x;
+		}
+
+
+		/**
+		 * sort vector right to left
+		 **/
+		private function rightToLeftComparator( a:Point, b:Point ):int
 		{
 			return b.x - a.x;
 		}
@@ -113,5 +162,6 @@ package com.potmo.tdm.visuals.map.util
 
 			return output;
 		}
+
 	}
 }

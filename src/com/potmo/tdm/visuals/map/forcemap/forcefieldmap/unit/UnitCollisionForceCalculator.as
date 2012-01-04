@@ -1,6 +1,7 @@
-package com.potmo.tdm.visuals.map.force
+package com.potmo.tdm.visuals.map.forcemap.forcefieldmap.unit
 {
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitManager;
 	import com.potmo.util.math.StrictMath;

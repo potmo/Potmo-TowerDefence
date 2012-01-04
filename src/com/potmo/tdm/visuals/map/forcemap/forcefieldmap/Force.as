@@ -1,4 +1,4 @@
-package com.potmo.tdm.visuals.map.force
+package com.potmo.tdm.visuals.map.forcemap.forcefieldmap
 {
 	import com.potmo.util.math.StrictMath;
 
@@ -121,5 +121,6 @@ package com.potmo.tdm.visuals.map.force
 			this.y -= y;
 			_lengthDirty = true;
 		}
+
 	}
 }

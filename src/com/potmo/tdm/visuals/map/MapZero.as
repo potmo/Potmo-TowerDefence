@@ -5,6 +5,8 @@ package com.potmo.tdm.visuals.map
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
+	import flash.geom.ColorTransform;
+	import flash.geom.Matrix;
 	import flash.geom.Point;
 
 	import starling.display.Image;
@@ -16,36 +18,22 @@ package com.potmo.tdm.visuals.map
 		private static const graphics:Vector.<BitmapData> = BitmapUtil.rasterizeMovieClip( new MapZero_Asset() );
 
 		[Embed( source = "../assets/maps/map0-walkmap.png" )]
-		private static const WALKMAP_ASSET:Class;
+		private static const MAP_DATA_IMAGE_ASSET:Class;
 
 
 		public function MapZero()
 		{
-			super( graphics[ 0 ] );
+			var mapDataImage:Bitmap = new MAP_DATA_IMAGE_ASSET() as Bitmap;
+			var visualRepresentation:BitmapData = graphics[ 0 ];
 
-		}
+			// Just for a while copy the mapDataImage onto the background
+			var matrix:Matrix = new Matrix();
+			matrix.scale( 10, 10 );
+			var colorTransform:ColorTransform = new ColorTransform( 1, 1, 1, 0.5 );
+			visualRepresentation.draw( mapDataImage, matrix, colorTransform );
 
+			super( visualRepresentation, mapDataImage.bitmapData );
 
-		override protected function setEndPoints():void
-		{
-			var walkMap:Bitmap = new WALKMAP_ASSET() as Bitmap;
-			var scale:Number = graphics[ 0 ].width / walkMap.width;
-
-			var endpoints:Vector.<Point> = mapImageAnalyzer.getEndPoints( walkMap.bitmapData, scale );
-			player1EndPoint = endpoints[ 0 ];
-			player2EndPoint = endpoints[ 1 ];
-
-		}
-
-
-		override protected function setBuildingPositions():void
-		{
-			var walkMap:Bitmap = new WALKMAP_ASSET() as Bitmap;
-			var scale:Number = graphics[ 0 ].width / walkMap.width;
-
-			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( walkMap.bitmapData, scale );
-			player0BuildingPositions = buildingPositions[ 0 ];
-			player1BuildingPositions = buildingPositions[ 1 ];
 		}
 
 

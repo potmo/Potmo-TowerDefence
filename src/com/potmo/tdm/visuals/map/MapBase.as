@@ -3,8 +3,11 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
-	import com.potmo.tdm.visuals.map.force.Force;
-	import com.potmo.tdm.visuals.map.force.UnitCollisionForceCalculator;
+	import com.potmo.tdm.visuals.map.forcemap.TileMap;
+	import com.potmo.tdm.visuals.map.forcemap.astar.AStarMap;
+	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.astar.AStarForceFieldMap;
+	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.unit.UnitCollisionForceCalculator;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
@@ -25,20 +28,76 @@ package com.potmo.tdm.visuals.map
 	{
 
 		protected var checkpoints:Vector.<PathCheckpoint>;
-		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
 		protected var mapImageAnalyzer:MapImageAnalyzer;
+		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
+		protected var tileMapRepresentation:TileMap;
+		protected var aStarMapRepresentation:AStarMap;
 
+		protected var player0EndPoint:Point;
 		protected var player1EndPoint:Point;
-		protected var player2EndPoint:Point;
 		protected var player0BuildingPositions:Vector.<Point>;
 		protected var player1BuildingPositions:Vector.<Point>;
+		protected var player0AStarForceFieldMap:AStarForceFieldMap;
+		protected var player1AStarForceFieldMap:AStarForceFieldMap;
+		protected var tileWidth:Number;
+		protected var tileHeight:Number;
 
 
-		public function MapBase( bitmap:BitmapData )
+		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData )
 		{
 			super();
+
+			// setup a device to analyze an image and get data from it
+			mapImageAnalyzer = new MapImageAnalyzer();
+
+			// calculate the scale between tile and visual map
+			tileWidth = visualMap.width / mapDataImage.width;
+			tileHeight = visualMap.height / mapDataImage.height;
+
+			// configure endpoints
+			this.setEndPoints( mapDataImage, visualMap, tileWidth );
+
+			// configure buildingpositions
+			this.setBuildingPositions( mapDataImage, visualMap, tileWidth );
+
+			// create a object that can calculate the forces on a unit
+			unitCollisionForceCalculator = new UnitCollisionForceCalculator();
+
+			// create a representation of the map in tiles
+			tileMapRepresentation = mapImageAnalyzer.createMap( mapDataImage, tileWidth, tileHeight );
+
+			// create a representation for the aStar
+			// this will help to calculate shortest routes from one point to another
+			aStarMapRepresentation = new AStarMap();
+			aStarMapRepresentation.loadFromMap( tileMapRepresentation );
+
+			// create a force AStar fieldmap for the players
+			// this will make it possible to know the shortest route from anywhere to the endpoint			
+			player0AStarForceFieldMap = new AStarForceFieldMap();
+			player0AStarForceFieldMap.setupFromAStarMap( aStarMapRepresentation, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, false );
+
+			player1AStarForceFieldMap = new AStarForceFieldMap();
+			player1AStarForceFieldMap.setupFromAStarMap( aStarMapRepresentation, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, false );
+			//TODO: All force fields should be stored in a image for later loading so we do not have to generate it each time we start a map
+
+			// set up the background visuals
+			this.setupBackground( visualMap )
+
+			// setup checkpoints and stuff
+			//TODO: Remove checkpoints in map
+			this.setCheckpoints();
+			this.drawCheckPoints();
+
+			// tell subclasses to initialize
+			this.initialize();
+
+		}
+
+
+		private function setupBackground( visualMap:BitmapData ):void
+		{
 			var textureParts:Vector.<Texture>;
-			textureParts = splitBitmapIntoTextures( bitmap );
+			textureParts = splitBitmapIntoTextures( visualMap );
 
 			var image:Image;
 			var o:int = 0;
@@ -51,19 +110,6 @@ package com.potmo.tdm.visuals.map
 				image.x = o;
 				o += image.width;
 			}
-
-			unitCollisionForceCalculator = new UnitCollisionForceCalculator();
-
-			mapImageAnalyzer = new MapImageAnalyzer();
-
-			this.initialize();
-
-			this.setEndPoints();
-			this.setBuildingPositions();
-
-			this.setCheckpoints();
-			this.drawCheckPoints();
-
 		}
 
 
@@ -96,6 +142,23 @@ package com.potmo.tdm.visuals.map
 
 			return textures;
 
+		}
+
+
+		protected function setEndPoints( mapDataImage:BitmapData, visualMap:BitmapData, scale:Number ):void
+		{
+			var endpoints:Vector.<Point> = mapImageAnalyzer.getEndPoints( mapDataImage, scale );
+			player0EndPoint = endpoints[ 0 ];
+			player1EndPoint = endpoints[ 1 ];
+
+		}
+
+
+		protected function setBuildingPositions( mapDataImage:BitmapData, visualMap:BitmapData, scale:Number ):void
+		{
+			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( mapDataImage, scale );
+			player0BuildingPositions = buildingPositions[ 0 ];
+			player1BuildingPositions = buildingPositions[ 1 ];
 		}
 
 
@@ -141,18 +204,6 @@ package com.potmo.tdm.visuals.map
 		protected function setCheckpoints():void
 		{
 			throw new Error( "Override and set all the ceckpoints in checkpoints" );
-		}
-
-
-		protected function setEndPoints():void
-		{
-			throw new Error( "Override and set the endpoints" );
-		}
-
-
-		protected function setBuildingPositions():void
-		{
-			throw new Error( "Override and set the building positions" );
 		}
 
 
@@ -381,6 +432,19 @@ package com.potmo.tdm.visuals.map
 		public function getUnitCollisionForce( gameLogics:GameLogics, unit:IUnit ):Force
 		{
 			return unitCollisionForceCalculator.getUnitCollisionForce( gameLogics, unit );
+		}
+
+
+		public function getMapPathForce( gameLogics:GameLogics, unit:IUnit ):Force
+		{
+			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
+			{
+				return player0AStarForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+			}
+			else
+			{
+				return player1AStarForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+			}
 		}
 
 	}
