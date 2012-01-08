@@ -1,8 +1,8 @@
 
 package com.potmo.tdm.visuals.map.util
 {
-	import com.potmo.tdm.visuals.map.forcemap.MapTileType;
-	import com.potmo.tdm.visuals.map.forcemap.TileMap;
+	import com.potmo.tdm.visuals.map.tilemap.MapTileType;
+	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 
 	import flash.display.BitmapData;
 	import flash.geom.Point;
@@ -151,7 +151,8 @@ package com.potmo.tdm.visuals.map.util
 								{
 									if ( pixels[ ( y + 2 ) * w + x ] == color ) // down moddle
 									{
-										output.push( new Point( x * mapScale, y * mapScale ) );
+										// remember that it is the center of the center pixel of the cross we want
+										output.push( new Point( ( x + 0.5 ) * mapScale, ( y + 1 + 0.5 ) * mapScale ) );
 									}
 								}
 							}

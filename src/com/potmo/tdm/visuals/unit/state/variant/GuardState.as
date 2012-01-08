@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.state.IUnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;

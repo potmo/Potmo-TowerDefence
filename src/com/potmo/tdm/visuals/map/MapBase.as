@@ -3,11 +3,11 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
-	import com.potmo.tdm.visuals.map.forcemap.TileMap;
-	import com.potmo.tdm.visuals.map.forcemap.astar.AStarMap;
-	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.astar.AStarForceFieldMap;
-	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.unit.UnitCollisionForceCalculator;
+	import com.potmo.tdm.visuals.map.tilemap.TileMap;
+	import com.potmo.tdm.visuals.map.tilemap.astar.AStarMap;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar.AStarForceFieldMap;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitCollisionForceCalculator;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
@@ -27,7 +27,6 @@ package com.potmo.tdm.visuals.map
 	public class MapBase extends DisplayObjectContainer
 	{
 
-		protected var checkpoints:Vector.<PathCheckpoint>;
 		protected var mapImageAnalyzer:MapImageAnalyzer;
 		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
 		protected var tileMapRepresentation:TileMap;
@@ -41,12 +40,14 @@ package com.potmo.tdm.visuals.map
 		protected var player1AStarForceFieldMap:AStarForceFieldMap;
 		protected var tileWidth:Number;
 		protected var tileHeight:Number;
+		private var mapName:String;
 
 
-		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData )
+		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData, name:String )
 		{
 			super();
 
+			this.mapName = name;
 			// setup a device to analyze an image and get data from it
 			mapImageAnalyzer = new MapImageAnalyzer();
 
@@ -82,11 +83,6 @@ package com.potmo.tdm.visuals.map
 
 			// set up the background visuals
 			this.setupBackground( visualMap )
-
-			// setup checkpoints and stuff
-			//TODO: Remove checkpoints in map
-			this.setCheckpoints();
-			this.drawCheckPoints();
 
 			// tell subclasses to initialize
 			this.initialize();
@@ -162,48 +158,9 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		protected function drawCheckPoints():void
-		{
-			/*
-			   var checkpoint:PathCheckpoint;
-			   var lastCheckPoint:PathCheckpoint;
-
-			   bitmapData.lock();
-
-			   for each ( checkpoint in checkpoints )
-			   {
-			   BitmapUtil.drawCirlce( checkpoint.x, checkpoint.y, 5, 0xFFFFFFFF, bitmapData );
-
-			   if ( lastCheckPoint )
-			   {
-			   BitmapUtil.drawLine( checkpoint.x, checkpoint.y, lastCheckPoint.x, lastCheckPoint.y, 0xFFFFFFFF, bitmapData );
-			   }
-			   lastCheckPoint = checkpoint;
-			   }
-			   bitmapData.unlock();*/
-
-			var checkpoint:PathCheckpoint;
-			var quad:Quad;
-
-			for each ( checkpoint in checkpoints )
-			{
-				quad = new Quad( 10, 10, 0xFFFFFFFF );
-				quad.x = checkpoint.x - 5;
-				quad.y = checkpoint.y - 5;
-				addChild( quad );
-			}
-		}
-
-
 		protected function initialize():void
 		{
 			//override	
-		}
-
-
-		protected function setCheckpoints():void
-		{
-			throw new Error( "Override and set all the ceckpoints in checkpoints" );
 		}
 
 
@@ -234,201 +191,6 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		/**
-		 * Get the next checkpoint to walk to
-		 */
-		/*
-		   TODO: Comment in this function in Map and fix it
-
-		   public function getNextCheckpoint( unit:UnitBase ):PathCheckpoint
-		   {
-		   var currentCheckpoint:PathCheckpoint = unit.getCurrentCheckpoint();
-
-		   // if the current checkpoint is -1 then the unit does not know
-		   // the next checkpoint and just wants to go to the closest
-		   if ( !currentCheckpoint )
-		   {
-		   Logger.log( "Unit " + unit + " has no current checkpoint" );
-		   return getNextCheckpointClosestAheadOfPointOnPathClosestToPoint( unit.x, unit.y, unit.getOwningPlayer() );
-		   }
-
-		   // ok we have a checkpoint then get the next
-		   var checkpointId:int = currentCheckpoint.id;
-		   var checkpointDir:int = 0;
-
-		   if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
-		   {
-		   checkpointDir = +1;
-		   }
-		   else
-		   {
-		   checkpointDir = -1;
-		   }
-
-		   // step to the next checkpoint but dont make it owerflow
-		   checkpointId = StrictMath.min( checkpoints.length - 1, StrictMath.max( checkpointId + checkpointDir, 0 ) );
-
-		   return checkpoints[ checkpointId ];
-		   }
-		 */
-
-		public function getClosestCheckpoint( unit:UnitBase ):PathCheckpoint
-		{
-			var checkpointDir:int = 0;
-			var firstCheckPointId:int = 0;
-			var lastCheckpointId:int = 0;
-
-			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
-			{
-				checkpointDir = +1;
-				firstCheckPointId = 0;
-				lastCheckpointId = checkpoints.length - 1;
-			}
-			else
-			{
-				checkpointDir = -1;
-				firstCheckPointId = checkpoints.length - 1;
-				lastCheckpointId = 0;
-			}
-
-			var checkpoint:PathCheckpoint;
-			var best:int;
-			var bestDist:Number = Number.MAX_VALUE;
-			var currDist:Number = 0;
-
-			var l:uint = checkpoints.length;
-
-			var i:int = firstCheckPointId;
-
-			while ( i != lastCheckpointId + checkpointDir )
-			{
-
-				checkpoint = checkpoints[ i ];
-
-				// calculate distance. We dont need to square it since we only need to know witch is longest
-				currDist = StrictMath.sqr( checkpoint.x - unit.x ) + StrictMath.sqr( checkpoint.y - unit.y );
-
-				if ( currDist < bestDist )
-				{
-					best = i;
-					bestDist = currDist;
-				}
-
-				i += checkpointDir;
-
-			}
-
-			return checkpoints[ best ];
-
-		}
-
-
-		public function getPointOnPathClosestToPoint( x:int, y:int ):Point
-		{
-			var a:PathCheckpoint = checkpoints[ 0 ];
-			var b:PathCheckpoint;
-
-			var c:int = checkpoints.length;
-			var t:Number;
-			var dSquared:Number;
-			var p:Point = new Point();
-			var bestPoint:Point;
-			var bestDist:Number = Number.MAX_VALUE;
-
-			for ( var i:int = 1; i < c; i++ )
-			{
-				b = checkpoints[ i ];
-
-				// get the closest point on the line intersecting both checkpoints
-				t = StrictMath.getTOnLineClosestToPoint( x, y, a.x, a.y, b.x, b.y );
-
-				t = StrictMath.clamp( t, 0, 1 );
-
-				//check if its even on the line section
-				p.x = a.x + t * ( b.x - a.x );
-				p.y = a.y + t * ( b.y - a.y );
-				dSquared = StrictMath.sqr( p.x - x ) + StrictMath.sqr( p.y - y );
-
-				if ( dSquared < bestDist )
-				{
-					bestDist = dSquared;
-					bestPoint = p.clone();
-				}
-
-				a = b;
-			}
-
-			return bestPoint;
-		}
-
-
-		public function getNextCheckpointClosestAheadOfPointOnPathClosestToPoint( x:int, y:int, player:Player ):PathCheckpoint
-		{
-
-			var dir:int;
-			var start:int;
-			var end:int;
-
-			if ( player.getColor() == PlayerColor.RED )
-			{
-				dir = +1;
-				start = 0;
-				end = checkpoints.length - 1;
-			}
-			else if ( player.getColor() == PlayerColor.BLUE )
-			{
-				dir = -1;
-				start = checkpoints.length - 1;
-				end = 0;
-			}
-
-			var c:int = checkpoints.length;
-			var t:Number;
-			var dSquared:Number;
-			var p:Point = new Point();
-			var bestDist:Number = Number.MAX_VALUE;
-			var bestNextCheckpoint:PathCheckpoint;
-
-			var a:PathCheckpoint = checkpoints[ start ];
-			var b:PathCheckpoint;
-
-			for ( var i:int = start + dir; i != end + dir; i += dir )
-			{
-				b = checkpoints[ i ];
-
-				// get the closest point on the line intersecting both checkpoints
-				t = StrictMath.getTOnLineClosestToPoint( x, y, a.x, a.y, b.x, b.y );
-
-				// make t be on the line
-				t = StrictMath.clamp( t, 0, 1 );
-
-				// calculate the closest point on the line
-				p.x = a.x + t * ( b.x - a.x );
-				p.y = a.y + t * ( b.y - a.y );
-				dSquared = StrictMath.sqr( p.x - x ) + StrictMath.sqr( p.y - y );
-
-				if ( dSquared < bestDist )
-				{
-					bestDist = dSquared;
-					bestNextCheckpoint = b;
-				}
-
-				a = b;
-			}
-
-			return bestNextCheckpoint;
-		}
-
-
-		/**
-		 * get all the checkpoints that makes the road between the players
-		 */
-		protected function getPathCheckpoints():Vector.<PathCheckpoint>
-		{
-			throw new Error( "Override!" );
-		}
-
-
 		public function getUnitCollisionForce( gameLogics:GameLogics, unit:IUnit ):Force
 		{
 			return unitCollisionForceCalculator.getUnitCollisionForce( gameLogics, unit );
@@ -445,6 +207,54 @@ package com.potmo.tdm.visuals.map
 			{
 				return player1AStarForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 			}
+		}
+
+
+		/**
+		 * Get the tile map representation of the map
+		 */
+		public function getTileMapRepresentation():TileMap
+		{
+			return tileMapRepresentation;
+		}
+
+
+		/**
+		 * Get the AStar tile map representation of the map
+		 */
+		public function getAStarMapRepresentation():AStarMap
+		{
+			return aStarMapRepresentation;
+		}
+
+
+		public function getPlayer0AStarForceFieldMapRepresentation():AStarForceFieldMap
+		{
+			return player0AStarForceFieldMap;
+		}
+
+
+		public function getPlayer1AStarForceFieldMapRepresentation():AStarForceFieldMap
+		{
+			return player1AStarForceFieldMap;
+		}
+
+
+		public function getMapName():String
+		{
+			return this.mapName;
+		}
+
+
+		public function getPlayer0EndPoint():Point
+		{
+			return player0EndPoint;
+		}
+
+
+		public function getPlayer1EndPoint():Point
+		{
+			return player1EndPoint;
 		}
 
 	}

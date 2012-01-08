@@ -7,14 +7,16 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
+	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
+	import com.potmo.tdm.visuals.unit.state.variant.IChargingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.IGuardingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 
-	public class Knight extends UnitBase implements IUnitVariant, INoneingUnit, IDeployingUnit, IGuardingUnit
+	public class Knight extends UnitBase implements IUnitVariant, INoneingUnit, IDeployingUnit, IGuardingUnit, IChargingUnit
 	{
 		private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
 		private static const SETTINGS:KnightSetting = new KnightSetting();
@@ -56,7 +58,11 @@ package com.potmo.tdm.visuals.unit.variant
 
 		override public function handleCommandedToCharge( gameLogics:GameLogics ):void
 		{
-			// TODO Auto-generated method stub
+			// set charge state
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			var newState:ChargeState = unitStateFactory.getChargeState();
+			newState.init( this, gameLogics );
+			setState( newState, gameLogics );
 		}
 
 
@@ -88,6 +94,13 @@ package com.potmo.tdm.visuals.unit.variant
 			var newState:GuardState = unitStateFactory.getGuardState();
 			newState.init( this, gameLogics );
 			setState( newState, gameLogics );
+		}
+
+
+		public function handleChargeStateFinished( state:ChargeState, gameLogics:GameLogics ):void
+		{
+			//TODO: handle what happens when the charge state ends. 
+			// Get the targeted unit from the state and have a hunt
 		}
 
 	}

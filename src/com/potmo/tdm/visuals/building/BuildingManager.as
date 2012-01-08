@@ -61,9 +61,8 @@ package com.potmo.tdm.visuals.building
 			newBuilding.x = building.x;
 			newBuilding.y = building.y;
 
-			var closestPointOnPath:Point = map.getPointOnPathClosestToPoint( newBuilding.x, newBuilding.y );
-
-			newBuilding.setDeployFlag( closestPointOnPath.x, closestPointOnPath.y, gameLogics );
+			//TODO: Initial deploy flag position should be calculated better than this 
+			newBuilding.setDeployFlag( newBuilding.x, newBuilding.y + 10, gameLogics );
 
 			_buildingFactory.returnBuilding( building );
 

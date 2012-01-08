@@ -2,7 +2,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.map.forcemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.state.IUnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
@@ -41,16 +41,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 
-			/*
-			   THIS IS FOR ATTACK STATE REALLY
-			   var force:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit );
-
-			   _unit.setVelX( _unit.getVelX() + force.x );
-			   _unit.setVelY( _unit.getVelY() + force.y );
-
-			   TODO: move this to charge state and also merge in unit collision forces
-			 */
-
 			// move towards the deploy flag
 			var building:BuildingBase = _unit.getHomeBuilding();
 
@@ -86,6 +76,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			_unit.setVelX( _unit.getVelX() + toFlagForce.x );
 			_unit.setVelY( _unit.getVelY() + toFlagForce.y );
+
+			//TODO: Unit collision forces should apply in the deploy state
 
 		}
 

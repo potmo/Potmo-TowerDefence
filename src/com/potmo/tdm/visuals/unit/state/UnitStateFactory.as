@@ -1,6 +1,7 @@
 package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
@@ -45,6 +46,12 @@ package com.potmo.tdm.visuals.unit.state
 		public function getGuardState():GuardState
 		{
 			return new GuardState();
+		}
+
+
+		public function getChargeState():ChargeState
+		{
+			return new ChargeState();
 		}
 	}
 }
