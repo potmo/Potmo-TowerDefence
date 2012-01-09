@@ -73,14 +73,14 @@ package com.potmo.tdm
 			{
 				aStarPathMap.getDirection( tX, tY );
 
-				tX++;
+				tY++;
 
-				if ( tX >= aStarMap.getWidth() )
+				if ( tY >= aStarMap.getHeight() )
 				{
-					tX = 0;
-					tY++;
+					tY = 0;
+					tX++;
 
-					if ( tY >= aStarMap.getHeight() )
+					if ( tX >= aStarMap.getWidth() )
 					{
 						removeEventListener( Event.ENTER_FRAME, onEnterFrame );
 						break;

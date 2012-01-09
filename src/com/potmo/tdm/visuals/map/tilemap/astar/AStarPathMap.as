@@ -91,7 +91,7 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 					var nextY:int = nextAStarTile.y;
 
 					// set the direction to the next tile
-					newTile.setDirection( x - nextX, y - nextY );
+					newTile.setDirection( nextX - x, nextY - y );
 				}
 
 				_data[ x ][ y ] = newTile;
