@@ -8,7 +8,8 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 	public class AStarPathMapTile extends MapTile
 	{
 		private var _next:AStarPathMapTile;
-		private var _direction:Point;
+		private var _directionX:int;
+		private var _directionY:int;
 
 
 		public function AStarPathMapTile( x:int, y:int, type:MapTileType )
@@ -17,21 +18,28 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 		}
 
 
-		public function setDirection( direction:Point ):void
+		public function setDirection( dirX:int, dirY:int ):void
 		{
-			this._direction = direction;
+			this._directionX = dirX;
+			this._directionY = dirY;
 		}
 
 
-		public function getDirection():Point
+		public function getDirectionX():int
 		{
-			return _direction;
+			return _directionX;
+		}
+
+
+		public function getDirectionY():int
+		{
+			return _directionY;
 		}
 
 
 		public function isWalkable():Boolean
 		{
-			this._type.isWalkable();
+			return this._type.isWalkable();
 		}
 
 	}

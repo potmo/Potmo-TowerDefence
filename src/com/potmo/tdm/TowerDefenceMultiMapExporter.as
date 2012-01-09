@@ -29,6 +29,9 @@ package com.potmo.tdm
 
 		private var endPoints:Vector.<Point>;
 
+		private var tX:int = 0;
+		private var tY:int = 0;
+
 
 		public function TowerDefenceMultiMapExporter()
 		{
@@ -56,12 +59,36 @@ package com.potmo.tdm
 			aStarPathMap = new AStarPathMap();
 			aStarPathMap.loadFromAStarMap( aStarMap, endPoints[ 0 ].x, endPoints[ 0 ].y );
 
+			//	aStarPathMap.getDirection( 24, 29 );
+			//	aStarPathMap.draw( forceMap, 1, 1 );
+
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 		}
 
 
 		private function onEnterFrame( event:Event ):void
 		{
+
+			for ( var i:int = 0; i < 10; i++ )
+			{
+				aStarPathMap.getDirection( tX, tY );
+
+				tX++;
+
+				if ( tX >= aStarMap.getWidth() )
+				{
+					tX = 0;
+					tY++;
+
+					if ( tY >= aStarMap.getHeight() )
+					{
+						removeEventListener( Event.ENTER_FRAME, onEnterFrame );
+						break;
+					}
+				}
+			}
+
+			aStarPathMap.draw( forceMap, 1, 1 );
 
 		}
 	}

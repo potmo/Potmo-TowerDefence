@@ -84,7 +84,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap
 			var iY:uint = QUARTER + QUARTER * y; // convert the y value
 
 			// shift x value 16 bits to left and mask in y value
-			var result:uint = iX << 16 & iY;
+			var result:uint = iX << 16 | iY;
 
 			return result;
 		}
