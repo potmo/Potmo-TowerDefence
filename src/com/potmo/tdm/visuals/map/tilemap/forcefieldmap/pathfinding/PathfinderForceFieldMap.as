@@ -1,23 +1,21 @@
-package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
+package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.pathfinding
 {
-	import com.potmo.tdm.visuals.map.tilemap.MapTileType;
-	import com.potmo.tdm.visuals.map.tilemap.astar.AStarMap;
-	import com.potmo.tdm.visuals.map.tilemap.astar.AStarMapTile;
-	import com.potmo.tdm.visuals.map.tilemap.astar.AStarPath;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.ForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.ForceFieldTile;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.IForceFieldMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.IPathfindingMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.PathFindingPath;
 	import com.potmo.util.math.StrictMath;
 
-	public class AStarForceFieldMap extends ForceFieldMap implements IForceFieldMap
+	public class PathfinderForceFieldMap extends ForceFieldMap implements IForceFieldMap
 	{
 		private var _targetY:int;
 		private var _targetX:int;
-		private var _aStarMap:AStarMap;
+		private var _pathfindingMap:IPathfindingMap;
 
 
-		public function AStarForceFieldMap()
+		public function PathfinderForceFieldMap()
 		{
 			super();
 		}
@@ -35,11 +33,11 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
 		}
 
 
-		public function setupFromAStarMap( aStarMap:AStarMap, goToPosX:int, goToPosY:int, initializeFlowMap:Boolean ):void
+		public function setupFromPathfindingMap( pathfindingMap:IPathfindingMap, goToPosX:int, goToPosY:int, initializeFlowMap:Boolean ):void
 		{
-			_aStarMap = aStarMap;
-			width = aStarMap.getWidth();
-			height = aStarMap.getHeight();
+			_pathfindingMap = pathfindingMap;
+			width = pathfindingMap.getWidth();
+			height = pathfindingMap.getHeight();
 			this._targetX = goToPosX;
 			this._targetY = goToPosY;
 
@@ -49,7 +47,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
 			// should we construct the flowmap rightaway or when it is used?
 			if ( initializeFlowMap )
 			{
-				tiles = constructFlowPathMap( aStarMap );
+				tiles = constructFlowPathMap( pathfindingMap );
 			}
 
 		}
@@ -115,7 +113,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
 		/**
 		 * Create a non progressive force field map (calculate all tiles at once)
 		 */
-		private function constructFlowPathMap( aStarMap:AStarMap ):Vector.<Vector.<ForceFieldTile>>
+		private function constructFlowPathMap( pathfindingMap:IPathfindingMap ):Vector.<Vector.<ForceFieldTile>>
 		{
 			var visitedHashTiles:Vector.<uint> = new Vector.<uint>();
 
@@ -144,7 +142,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
 		protected function setPathForPos( x:int, y:int ):void
 		{
 			var forceFieldTile:ForceFieldTile;
-			var path:AStarPath = _aStarMap.getBestPath( x, y, _targetX, _targetY ); //,visitedHashTiles
+			var path:PathFindingPath = _pathfindingMap.getBestPath( x, y, _targetX, _targetY ); //,visitedHashTiles
 			path.data.reverse();
 
 			var length:int = path.data.length;
@@ -152,7 +150,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar
 			// standing on the tile or something?
 			if ( length <= 1 )
 			{
-				forceFieldTile = new ForceFieldTile( this, x, y, _aStarMap.getNodeAt( x, y ).getType(), new Force( 0, 0 ) );
+				forceFieldTile = new ForceFieldTile( this, x, y, _pathfindingMap.getNodeAt( x, y ).getType(), new Force( 0, 0 ) );
 				tiles[ x ][ y ] = forceFieldTile;
 
 					//visitedHashTiles.push( _aStarMap.getHash() );

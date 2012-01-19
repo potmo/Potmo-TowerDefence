@@ -1,18 +1,16 @@
 package com.potmo.tdm.visuals.map
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
-	import com.potmo.tdm.visuals.map.tilemap.astar.AStarMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar.AStarForceFieldMap;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.pathfinding.PathfinderForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitCollisionForceCalculator;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.IPathfindingMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.astar.AStarMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraMap;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.UnitBase;
-	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
-	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.display.BitmapData;
@@ -21,7 +19,6 @@ package com.potmo.tdm.visuals.map
 
 	import starling.display.DisplayObjectContainer;
 	import starling.display.Image;
-	import starling.display.Quad;
 	import starling.textures.Texture;
 
 	public class MapBase extends DisplayObjectContainer
@@ -30,14 +27,14 @@ package com.potmo.tdm.visuals.map
 		protected var mapImageAnalyzer:MapImageAnalyzer;
 		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
 		protected var tileMapRepresentation:TileMap;
-		protected var aStarMapRepresentation:AStarMap;
+		protected var dijkstrtaMap:DijkstraMap;
 
 		protected var player0EndPoint:Point;
 		protected var player1EndPoint:Point;
 		protected var player0BuildingPositions:Vector.<Point>;
 		protected var player1BuildingPositions:Vector.<Point>;
-		protected var player0AStarForceFieldMap:AStarForceFieldMap;
-		protected var player1AStarForceFieldMap:AStarForceFieldMap;
+		protected var player0PathfinderForceFieldMap:PathfinderForceFieldMap;
+		protected var player1PathfinderForceFieldMap:PathfinderForceFieldMap;
 		protected var tileWidth:Number;
 		protected var tileHeight:Number;
 		private var mapName:String;
@@ -69,16 +66,19 @@ package com.potmo.tdm.visuals.map
 
 			// create a representation for the aStar
 			// this will help to calculate shortest routes from one point to another
-			aStarMapRepresentation = new AStarMap();
-			aStarMapRepresentation.loadFromMap( tileMapRepresentation );
+			dijkstrtaMap = new DijkstraMap();
 
 			// create a force AStar fieldmap for the players
-			// this will make it possible to know the shortest route from anywhere to the endpoint			
-			player0AStarForceFieldMap = new AStarForceFieldMap();
-			player0AStarForceFieldMap.setupFromAStarMap( aStarMapRepresentation, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, false );
+			// this will make it possible to know the shortest route from anywhere to the endpoint
+			dijkstrtaMap.loadFromMap( tileMapRepresentation );
+			dijkstrtaMap.buildShortestPathToPoint( player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight );
+			player0PathfinderForceFieldMap = new PathfinderForceFieldMap();
+			player0PathfinderForceFieldMap.setupFromPathfindingMap( dijkstrtaMap, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, true );
 
-			player1AStarForceFieldMap = new AStarForceFieldMap();
-			player1AStarForceFieldMap.setupFromAStarMap( aStarMapRepresentation, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, false );
+			dijkstrtaMap.loadFromMap( tileMapRepresentation );
+			dijkstrtaMap.buildShortestPathToPoint( player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight );
+			player1PathfinderForceFieldMap = new PathfinderForceFieldMap();
+			player1PathfinderForceFieldMap.setupFromPathfindingMap( dijkstrtaMap, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, true );
 			//TODO: All force fields should be stored in a image for later loading so we do not have to generate it each time we start a map
 
 			// set up the background visuals
@@ -201,11 +201,11 @@ package com.potmo.tdm.visuals.map
 		{
 			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
 			{
-				return player0AStarForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				return player0PathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 			}
 			else
 			{
-				return player1AStarForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				return player1PathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 			}
 		}
 
@@ -219,24 +219,15 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		/**
-		 * Get the AStar tile map representation of the map
-		 */
-		public function getAStarMapRepresentation():AStarMap
+		public function getPlayer0AStarForceFieldMapRepresentation():PathfinderForceFieldMap
 		{
-			return aStarMapRepresentation;
+			return player0PathfinderForceFieldMap;
 		}
 
 
-		public function getPlayer0AStarForceFieldMapRepresentation():AStarForceFieldMap
+		public function getPlayer1AStarForceFieldMapRepresentation():PathfinderForceFieldMap
 		{
-			return player0AStarForceFieldMap;
-		}
-
-
-		public function getPlayer1AStarForceFieldMapRepresentation():AStarForceFieldMap
-		{
-			return player1AStarForceFieldMap;
+			return player1PathfinderForceFieldMap;
 		}
 
 

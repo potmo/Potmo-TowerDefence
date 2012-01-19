@@ -26,12 +26,17 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function visit( gameLogics:GameLogics ):void
 		{
-			var force:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit );
+			var mapForce:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit );
 
-			_unit.setVelX( _unit.getVelX() + force.x );
-			_unit.setVelY( _unit.getVelY() + force.y );
+			// calculate forces from other units that pushes the unit
+			var unitCollisionForce:Force;
+			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
 
-			//TODO: Unit collision forces should apply when charging
+			// add force from map and unit collistion force
+			_unit.setVelX( _unit.getVelX() + mapForce.x + unitCollisionForce.x );
+			_unit.setVelY( _unit.getVelY() + mapForce.y + unitCollisionForce.y );
+
+			//TODO: Unit collision forces should apply when charging in a better way. Scaled and weighted
 			//TODO: Units in Chagrestate should look for opponents and target them 
 		}
 

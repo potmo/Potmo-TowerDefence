@@ -1,18 +1,18 @@
 package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.composer
 {
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.astar.AStarForceFieldMap;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.pathfinding.PathfinderForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.wall.WallForceFieldMap;
 
 	public class TotalForceFieldComposer implements IForceComposer
 	{
-		private var aStarField:AStarForceFieldMap;
+		private var aStarField:PathfinderForceFieldMap;
 		private var wallField:WallForceFieldMap;
 		private var unitField:UnitForceFieldMap;
 
 
-		public function TotalForceFieldComposer( aStarField:AStarForceFieldMap, wallField:WallForceFieldMap, unitField:UnitForceFieldMap )
+		public function TotalForceFieldComposer( aStarField:PathfinderForceFieldMap, wallField:WallForceFieldMap, unitField:UnitForceFieldMap )
 		{
 			this.aStarField = aStarField;
 			this.wallField = wallField;

@@ -1,8 +1,11 @@
-package com.potmo.tdm.visuals.map.tilemap.astar
+package com.potmo.tdm.visuals.map.tilemap.pathfinding.astar
 {
 	//	import com.potmo.secretServer.application.rts.units.Unit;
-	import com.potmo.tdm.visuals.map.tilemap.TileMap;
+	import com.potmo.tdm.visuals.map.tilemap.IMapTile;
 	import com.potmo.tdm.visuals.map.tilemap.MapTile;
+	import com.potmo.tdm.visuals.map.tilemap.TileMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.IPathfindingMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.PathFindingPath;
 	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.math.StrictMath;
 
@@ -14,7 +17,7 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 	 * This is a type of map that can calculate the fastest route between two points of a given map
 	 *
 	 */
-	public class AStarMap
+	public class AStarMap implements IPathfindingMap
 	{
 
 		private var _data:Vector.<Vector.<AStarMapTile>>;
@@ -46,10 +49,9 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 		 * @param x1, y1 end pos
 		 * @haltAtHashedTiles
 		 */
-		public function getBestPath( x0:int, y0:int, x1:int, y1:int, haltAtHashedTiles:Vector.<uint> = null ):AStarPath
+		public function getBestPath( x0:int, y0:int, x1:int, y1:int ):PathFindingPath
 		{
 
-			var shouldCheckHashedTiles:Boolean = haltAtHashedTiles != null;
 			var foundGoal:Boolean = false;
 			//every time a new path is calculated we increase the pathCalculationNumber
 			// in that way we can determin if the g,h and f values are for this calculation
@@ -97,20 +99,10 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 				{
 					foundGoal = true;
 				}
-				else if ( shouldCheckHashedTiles )
-				{
-					// check if this is a early exit tile that we are standing on
-					var index:int = haltAtHashedTiles.indexOf( current.getHash() );
-
-					if ( index != -1 )
-					{
-						foundGoal = true;
-					}
-				}
 
 				if ( foundGoal )
 				{
-					return AStarPath.MakePath( current, start, this._pathCalculationNumber, this );
+					return makePath( current, start, this._pathCalculationNumber );
 				}
 
 				open.splice( open.indexOf( current ), 1 );
@@ -185,7 +177,31 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 					ng = n;
 				}
 			}
-			return AStarPath.MakePath( ng, start, this._pathCalculationNumber, this );
+
+			// make the path
+			return makePath( ng, start, this._pathCalculationNumber );
+
+		}
+
+
+		private function makePath( n:AStarMapTile, start:AStarMapTile, pathCalculationNumber:uint ):PathFindingPath
+		{
+
+			var path:PathFindingPath = new PathFindingPath();
+
+			path.data = new Vector.<IMapTile>();
+
+			while ( n.getParent( pathCalculationNumber ) != null )
+			{
+				path.data.push( n );
+				n = n.getParent( pathCalculationNumber );
+			}
+			path.data.push( start );
+
+			path.data.reverse();
+
+			return path;
+
 		}
 
 
@@ -367,7 +383,7 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 		}
 
 
-		public function getNodeAt( x:int, y:int ):AStarMapTile
+		public function getNodeAt( x:int, y:int ):IMapTile
 		{
 			return _data[ x ][ y ];
 		}
@@ -403,7 +419,7 @@ package com.potmo.tdm.visuals.map.tilemap.astar
 		}
 
 
-		public function drawPath( canvas:Bitmap, path:AStarPath, horizontalTileSize:int, verticalTileSize:int ):void
+		public function drawPath( canvas:Bitmap, path:PathFindingPath, horizontalTileSize:int, verticalTileSize:int ):void
 		{
 
 			canvas.bitmapData.lock();

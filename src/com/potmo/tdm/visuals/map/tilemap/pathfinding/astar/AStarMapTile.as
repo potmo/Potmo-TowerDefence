@@ -1,4 +1,4 @@
-package com.potmo.tdm.visuals.map.tilemap.astar
+package com.potmo.tdm.visuals.map.tilemap.pathfinding.astar
 {
 	import com.potmo.tdm.visuals.map.tilemap.MapTile;
 	import com.potmo.tdm.visuals.map.tilemap.MapTileType;
