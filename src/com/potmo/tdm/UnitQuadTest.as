@@ -1,56 +1,111 @@
 package com.potmo.tdm
 {
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.UnitQuadTree;
+	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
 	import com.potmo.util.image.BitmapUtil;
 
 	import flash.display.Bitmap;
 	import flash.display.BitmapData;
 	import flash.display.Sprite;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 
 	[SWF( backgroundColor = "0xCCCCCC", frameRate = "30", width = "960", height = "640" )]
 	public class UnitQuadTest extends Sprite
 	{
 
 		private var canvas:BitmapData;
-		private var unitQuad:UnitQuadTree;
-		private var units:Vector.<Unit>;
+		private var unitQuad:QuadTree;
+		private var units:Vector.<IUnit>;
+		private var mouseRect:Rectangle = new Rectangle( 0, 0, 60, 60 );
+		private static const WIDTH:int = 600;
+		private static const HEIGHT:int = 600;
 
 
 		public function UnitQuadTest()
 		{
 
-			canvas = new BitmapData( 500, 500, false );
+			canvas = new BitmapData( WIDTH, HEIGHT, false );
 			addChild( new Bitmap( canvas ) );
 
-			unitQuad = new UnitQuadTree( 0, 0, 500, 500 );
-			units = new Vector.<Unit>();
+			unitQuad = new QuadTree( 0, 0, WIDTH, HEIGHT, 4, 1 );
+			units = new Vector.<IUnit>();
 
-			addUnits( 50 );
+			addUnits( 100 );
 
 			unitQuad.draw( canvas, 1 );
-
+			drawUnits( units, 0xFF0000FF, 1 );
 			addEventListener( Event.ENTER_FRAME, onEnterFrame );
 
 		}
 
 
+		private function drawUnits( units:Vector.<IUnit>, color:uint, scale:Number = 1.0 ):void
+		{
+			for each ( var unit:IUnit in units )
+			{
+				BitmapUtil.drawCirlce( unit.getX(), unit.getY(), unit.getRadius() - 1, color, canvas );
+			}
+		}
+
+
 		private function onEnterFrame( event:Event ):void
 		{
+			BitmapUtil.fill( canvas, 0xFFFFFFFF );
+
 			for each ( var unit:Unit in units )
 			{
-				unit.setX( unit.getX() + Math.random() * 4 - 2 );
-				unit.setY( unit.getY() + Math.random() * 4 - 2 );
+				var velX:Number = unit.getVelX();
+				var velY:Number = unit.getVelY();
+
+				//	velX = velX * 0.95 + Math.random() * 1 - 0.5;
+				//	velY = velY * 0.95 + Math.random() * 1 - 0.5;
+
+				var newX:Number = unit.getX() + velX;
+				var newY:Number = unit.getY() + velY;
+
+				if ( newX > WIDTH )
+				{
+					newX -= WIDTH;
+				}
+
+				if ( newX < 0 )
+				{
+					newX += WIDTH;
+				}
+
+				if ( newY > HEIGHT )
+				{
+					newY -= HEIGHT;
+				}
+
+				if ( newY < 0 )
+				{
+					newY += HEIGHT;
+				}
+
+				unit.setX( newX );
+				unit.setY( newY );
 
 				if ( unit.isPositionDirty() )
 				{
 					unitQuad.cleanPosition( unit );
 				}
+
 			}
 
-			BitmapUtil.fill( canvas, 0xFFFFFFFF );
 			unitQuad.draw( canvas, 1 );
+			drawUnits( units, 0xFF0000FF, 1 );
+
+			mouseRect.x = mouseX;
+			mouseRect.y = mouseY;
+
+			// get units from pos
+			//var unitsUnder:Vector.<IUnit> = unitQuad.retriveFromPosition( mouseX, mouseY );
+			var unitsUnder:Vector.<IUnit> = unitQuad.retriveFromRect( mouseRect.x, mouseRect.y, mouseRect.width, mouseRect.height );
+			drawUnits( unitsUnder, 0xFF00FF00, 1 );
+
+			BitmapUtil.drawRectangle( mouseRect.x, mouseRect.y, mouseRect.width, mouseRect.height, 0xFF000000, canvas );
 		}
 
 
@@ -61,10 +116,13 @@ package com.potmo.tdm
 			for ( var i:int = 0; i < count; i++ )
 			{
 				unit = new Unit();
+				unit.setName( "id:" + i );
 				units.push( unit );
-				unit.setX( Math.random() * 500 );
-				unit.setY( Math.random() * 500 );
-
+				unit.setX( Math.random() * WIDTH );
+				unit.setY( Math.random() * HEIGHT );
+				/*	unit.setVelX( Math.random() * 1 - 0.5 );
+				   unit.setVelY( Math.random() * 1 - 0.5 );*/
+				unit.setPositionAsClean();
 				unitQuad.insert( unit );
 			}
 
@@ -83,13 +141,20 @@ import starling.display.DisplayObject;
 internal class Unit implements IUnit
 {
 
-	private var x:Number;
-	private var y:Number;
-	private var _oldX:Number;
-	private var _oldY:Number;
-	private var _positionIsDirty:Boolean;
-	private var _velx:Number;
-	private var _vely:Number;
+	private var x:Number = 0;
+	private var y:Number = 0;
+	private var _oldX:Number = 0;
+	private var _oldY:Number = 0;
+	private var _positionIsDirty:Boolean = false;
+	private var _velx:Number = 0;
+	private var _vely:Number = 0;
+	private var _name:String = "N/A";
+
+
+	public function toString():String
+	{
+		return "Unit[" + _name + "," + x + "," + y + ":" + _oldX + "," + _oldY + "]";
+	}
 
 
 	final public function getOldX():Number
@@ -113,6 +178,8 @@ internal class Unit implements IUnit
 	final public function setPositionAsClean():void
 	{
 		_positionIsDirty = false;
+		_oldX = this.x;
+		_oldY = this.y;
 	}
 
 
@@ -137,7 +204,7 @@ internal class Unit implements IUnit
 	{
 		if ( y != value )
 		{
-			_oldY = x;
+			_oldY = y;
 			_positionIsDirty = true;
 			this.y = value;
 		}
@@ -289,4 +356,10 @@ internal class Unit implements IUnit
 		return null;
 	}
 
+
+	public function setName( name:String ):void
+	{
+		this._name = name;
+
+	}
 }

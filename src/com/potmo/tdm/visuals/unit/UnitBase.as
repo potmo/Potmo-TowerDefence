@@ -281,6 +281,8 @@ package com.potmo.tdm.visuals.unit
 
 		final public function setPositionAsClean():void
 		{
+			_oldX = x;
+			_oldY = y;
 			_positionIsDirty = false;
 		}
 
@@ -306,7 +308,7 @@ package com.potmo.tdm.visuals.unit
 		{
 			if ( y != value )
 			{
-				_oldY = x;
+				_oldY = y;
 				_positionIsDirty = true;
 				this.y = value;
 			}

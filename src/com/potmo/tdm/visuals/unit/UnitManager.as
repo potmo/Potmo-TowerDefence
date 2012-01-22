@@ -5,6 +5,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.map.MapBase;
+	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.math.StrictMath;
 
@@ -12,7 +13,7 @@ package com.potmo.tdm.visuals.unit
 
 	public class UnitManager
 	{
-		private var _unitLookup:UnitQuadTree;
+		private var _unitLookup:QuadTree;
 		private var _units:Vector.<IUnit>;
 		private var _unitFactory:UnitFactory;
 		private var _unitStateFactory:UnitStateFactory;
@@ -23,7 +24,7 @@ package com.potmo.tdm.visuals.unit
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
 			this._units = new Vector.<IUnit>();
-			this._unitLookup = new UnitQuadTree( 0, 0, map.getMapWidth(), map.getMapHeight() );
+			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 10, 3 );
 		}
 
 
@@ -55,6 +56,7 @@ package com.potmo.tdm.visuals.unit
 			_units.push( unit );
 
 			// push it to the lookup
+			unit.setPositionAsClean();
 			_unitLookup.insert( unit );
 
 			building.deployUnit( unit, gameLogics );
@@ -89,7 +91,8 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get all the close by units
-			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - range, y - range, range * 2, range * 2 );
+			//var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - range, y - range, range * 2, range * 2 );
+			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - range, y - range, range * 2, range * 2 );
 
 			var dist:Number;
 			var closestUnitDist:Number = Number.MAX_VALUE;
@@ -122,9 +125,8 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get all the close by units
-			//TODO: This might also need to include more in the lookup since both object have radius
-			const adding:Number = 50;
-			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - radius - adding, y - radius - adding, ( radius + adding ) * 2, ( radius + adding ) * 2 );
+			//var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - radius, y - radius, radius * 2, radius * 2 );
+			var unitsToSearch:Vector.<IUnit> = _units;
 
 			var maxDist:Number;
 			var output:Vector.<IUnit> = new Vector.<IUnit>();
@@ -157,7 +159,8 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get all the close by units
-			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+			//var unitsToSearch:Vector.<IUnit> = _unitLookup.search( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 
 			//square inRange
 			range *= range;
