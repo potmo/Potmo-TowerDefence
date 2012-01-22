@@ -33,5 +33,10 @@ package com.potmo.tdm.visuals.unit
 		function stopBeingTargetedByUnit( other:IUnit ):void;
 		function getSettings():IUnitSetting;
 
+		function getOldX():Number;
+		function getOldY():Number;
+		function isPositionDirty():Boolean;
+		function setPositionAsClean():void;
+
 	}
 }

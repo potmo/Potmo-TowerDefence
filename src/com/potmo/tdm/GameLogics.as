@@ -64,7 +64,7 @@ package com.potmo.tdm
 			buildingFactory = new BuildingFactory();
 			projectileFactory = new ProjectileFactory();
 
-			unitManager = new UnitManager( unitFactory, unitStateFactory );
+			unitManager = new UnitManager( unitFactory, unitStateFactory, map );
 			buildingManager = new BuildingManager( buildingFactory );
 
 			buildingManager.createDefaultConstructionSites( playerRed, playerBlue, this );

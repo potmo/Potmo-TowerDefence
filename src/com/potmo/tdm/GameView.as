@@ -285,9 +285,9 @@ package com.potmo.tdm
 				return true;
 			}
 
-			if ( cameraPosition > map.getMapSize() - ScreenSize.WIDTH )
+			if ( cameraPosition > map.getMapWidth() - ScreenSize.WIDTH )
 			{
-				cameraPosition = map.getMapSize() - ScreenSize.WIDTH;
+				cameraPosition = map.getMapWidth() - ScreenSize.WIDTH;
 				return true;
 			}
 

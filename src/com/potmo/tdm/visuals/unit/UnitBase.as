@@ -38,6 +38,9 @@ package com.potmo.tdm.visuals.unit
 
 		private static const HEALTH_BAR_HEIGHT:int = 6;
 		private static const HEALTH_BAR_WIDTH:int = 20;
+		private var _oldX:Number;
+		private var _oldY:Number;
+		private var _positionIsDirty:Boolean;
 
 
 		public function UnitBase( graphics:TextureAnimationCacheObject, type:UnitType, settings:IUnitSetting )
@@ -258,9 +261,38 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
+		final public function getOldX():Number
+		{
+			return _oldX;
+		}
+
+
+		final public function getOldY():Number
+		{
+			return _oldY;
+		}
+
+
+		final public function isPositionDirty():Boolean
+		{
+			return _positionIsDirty;
+		}
+
+
+		final public function setPositionAsClean():void
+		{
+			_positionIsDirty = false;
+		}
+
+
 		final public function setX( value:Number ):void
 		{
-			this.x = value;
+			if ( x != value )
+			{
+				_oldX = x;
+				_positionIsDirty = true;
+				this.x = value;
+			}
 		}
 
 
@@ -272,7 +304,12 @@ package com.potmo.tdm.visuals.unit
 
 		final public function setY( value:Number ):void
 		{
-			this.y = value;
+			if ( y != value )
+			{
+				_oldY = x;
+				_positionIsDirty = true;
+				this.y = value;
+			}
 		}
 
 

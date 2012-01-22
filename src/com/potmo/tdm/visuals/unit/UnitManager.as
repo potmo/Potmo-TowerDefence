@@ -4,22 +4,26 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
-	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.math.StrictMath;
 
+	import flash.geom.Rectangle;
+
 	public class UnitManager
 	{
-		private var _units:Vector.<IUnit> = new Vector.<IUnit>();
+		private var _unitLookup:UnitQuadTree;
+		private var _units:Vector.<IUnit>;
 		private var _unitFactory:UnitFactory;
 		private var _unitStateFactory:UnitStateFactory;
 
 
-		public function UnitManager( unitFactory:UnitFactory, unitStateFactory:UnitStateFactory )
+		public function UnitManager( unitFactory:UnitFactory, unitStateFactory:UnitStateFactory, map:MapBase )
 		{
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
+			this._units = new Vector.<IUnit>();
+			this._unitLookup = new UnitQuadTree( 0, 0, map.getMapWidth(), map.getMapHeight() );
 		}
 
 
@@ -29,6 +33,11 @@ package com.potmo.tdm.visuals.unit
 			{
 				unit.update( gameLogics );
 
+				// update the lookup if the unit moved
+				if ( unit.isPositionDirty() )
+				{
+					_unitLookup.cleanPosition( unit );
+				}
 			}
 
 		}
@@ -42,7 +51,12 @@ package com.potmo.tdm.visuals.unit
 			var owner:Player = building.getOwningPlayer();
 			var unit:IUnit = _unitFactory.getUnit( type, owner, gameLogics );
 
+			// push it to the array
 			_units.push( unit );
+
+			// push it to the lookup
+			_unitLookup.insert( unit );
+
 			building.deployUnit( unit, gameLogics );
 
 			var gameView:GameView = gameLogics.getGameView();
@@ -60,6 +74,7 @@ package com.potmo.tdm.visuals.unit
 		{
 			var index:int = _units.indexOf( unit );
 			_units.splice( index, 1 );
+			_unitLookup.remove( unit );
 			var gameView:GameView = gameLogics.getGameView();
 			gameView.removeUnit( unit );
 			_unitFactory.returnUnit( unit, gameLogics );
@@ -72,14 +87,18 @@ package com.potmo.tdm.visuals.unit
 		 */
 		public function getClosestUnitToPointWithinRange( x:Number, y:Number, range:Number ):IUnit
 		{
-			// square
-			range *= range;
+
+			// get all the close by units
+			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - range, y - range, range * 2, range * 2 );
 
 			var dist:Number;
 			var closestUnitDist:Number = Number.MAX_VALUE;
 			var closestUnit:IUnit;
 
-			for each ( var unit:IUnit in _units )
+			// square for faster lookup
+			range *= range;
+
+			for each ( var unit:IUnit in unitsToSearch )
 			{
 				dist = StrictMath.distSquared( unit.getX(), unit.getY(), x, y );
 
@@ -102,10 +121,15 @@ package com.potmo.tdm.visuals.unit
 		public function getUnitsIntersectingCircle( x:Number, y:Number, radius:Number ):Vector.<IUnit>
 		{
 
+			// get all the close by units
+			//TODO: This might also need to include more in the lookup since both object have radius
+			const adding:Number = 50;
+			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - radius - adding, y - radius - adding, ( radius + adding ) * 2, ( radius + adding ) * 2 );
+
 			var maxDist:Number;
 			var output:Vector.<IUnit> = new Vector.<IUnit>();
 
-			for each ( var unit:IUnit in _units )
+			for each ( var unit:IUnit in unitsToSearch )
 			{
 				//see if unit and circle intersects
 				var unitX:Number = unit.getX();
@@ -129,10 +153,14 @@ package com.potmo.tdm.visuals.unit
 		 * Return the closest
 		 * @returns the best unit to attack or null if none
 		 */
-		public function getEnemyUnitCloseEnough( unit:IUnit, inRange:int ):IUnit
+		public function getEnemyUnitCloseEnough( unit:IUnit, range:int ):IUnit
 		{
+
+			// get all the close by units
+			var unitsToSearch:Vector.<IUnit> = _unitLookup.search( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+
 			//square inRange
-			inRange *= inRange;
+			range *= range;
 
 			// okay firstly we want to target a unit that is not already targeted by another unit
 			// if we can not find that we will target the first best
@@ -143,7 +171,7 @@ package com.potmo.tdm.visuals.unit
 
 			var dist:Number;
 
-			for each ( var other:IUnit in _units )
+			for each ( var other:IUnit in unitsToSearch )
 			{
 				// check for owner
 				if ( other.getOwningPlayer().getColor() != unit.getOwningPlayer().getColor() )
@@ -151,12 +179,12 @@ package com.potmo.tdm.visuals.unit
 					dist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
 
 					// check if it is in range
-					if ( dist <= inRange )
+					if ( dist <= range )
 					{
 						if ( other.isTargetedByAnyUnit() )
 						{
 							// targeted must be double as close
-							if ( dist * 4 <= inRange )
+							if ( dist * 4 <= range )
 							{
 								if ( dist < bestTargetedDist )
 								{

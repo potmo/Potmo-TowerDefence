@@ -39,6 +39,9 @@ package com.potmo.tdm.visuals.map
 		protected var tileHeight:Number;
 		private var mapName:String;
 
+		private var mapWidth:int;
+		private var mapHeight:int;
+
 
 		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData, name:String )
 		{
@@ -51,6 +54,9 @@ package com.potmo.tdm.visuals.map
 			// calculate the scale between tile and visual map
 			tileWidth = visualMap.width / mapDataImage.width;
 			tileHeight = visualMap.height / mapDataImage.height;
+
+			this.mapWidth = visualMap.width;
+			this.mapHeight = visualMap.height;
 
 			// configure endpoints
 			this.setEndPoints( mapDataImage, visualMap, tileWidth );
@@ -167,9 +173,15 @@ package com.potmo.tdm.visuals.map
 		/**
 		 * Get the size of the map
 		 */
-		public function getMapSize():uint
+		public function getMapWidth():uint
 		{
-			return this.width;
+			return this.mapWidth;
+		}
+
+
+		public function getMapHeight():uint
+		{
+			return this.mapHeight;
 		}
 
 
