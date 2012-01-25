@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.building
 
 	public class BuildingBase extends TextureAnimation
 	{
-		protected static const MAX_UNITS:uint = 15;
+		protected static const MAX_UNITS:uint = 3;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;

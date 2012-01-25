@@ -1,0 +1,75 @@
+package com.potmo.tdm.visuals.unit
+{
+	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.player.Player;
+
+	public final class UnitFactory_old
+	{
+		private var knightPool:Vector.<UnitBase_old> = new Vector.<UnitBase_old>();
+		private var archerPool:Vector.<UnitBase_old> = new Vector.<UnitBase_old>();
+
+
+		public function UnitFactory_old()
+		{
+			populatePool( knightPool, UnitType.KNIGHT, 10 );
+			populatePool( archerPool, UnitType.ARCHER, 10 );
+		}
+
+
+		public function getUnit( type:UnitType, player:Player ):UnitBase_old
+		{
+			var unit:UnitBase_old;
+			var pool:Vector.<UnitBase_old> = getPool( type );
+
+			unit = getUnitFromPool( pool, type );
+			unit.setOwningPlayer( player );
+			return unit;
+		}
+
+
+		public function returnUnit( unit:UnitBase_old, gameLogics:GameLogics ):void
+		{
+			unit.reset( gameLogics );
+			getPool( unit.getType() ).push( unit );
+		}
+
+
+		private function getPool( type:UnitType ):Vector.<UnitBase_old>
+		{
+			switch ( type )
+			{
+				case UnitType.KNIGHT:
+					return knightPool;
+				case UnitType.ARCHER:
+					return archerPool;
+				default:
+					throw new Error( "Not possible to find pool of type: " + type );
+			}
+		}
+
+
+		private function getUnitFromPool( pool:Vector.<UnitBase_old>, type:UnitType ):UnitBase_old
+		{
+			if ( pool.length == 0 )
+			{
+				populatePool( pool, type, 5 );
+			}
+			return pool.pop();
+		}
+
+
+		private function populatePool( pool:Vector.<UnitBase_old>, type:UnitType, units:uint ):void
+		{
+			var unit:UnitBase_old;
+			var clazz:Class = type.getClass();
+
+			while ( units > 0 )
+			{
+				unit = new clazz();
+				pool.push( unit );
+				units--;
+			}
+		}
+
+	}
+}

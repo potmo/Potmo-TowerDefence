@@ -43,7 +43,7 @@ package com.potmo.tdm
 		private var map:MapBase;
 
 		private var mapCanvas:Sprite;
-		private var inbetweenItems:SortingSprite;
+		private var inbetweenItems:Sprite;
 
 		private var gameLogics:GameLogics;
 		private var orderManager:OrderManager;
@@ -59,7 +59,7 @@ package com.potmo.tdm
 			mapCanvas = new Sprite();
 			addChild( mapCanvas );
 
-			inbetweenItems = new SortingSprite();
+			inbetweenItems = new Sprite();
 			mapCanvas.addChild( inbetweenItems );
 
 		}
@@ -242,8 +242,25 @@ package com.potmo.tdm
 
 			// z sort units and buildings
 
-			inbetweenItems.sortChildren();
+			inbetweenItems.sortChildren( zSortCompareFunction );
 
+		}
+
+
+		private final function zSortCompareFunction( child1:DisplayObject, child2:DisplayObject ):int
+		{
+			if ( child1.y < child2.y )
+			{
+				return -1;
+			}
+			else if ( child1.y > child2.y )
+			{
+				return 1;
+			}
+			else
+			{
+				return 0;
+			}
 		}
 
 

@@ -47,8 +47,12 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 			}
 
 			// loop all other units and add their force to the mix
-			for each ( var otherUnit:IUnit in units )
+			var length:int = units.length;
+
+			for ( var i:int = 0; i < length; i++ )
 			{
+				var otherUnit:IUnit = units[ i ]
+
 				// do not check against myself
 				if ( unit == otherUnit )
 				{

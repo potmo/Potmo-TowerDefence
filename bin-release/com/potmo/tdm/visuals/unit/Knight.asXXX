@@ -1,0 +1,99 @@
+package com.potmo.tdm.visuals.unit
+{
+	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.asset.unit.Knight_Asset;
+	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
+	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+
+	public class Knight extends FightingUnitBase
+	{
+
+		private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
+		private static const SETTINGS:KnightSetting = new KnightSetting();
+
+		private var hurtOnAnimation:Boolean = false;
+
+
+		public function Knight()
+		{
+			super( ASSET, UnitType.KNIGHT, SETTINGS );
+
+		}
+
+
+		override public function update( gameLogics:GameLogics ):void
+		{
+			super.update( gameLogics );
+		}
+
+
+		override protected function onDie( gameLogics:GameLogics ):void
+		{
+			// just wait until we reach the DEAD frame
+			setFrameFromName( "DIE" );
+		}
+
+
+		override protected function onHeal( maxAmount:int, gameLogics:GameLogics ):void
+		{
+			heal( maxAmount, gameLogics );
+		}
+
+
+		override protected function onEngageTargetUnit( gameLogics:GameLogics ):void
+		{
+			// just wait until we reach the DAMAGE frame
+			setFrameFromName( "FIGHT" );
+		}
+
+
+		override protected function onEnterNamedFrame( frameName:String, gameLogics:GameLogics ):void
+		{
+			switch ( frameName )
+			{
+				case ( "DAMAGE" ):
+				{
+					// now really hurt the target
+					hurtTargetedUnit( gameLogics );
+					break;
+				}
+				case ( "DEAD" ):
+				{
+					die( gameLogics );
+					break;
+				}
+			}
+		}
+
+
+		override protected function onStateSet( state:UnitStateEnum, gameLogics:GameLogics ):void
+		{
+
+			switch ( state )
+			{
+				case UnitStateEnum.CHARGING:
+				case UnitStateEnum.DEPLOYING:
+					setFrameFromName( "WALK" );
+					break;
+
+				case UnitStateEnum.GUARDING:
+				case UnitStateEnum.NONE:
+					setFrameFromName( "LOOP_WAIT" );
+					break;
+
+				case UnitStateEnum.APPROACH_ATTACK:
+				case UnitStateEnum.APPROACH_DEFEND:
+					setFrameFromName( "APPROACH_FIGHT" );
+					break;
+
+				case UnitStateEnum.ATTACKING:
+				case UnitStateEnum.DEFENDING:
+					setFrameFromName( "LOOP_WAIT" );
+					break;
+
+			}
+		}
+
+	}
+}

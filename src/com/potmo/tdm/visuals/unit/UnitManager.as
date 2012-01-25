@@ -30,8 +30,11 @@ package com.potmo.tdm.visuals.unit
 
 		public function update( gameLogics:GameLogics ):void
 		{
-			for each ( var unit:IUnit in _units )
+			var unitsLength:int = _units.length;
+
+			for ( var i:int = 0; i < unitsLength; i++ )
 			{
+				var unit:IUnit = _units[ i ];
 				unit.update( gameLogics );
 
 				// update the lookup if the unit moved
@@ -101,8 +104,11 @@ package com.potmo.tdm.visuals.unit
 			// square for faster lookup
 			range *= range;
 
-			for each ( var unit:IUnit in unitsToSearch )
+			var unitsLength:int = unitsToSearch.length;
+
+			for ( var i:int = 0; i < unitsLength; i++ )
 			{
+				var unit:IUnit = unitsToSearch[ i ];
 				dist = StrictMath.distSquared( unit.getX(), unit.getY(), x, y );
 
 				if ( dist <= range )
@@ -131,8 +137,11 @@ package com.potmo.tdm.visuals.unit
 			var maxDist:Number;
 			var output:Vector.<IUnit> = new Vector.<IUnit>();
 
-			for each ( var unit:IUnit in unitsToSearch )
+			var unitsLength:int = unitsToSearch.length;
+			
+			for ( var i:int = 0; i < unitsLength; i++ )
 			{
+				var unit:IUnit = unitsToSearch[ i ];
 				//see if unit and circle intersects
 				var unitX:Number = unit.getX();
 				var unitY:Number = unit.getY();
@@ -173,9 +182,12 @@ package com.potmo.tdm.visuals.unit
 			var bestUntargetedDist:int = int.MAX_VALUE;
 
 			var dist:Number;
-
-			for each ( var other:IUnit in unitsToSearch )
+			var unitsLength:int = unitsToSearch.length;
+			
+			for ( var i:int = 0; i < unitsLength; i++ )
 			{
+				var other:IUnit = unitsToSearch[ i ];
+				
 				// check for owner
 				if ( other.getOwningPlayer().getColor() != unit.getOwningPlayer().getColor() )
 				{

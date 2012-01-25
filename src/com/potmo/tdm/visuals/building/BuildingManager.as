@@ -21,9 +21,11 @@ package com.potmo.tdm.visuals.building
 
 		public function update( gameLogics:GameLogics ):void
 		{
-			for each ( var building:BuildingBase in _buildings )
+			var length:int = _buildings.length;
+
+			for ( var i:int = 0; i < length; i++ )
 			{
-				building.update( gameLogics );
+				_buildings[ i ].update( gameLogics );
 			}
 
 		}
@@ -131,13 +133,14 @@ package com.potmo.tdm.visuals.building
 		 */
 		public function getBuildingUnderPosition( x:int, y:int ):BuildingBase
 		{
-			var building:BuildingBase
 
-			for each ( building in _buildings )
+			var length:int = _buildings.length;
+
+			for ( var i:int = 0; i < length; i++ )
 			{
-				if ( building.isUnderPosition( x, y ) )
+				if ( _buildings[ i ].isUnderPosition( x, y ) )
 				{
-					return building;
+					return _buildings[ i ];
 				}
 			}
 

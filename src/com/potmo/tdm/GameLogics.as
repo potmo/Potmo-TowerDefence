@@ -80,6 +80,7 @@ package com.potmo.tdm
 
 			buildingManager.update( this );
 
+			//TODO: For loop instead of for each
 			for each ( projectile in projectiles )
 			{
 				projectile.update( this );

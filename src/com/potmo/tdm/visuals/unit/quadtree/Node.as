@@ -114,18 +114,27 @@ package com.potmo.tdm.visuals.unit.quadtree
 				var copyNodes:Vector.<Node> = nodes.concat();
 				nodes.length = 0;
 
-				for each ( var node:Node in copyNodes )
+				var copyNodesLength:int = copyNodes.length;
+
+				for ( var i:int = 0; i < copyNodesLength; i++ )
 				{
+					var node:Node = copyNodes[ i ];
 					node.combineSubnodes();
 					var unit:IUnit;
 
-					for each ( unit in node.children )
+					var nodeChildrenLength:int = node.children.length;
+
+					for ( var j:int = 0; j < nodeChildrenLength; j++ )
 					{
+						unit = node.children[ j ];
 						this.insert( unit );
 					}
 
-					for each ( unit in node.stuckChildren )
+					var nodeStuckChildrenLength:int = node.stuckChildren.length;
+
+					for ( var k:int = 0; k < nodeStuckChildrenLength; k++ )
 					{
+						unit = node.children[ k ];
 						this.insert( unit );
 					}
 				}
@@ -140,9 +149,11 @@ package com.potmo.tdm.visuals.unit.quadtree
 
 			if ( nodes && nodes.length != 0 )
 			{
-				for each ( var node:Node in nodes )
+				var nodeLength:int = nodes.length;
+
+				for ( var i:int = 0; i < nodeLength; i++ )
 				{
-					num += node.getNumberOfSubnodeChildren();
+					num += nodes[ i ].getNumberOfSubnodeChildren();
 				}
 			}
 			else
@@ -256,9 +267,12 @@ package com.potmo.tdm.visuals.unit.quadtree
 				out = out.concat( getChildren() );
 
 				// then add the subnodes if we should
-				for each ( var node:Node in nodes )
+				var nodeLength:int = nodes.length;
+
+				for ( var i:int = 0; i < nodeLength; i++ )
 				{
-					out = out.concat( node.retrieveFromRect( x, y, width, height ) );
+
+					out = out.concat( nodes[ i ].retrieveFromRect( x, y, width, height ) );
 				}
 			}
 
@@ -272,9 +286,11 @@ package com.potmo.tdm.visuals.unit.quadtree
 			var out:Vector.<IUnit> = new Vector.<IUnit>();
 			out = out.concat( getChildren() );
 
-			for each ( var node:Node in nodes )
+			var nodeLength:int = nodes.length;
+
+			for ( var i:int = 0; i < nodeLength; i++ )
 			{
-				out = out.concat( node.getAllChildrenRecursive() );
+				out = out.concat( nodes[ i ].getAllChildrenRecursive() );
 			}
 			return out;
 		}
