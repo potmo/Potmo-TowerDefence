@@ -64,16 +64,17 @@ package com.potmo.tdm
 			dijkstraMap.loadFromMap( tileMap );
 			dijkstraMap.buildShortestPathToPoint( endPoints[ 0 ].x, endPoints[ 0 ].y );
 
-			dijkstraMap.draw( forceCanvas, 1, 1 );
+			dijkstraMap.buildPathsFromUnwalkableTilesToNearestWalkableTile();
 
-			var path:PathFindingPath = dijkstraMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
+			dijkstraMap.draw( forceCanvas, 1, 1 );
 
 			// draw the best path between the start points
 			forceCanvas.lock();
+			var path:PathFindingPath = dijkstraMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
 
 			for each ( var tile:IMapTile in path.data )
 			{
-				forceCanvas.fillRect( new Rectangle( tile.x, tile.y, 1, 1 ), 0xFF00FF00 );
+				forceCanvas.fillRect( new Rectangle( tile.x, tile.y, 1, 1 ), 0xFFFFFFFF );
 			}
 			forceCanvas.unlock();
 
