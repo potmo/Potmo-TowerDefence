@@ -30,7 +30,7 @@ package com.potmo.tdm.visuals.map
 
 			// Just for a while copy the mapDataImage onto the background
 			var matrix:Matrix = new Matrix();
-			matrix.scale( 10, 10 );
+			matrix.scale( 8, 8 );
 			var colorTransform:ColorTransform = new ColorTransform( 1, 1, 1, 0.5 );
 			visualRepresentation.draw( mapDataImage, matrix, colorTransform );
 

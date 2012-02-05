@@ -27,7 +27,7 @@ package com.potmo.tdm.visuals.map
 		protected var mapImageAnalyzer:MapImageAnalyzer;
 		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
 		protected var tileMapRepresentation:TileMap;
-		protected var dijkstrtaMap:DijkstraMap;
+		protected var dijkstraMap:DijkstraMap;
 
 		protected var player0EndPoint:Point;
 		protected var player1EndPoint:Point;
@@ -72,19 +72,19 @@ package com.potmo.tdm.visuals.map
 
 			// create a representation for the aStar
 			// this will help to calculate shortest routes from one point to another
-			dijkstrtaMap = new DijkstraMap();
+			dijkstraMap = new DijkstraMap();
 
 			// create a force AStar fieldmap for the players
 			// this will make it possible to know the shortest route from anywhere to the endpoint
-			dijkstrtaMap.loadFromMap( tileMapRepresentation );
-			dijkstrtaMap.buildShortestPathToPoint( player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight );
+			dijkstraMap.loadFromMap( tileMapRepresentation );
+			dijkstraMap.buildShortestPathToPoint( player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight );
 			player0PathfinderForceFieldMap = new PathfinderForceFieldMap();
-			player0PathfinderForceFieldMap.setupFromPathfindingMap( dijkstrtaMap, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, true );
+			player0PathfinderForceFieldMap.setupFromPathfindingMap( dijkstraMap, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, true );
 
-			dijkstrtaMap.loadFromMap( tileMapRepresentation );
-			dijkstrtaMap.buildShortestPathToPoint( player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight );
+			dijkstraMap.loadFromMap( tileMapRepresentation );
+			dijkstraMap.buildShortestPathToPoint( player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight );
 			player1PathfinderForceFieldMap = new PathfinderForceFieldMap();
-			player1PathfinderForceFieldMap.setupFromPathfindingMap( dijkstrtaMap, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, true );
+			player1PathfinderForceFieldMap.setupFromPathfindingMap( dijkstraMap, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, true );
 			//TODO: All force fields should be stored in a image for later loading so we do not have to generate it each time we start a map
 
 			// set up the background visuals

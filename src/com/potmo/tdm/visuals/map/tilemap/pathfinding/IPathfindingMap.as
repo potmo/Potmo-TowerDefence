@@ -6,7 +6,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding
 	{
 		function getWidth():uint;
 		function getHeight():uint;
-		function getBestPath( x:int, y:int, targetX:int, _targetY:int ):PathFindingPath;
+		function getBestPath( x:int, y:int, targetX:int, targetY:int ):PathFindingPath;
 		function getNodeAt( x:int, y:int ):IMapTile;
 	}
 }

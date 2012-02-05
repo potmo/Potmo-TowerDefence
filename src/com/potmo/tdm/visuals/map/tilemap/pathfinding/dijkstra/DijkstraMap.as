@@ -19,6 +19,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 		private var _height:int;
 		private var calculatedTargetX:int;
 		private var calculatedTargetY:int;
+		public static var DIRECTION_COLOR_MATRIX:Vector.<Vector.<uint>>;
 
 
 		public function DijkstraMap()
@@ -345,23 +346,6 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 		public function draw( canvas:BitmapData, horizontalTileSize:int, verticalTileSize:int ):void
 		{
 
-			var colorWheel:Vector.<Vector.<uint>> = new Vector.<Vector.<uint>>( 3, true );
-			colorWheel[ 0 ] = new Vector.<uint>( 3, true );
-			colorWheel[ 1 ] = new Vector.<uint>( 3, true );
-			colorWheel[ 2 ] = new Vector.<uint>( 3, true );
-
-			colorWheel[ 0 ][ 0 ] = 0xFFFF0090;
-			colorWheel[ 1 ][ 0 ] = 0xFFFF0000;
-			colorWheel[ 2 ][ 0 ] = 0xFFFF9000;
-
-			colorWheel[ 0 ][ 1 ] = 0xFF900000;
-			colorWheel[ 1 ][ 1 ] = 0xFFFFFFFF;
-			colorWheel[ 2 ][ 1 ] = 0xFFFFFF00;
-
-			colorWheel[ 0 ][ 2 ] = 0xFF0000FF;
-			colorWheel[ 1 ][ 2 ] = 0xFF009090;
-			colorWheel[ 2 ][ 2 ] = 0xFF90FF00;
-
 			canvas.lock();
 
 			for ( var y:int = 0; y < _height; y++ )
@@ -373,7 +357,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 
 					if ( !tile.bestPredessesor )
 					{
-						color = 0xFF000000;
+						color = DijkstraColorToDirectionConverter.NO_DIRECTION_COLOR;
 					}
 					else
 					{
@@ -383,11 +367,8 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 						xDir = StrictMath.clamp( xDir, -1, 1 );
 						yDir = StrictMath.clamp( yDir, -1, 1 );
 
-						color = colorWheel[ 1 + xDir ][ 1 + yDir ];
+						color = DijkstraColorToDirectionConverter.getColorFromDirection( 1 + xDir, 1 + yDir, tile.getType().isWalkable() );
 
-						/*	var c0:int = 127 + 127 * xDir;
-						   var c1:int = 127 + 127 * yDir;
-						   color = ( c0 << 16 ) | c1 | 0xFF000000;*/
 					}
 					canvas.fillRect( new Rectangle( x * horizontalTileSize, y * verticalTileSize, horizontalTileSize, verticalTileSize ), color );
 				}

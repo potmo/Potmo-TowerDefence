@@ -5,6 +5,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.PathFindingPath;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated.DijkstraPrecalculatedMap;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.util.image.encoder.PNGEncoder;
 	import com.potmo.util.logger.Logger;
@@ -30,6 +31,7 @@ package com.potmo.tdm
 
 		private var tileMap:TileMap;
 		private var dijkstraMap:DijkstraMap;
+		private var dijkstraPrecalculatedMap:DijkstraPrecalculatedMap;
 
 		private var endPoints:Vector.<Point>;
 
@@ -68,9 +70,12 @@ package com.potmo.tdm
 
 			dijkstraMap.draw( forceCanvas, 1, 1 );
 
+			dijkstraPrecalculatedMap = new DijkstraPrecalculatedMap();
+			dijkstraPrecalculatedMap.setupFromImage( forceCanvas );
+
 			// draw the best path between the start points
 			forceCanvas.lock();
-			var path:PathFindingPath = dijkstraMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
+			var path:PathFindingPath = dijkstraPrecalculatedMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
 
 			for each ( var tile:IMapTile in path.data )
 			{
