@@ -76,14 +76,14 @@ package com.potmo.tdm
 		{
 
 			var building:BuildingBase;
-			var projectile:Projectile;
 
 			buildingManager.update( this );
 
-			//TODO: For loop instead of for each
-			for each ( projectile in projectiles )
+			var length:int = projectiles.length;
+
+			for ( var i:int = length; i >= 0; i-- )
 			{
-				projectile.update( this );
+				projectiles[ i ].update( this );
 
 			}
 

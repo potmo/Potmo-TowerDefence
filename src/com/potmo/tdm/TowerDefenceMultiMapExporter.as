@@ -64,7 +64,7 @@ package com.potmo.tdm
 			tileMap = mapImageAnalyzer.createMap( sourceCanvas, 1, 1 );
 			dijkstraMap = new DijkstraMap();
 			dijkstraMap.loadFromMap( tileMap );
-			dijkstraMap.buildShortestPathToPoint( endPoints[ 0 ].x, endPoints[ 0 ].y );
+			dijkstraMap.buildShortestPathToPoint( endPoints[ 1 ].x, endPoints[ 1 ].y );
 
 			dijkstraMap.buildPathsFromUnwalkableTilesToNearestWalkableTile();
 
@@ -74,14 +74,14 @@ package com.potmo.tdm
 			dijkstraPrecalculatedMap.setupFromImage( forceCanvas );
 
 			// draw the best path between the start points
-			forceCanvas.lock();
-			var path:PathFindingPath = dijkstraPrecalculatedMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
+		/*forceCanvas.lock();
+		   var path:PathFindingPath = dijkstraPrecalculatedMap.getBestPath( endPoints[ 1 ].x, endPoints[ 1 ].y, endPoints[ 0 ].x, endPoints[ 0 ].y );
 
-			for each ( var tile:IMapTile in path.data )
-			{
-				forceCanvas.fillRect( new Rectangle( tile.x, tile.y, 1, 1 ), 0xFFFFFFFF );
-			}
-			forceCanvas.unlock();
+		   for each ( var tile:IMapTile in path.data )
+		   {
+		   forceCanvas.fillRect( new Rectangle( tile.x, tile.y, 1, 1 ), 0xFFFFFFFF );
+		   }
+		   forceCanvas.unlock();*/
 
 		/*	aStarPathMap = new AStarPathMap();
 		   aStarPathMap.loadFromAStarMap( dijkstraMap, endPoints[ 0 ].x, endPoints[ 0 ].y );

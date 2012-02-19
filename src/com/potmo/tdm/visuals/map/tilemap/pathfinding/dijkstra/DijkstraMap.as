@@ -116,7 +116,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 				}
 
 				// check if we have found a better path to this one and in that case update it with the better path
-				var movingCost:Number = getDiagonalOrStraightMovingCost( current, neightbour ); //TODO: Can multiplay with the cost for the tile here
+				var movingCost:Number = getDiagonalOrStraightMovingCost( current, neightbour ); // Can multiplay with the cost for the tile here
 				var testNewTotalCost:Number = current.bestTotalCost + movingCost;
 
 				if ( neightbour.bestTotalCost > testNewTotalCost )

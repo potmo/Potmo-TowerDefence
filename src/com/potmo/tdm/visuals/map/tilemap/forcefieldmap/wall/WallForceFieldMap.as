@@ -38,8 +38,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.wall
 
 		private function isTileWalkable( mapTile:MapTile ):Boolean
 		{
-			//TODO: Calculate if a tile is walkable in a better way
-			return mapTile.getType() == MapTileType.DEFAULT_WALKABLE_TILE;
+			return mapTile.getType().isWalkable();
 		}
 
 

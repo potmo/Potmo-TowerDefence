@@ -77,8 +77,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit.setVelX( _unit.getVelX() + toFlagForce.x );
 			_unit.setVelY( _unit.getVelY() + toFlagForce.y );
 
-			//TODO: Unit collision forces should apply in the deploy state
-
 		}
 
 

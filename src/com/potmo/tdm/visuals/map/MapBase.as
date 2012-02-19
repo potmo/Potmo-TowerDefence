@@ -4,11 +4,13 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.IForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.pathfinding.PathfinderForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitCollisionForceCalculator;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.IPathfindingMap;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.astar.AStarMap;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated.DijkstraPrecalculatedMap;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.util.math.StrictMath;
@@ -27,14 +29,13 @@ package com.potmo.tdm.visuals.map
 		protected var mapImageAnalyzer:MapImageAnalyzer;
 		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
 		protected var tileMapRepresentation:TileMap;
-		protected var dijkstraMap:DijkstraMap;
 
 		protected var player0EndPoint:Point;
 		protected var player1EndPoint:Point;
 		protected var player0BuildingPositions:Vector.<Point>;
 		protected var player1BuildingPositions:Vector.<Point>;
-		protected var player0PathfinderForceFieldMap:PathfinderForceFieldMap;
-		protected var player1PathfinderForceFieldMap:PathfinderForceFieldMap;
+		protected var leftRightPathfinderForceFieldMap:DijkstraPrecalculatedMap;
+		protected var rightLeftPathfinderForceFieldMap:DijkstraPrecalculatedMap;
 		protected var tileWidth:Number;
 		protected var tileHeight:Number;
 		private var mapName:String;
@@ -43,9 +44,11 @@ package com.potmo.tdm.visuals.map
 		private var mapHeight:int;
 
 
-		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData, name:String )
+		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData, name:String )
 		{
 			super();
+
+			validateDataImageSizes( mapDataImage, directionLeftRightDataImage, directionRightLeftDataImage );
 
 			this.mapName = name;
 			// setup a device to analyze an image and get data from it
@@ -70,22 +73,13 @@ package com.potmo.tdm.visuals.map
 			// create a representation of the map in tiles
 			tileMapRepresentation = mapImageAnalyzer.createMap( mapDataImage, tileWidth, tileHeight );
 
-			// create a representation for the aStar
-			// this will help to calculate shortest routes from one point to another
-			dijkstraMap = new DijkstraMap();
+			// create a map containing information on shortest path from
+			// all point in the map to the final point
+			leftRightPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
+			leftRightPathfinderForceFieldMap.setupFromImage( directionLeftRightDataImage );
 
-			// create a force AStar fieldmap for the players
-			// this will make it possible to know the shortest route from anywhere to the endpoint
-			dijkstraMap.loadFromMap( tileMapRepresentation );
-			dijkstraMap.buildShortestPathToPoint( player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight );
-			player0PathfinderForceFieldMap = new PathfinderForceFieldMap();
-			player0PathfinderForceFieldMap.setupFromPathfindingMap( dijkstraMap, player0EndPoint.x / tileWidth, player0EndPoint.y / tileHeight, true );
-
-			dijkstraMap.loadFromMap( tileMapRepresentation );
-			dijkstraMap.buildShortestPathToPoint( player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight );
-			player1PathfinderForceFieldMap = new PathfinderForceFieldMap();
-			player1PathfinderForceFieldMap.setupFromPathfindingMap( dijkstraMap, player1EndPoint.x / tileWidth, player1EndPoint.y / tileHeight, true );
-			//TODO: All force fields should be stored in a image for later loading so we do not have to generate it each time we start a map
+			rightLeftPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
+			rightLeftPathfinderForceFieldMap.setupFromImage( directionRightLeftDataImage );
 
 			// set up the background visuals
 			this.setupBackground( visualMap )
@@ -93,6 +87,20 @@ package com.potmo.tdm.visuals.map
 			// tell subclasses to initialize
 			this.initialize();
 
+		}
+
+
+		private function validateDataImageSizes( mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData ):void
+		{
+			if ( mapDataImage.width != directionLeftRightDataImage.width || mapDataImage.height != directionLeftRightDataImage.height )
+			{
+				throw new Error( "Image sizes not match. - directionLeftRightDataImage" );
+			}
+
+			if ( mapDataImage.width != directionRightLeftDataImage.width || mapDataImage.height != directionRightLeftDataImage.height )
+			{
+				throw new Error( "Image sizes not match. - directionRightLeftDataImage" );
+			}
 		}
 
 
@@ -213,11 +221,11 @@ package com.potmo.tdm.visuals.map
 		{
 			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
 			{
-				return player0PathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				return leftRightPathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 			}
 			else
 			{
-				return player1PathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				return rightLeftPathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 			}
 		}
 
@@ -228,18 +236,6 @@ package com.potmo.tdm.visuals.map
 		public function getTileMapRepresentation():TileMap
 		{
 			return tileMapRepresentation;
-		}
-
-
-		public function getPlayer0AStarForceFieldMapRepresentation():PathfinderForceFieldMap
-		{
-			return player0PathfinderForceFieldMap;
-		}
-
-
-		public function getPlayer1AStarForceFieldMapRepresentation():PathfinderForceFieldMap
-		{
-			return player1PathfinderForceFieldMap;
 		}
 
 
