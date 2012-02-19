@@ -2,6 +2,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
+	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.state.IUnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
@@ -9,6 +10,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	public class ChargeState extends UnitStateBase implements IUnitState
 	{
 		private var _unit:IChargingUnit;
+		private var _enemy:IUnit;
 
 
 		final public function ChargeState()
@@ -26,7 +28,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function visit( gameLogics:GameLogics ):void
 		{
-			var mapForce:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit );
+
+			var mapForce:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
@@ -36,14 +39,40 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit.setVelX( _unit.getVelX() + mapForce.x + unitCollisionForce.x );
 			_unit.setVelY( _unit.getVelY() + mapForce.y + unitCollisionForce.y );
 
+			// search for nearby enemy units
+			searchForEnemies( gameLogics );
+
 			//TODO: Unit collision forces should apply when charging in a better way. Scaled and weighted
-			//TODO: Units in Chagrestate should look for opponents and target them 
+			//TODO: Units should check if they have reached the goal
+		}
+
+
+		private function searchForEnemies( gameLogics:GameLogics ):void
+		{
+			var enemy:IUnit = gameLogics.getUnitManager().getEnemyUnitCloseEnough( _unit, _unit.getSettings().targetingRange );
+
+			if ( enemy )
+			{
+				_enemy = enemy;
+				_unit.handleChargeStateFinished( this, gameLogics );
+			}
+		}
+
+
+		/**
+		 * If a anemy is found then this isnot null
+		 * otherwise it is null
+		 */
+		public function getEnemy():IUnit
+		{
+			return _enemy;
 		}
 
 
 		public function clear():void
 		{
 			_unit = null;
+			_enemy = null;
 		}
 	}
 }

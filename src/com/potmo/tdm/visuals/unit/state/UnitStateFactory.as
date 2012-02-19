@@ -8,6 +8,7 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.IGuardingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
+	import com.potmo.tdm.visuals.unit.state.variant.AttackState;
 
 	public class UnitStateFactory
 	{
@@ -52,6 +53,12 @@ package com.potmo.tdm.visuals.unit.state
 		public function getChargeState():ChargeState
 		{
 			return new ChargeState();
+		}
+
+
+		public function getAttackState():AttackState
+		{
+			return new AttackState();
 		}
 	}
 }

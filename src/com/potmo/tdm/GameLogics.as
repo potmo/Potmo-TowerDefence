@@ -81,7 +81,7 @@ package com.potmo.tdm
 
 			var length:int = projectiles.length;
 
-			for ( var i:int = length; i >= 0; i-- )
+			for ( var i:int = length - 1; i >= 0; i-- )
 			{
 				projectiles[ i ].update( this );
 

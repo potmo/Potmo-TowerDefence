@@ -41,6 +41,7 @@ package com.potmo.tdm.visuals.unit
 		private var _oldX:Number;
 		private var _oldY:Number;
 		private var _positionIsDirty:Boolean;
+		private var _targetUnit:IUnit;
 
 
 		public function UnitBase( graphics:TextureAnimationCacheObject, type:UnitType, settings:IUnitSetting )

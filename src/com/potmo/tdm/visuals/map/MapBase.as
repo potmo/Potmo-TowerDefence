@@ -217,16 +217,21 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		public function getMapPathForce( gameLogics:GameLogics, unit:IUnit ):Force
+		public function getMapPathForce( gameLogics:GameLogics, unit:IUnit, movingDirection:MapMovingDirection ):Force
 		{
-			if ( unit.getOwningPlayer().getColor() == PlayerColor.RED )
+			var map:IForceFieldMap;
+
+			if ( movingDirection == MapMovingDirection.RIGHT )
 			{
-				return leftRightPathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				map = leftRightPathfinderForceFieldMap;
+
 			}
 			else
 			{
-				return rightLeftPathfinderForceFieldMap.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+				map = rightLeftPathfinderForceFieldMap;
 			}
+
+			return map.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 		}
 
 

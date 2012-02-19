@@ -33,6 +33,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			_unit.setVelX( _unit.getVelX() + unitCollisionForce.x );
 			_unit.setVelY( _unit.getVelY() + unitCollisionForce.y );
+
+			//TODO: Guarding units should look for enemies and target them
 		}
 
 

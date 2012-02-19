@@ -31,6 +31,7 @@ package com.potmo.tdm.visuals.unit
 		function isTargetedByAnyUnit():Boolean;
 		function startBeingTargetedByUnit( other:IUnit ):void;
 		function stopBeingTargetedByUnit( other:IUnit ):void;
+
 		function getSettings():IUnitSetting;
 
 		function getOldX():Number;

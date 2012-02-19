@@ -1,5 +1,6 @@
 package com.potmo.tdm.player
 {
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 
 	public class Player
 	{
@@ -47,6 +48,19 @@ package com.potmo.tdm.player
 			return "Player[" + name + "(" + id + ")]"
 		}
 
+
+		public function getDefaultMovingDirection():MapMovingDirection
+		{
+			if ( getColor() == PlayerColor.RED )
+			{
+				return MapMovingDirection.RIGHT;
+			}
+			else
+			{
+				return MapMovingDirection.LEFT;
+			}
+
+		}
 	}
 }
 

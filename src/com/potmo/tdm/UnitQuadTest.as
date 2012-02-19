@@ -362,4 +362,22 @@ internal class Unit implements IUnit
 		this._name = name;
 
 	}
+
+
+	public function startTargetUnit( other:IUnit ):void
+	{
+		// TODO Auto-generated method stub
+	}
+
+
+	public function stopTargetUnit():void
+	{
+		// TODO Auto-generated method stub
+	}
+
+
+	public function isTartetingAnyUnit():Boolean
+	{
+		return false;
+	}
 }
