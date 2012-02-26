@@ -28,7 +28,7 @@ package com.potmo.tdm.visuals.unit
 		function getY():Number;
 		function getRadius():Number;
 
-		function isTargetedByAnyUnit():Boolean;
+		function getNumberOfTargetingUnits():int;
 		function startBeingTargetedByUnit( other:IUnit ):void;
 		function stopBeingTargetedByUnit( other:IUnit ):void;
 

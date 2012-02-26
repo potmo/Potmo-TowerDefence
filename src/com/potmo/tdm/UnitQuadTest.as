@@ -183,6 +183,12 @@ internal class Unit implements IUnit
 	}
 
 
+	public function getNumberOfTargetingUnits():int
+	{
+		return 0;
+	}
+
+
 	final public function setX( value:Number ):void
 	{
 		if ( x != value )
@@ -330,12 +336,6 @@ internal class Unit implements IUnit
 	public function getAsDisplayObject():DisplayObject
 	{
 		return null;
-	}
-
-
-	public function isTargetedByAnyUnit():Boolean
-	{
-		return false;
 	}
 
 

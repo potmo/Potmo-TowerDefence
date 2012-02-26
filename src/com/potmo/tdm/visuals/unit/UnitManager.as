@@ -13,6 +13,8 @@ package com.potmo.tdm.visuals.unit
 
 	public class UnitManager
 	{
+		private static const MAX_NUMBER_OF_TARGETING_UNITS:int = 2;
+
 		private var _unitLookup:QuadTree;
 		private var _units:Vector.<IUnit>;
 		private var _unitFactory:UnitFactory;
@@ -138,7 +140,7 @@ package com.potmo.tdm.visuals.unit
 			var output:Vector.<IUnit> = new Vector.<IUnit>();
 
 			var unitsLength:int = unitsToSearch.length;
-			
+
 			for ( var i:int = 0; i < unitsLength; i++ )
 			{
 				var unit:IUnit = unitsToSearch[ i ];
@@ -164,7 +166,7 @@ package com.potmo.tdm.visuals.unit
 		 * Return the closest
 		 * @returns the best unit to attack or null if none
 		 */
-		public function getEnemyUnitCloseEnough( unit:IUnit, range:int ):IUnit
+		public function getClosestEnemyUnitPossibleToAttack( unit:IUnit, range:int ):IUnit
 		{
 
 			// get all the close by units
@@ -183,40 +185,50 @@ package com.potmo.tdm.visuals.unit
 
 			var dist:Number;
 			var unitsLength:int = unitsToSearch.length;
-			
+
 			for ( var i:int = 0; i < unitsLength; i++ )
 			{
 				var other:IUnit = unitsToSearch[ i ];
-				
-				// check for owner
-				if ( other.getOwningPlayer().getColor() != unit.getOwningPlayer().getColor() )
+
+				// a unit can only be targeted by x number of other units
+				if ( other.getNumberOfTargetingUnits() >= MAX_NUMBER_OF_TARGETING_UNITS )
 				{
-					dist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
+					continue;
+				}
 
-					// check if it is in range
-					if ( dist <= range )
+				// check for owner
+				if ( other.getOwningPlayer().getColor() == unit.getOwningPlayer().getColor() )
+				{
+					continue;
+				}
+
+				dist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
+
+				if ( dist > range )
+				{
+					continue;
+				}
+
+				// check if it is in range
+
+				if ( other.getNumberOfTargetingUnits() > 0 )
+				{
+					// targeted must be double as close
+					if ( dist * 4 <= range )
 					{
-						if ( other.isTargetedByAnyUnit() )
+						if ( dist < bestTargetedDist )
 						{
-							// targeted must be double as close
-							if ( dist * 4 <= range )
-							{
-								if ( dist < bestTargetedDist )
-								{
-									bestTargeted = other;
-									bestTargetedDist = dist;
-								}
-							}
+							bestTargeted = other;
+							bestTargetedDist = dist;
 						}
-						else
-						{
-							if ( dist < bestUntargetedDist )
-							{
-								bestUntargeted = other;
-								bestUntargetedDist = dist;
-							}
-						}
-
+					}
+				}
+				else
+				{
+					if ( dist < bestUntargetedDist )
+					{
+						bestUntargeted = other;
+						bestUntargetedDist = dist;
 					}
 				}
 

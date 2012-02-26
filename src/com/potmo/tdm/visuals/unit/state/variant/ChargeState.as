@@ -44,12 +44,13 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			//TODO: Unit collision forces should apply when charging in a better way. Scaled and weighted
 			//TODO: Units should check if they have reached the goal
+			//TODO: Units should try to group when charging so they dont spread out too much
 		}
 
 
 		private function searchForEnemies( gameLogics:GameLogics ):void
 		{
-			var enemy:IUnit = gameLogics.getUnitManager().getEnemyUnitCloseEnough( _unit, _unit.getSettings().targetingRange );
+			var enemy:IUnit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit, _unit.getSettings().targetingRange );
 
 			if ( enemy )
 			{

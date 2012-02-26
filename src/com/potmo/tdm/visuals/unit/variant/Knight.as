@@ -59,7 +59,7 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		override public function handleCommandedToCharge( gameLogics:GameLogics ):void
+		override public function handleBeeingCommandedToCharge( gameLogics:GameLogics ):void
 		{
 			// set charge state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();

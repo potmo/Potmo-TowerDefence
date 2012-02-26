@@ -11,6 +11,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 		private var _enemy:IUnit;
 		private var _unit:IAttackingUnit;
 
+		private var _hitDelay:int = 0;
+
 
 		final public function AttackState()
 		{
@@ -22,12 +24,37 @@ package com.potmo.tdm.visuals.unit.state.variant
 		{
 			this._unit = unit;
 			this._enemy = enemy;
+
+			_enemy.startBeingTargetedByUnit( _unit );
+
+			_hitDelay = unit.getSettings().hitDelay;
 		}
 
 
 		public function visit( gameLogics:GameLogics ):void
 		{
-			//TODO: implement attack functions
+			_hitDelay--;
+
+			if ( _hitDelay <= 0 )
+			{
+				damageEnemy( gameLogics );
+			}
+
+			//TODO: Check if unit is dead then stop
+			//TODO: Check if unit is too far away then stop
+
+		}
+
+
+		private function damageEnemy( gameLogics:GameLogics ):void
+		{
+
+			// damage
+			var damage:int = _unit.getSettings().hitDamage;
+			_enemy.damage( damage, gameLogics );
+
+			// reset hit delay
+			_hitDelay = _unit.getSettings().hitDelay;
 		}
 
 
@@ -35,6 +62,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		{
 			_unit = null;
 			_enemy = null;
+			_hitDelay = 0;
 		}
 
 	}

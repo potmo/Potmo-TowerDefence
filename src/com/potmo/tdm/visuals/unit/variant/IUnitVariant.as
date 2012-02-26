@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.unit.variant
 		function handleBeingKilled( gameLogics:GameLogics ):void;
 		function handleBeingHurt( damage:int, gameLogics:GameLogics ):void;
 		function handleBeingHealed( aid:int, gameLogics:GameLogics ):void;
-		function handleCommandedToCharge( gameLogics:GameLogics ):void;
+		function handleBeeingCommandedToCharge( gameLogics:GameLogics ):void;
 		function handleBeingDeployed( x:int, y:int, gameLogics:GameLogics ):void;
 	}
 }

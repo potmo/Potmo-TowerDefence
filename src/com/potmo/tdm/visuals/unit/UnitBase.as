@@ -10,6 +10,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import starling.display.DisplayObject;
@@ -105,11 +106,14 @@ package com.potmo.tdm.visuals.unit
 
 		final protected function setState( newState:IUnitState, gameLogics:GameLogics ):void
 		{
+			Logger.log( "Unit: " + this + " transition to state: " + newState + " from: " + _state );
+
 			if ( _state )
 			{
 				gameLogics.getUnitManager().getUnitStateFactory().returnState( _state );
 			}
 			_state = newState;
+
 		}
 
 
@@ -179,7 +183,7 @@ package com.potmo.tdm.visuals.unit
 
 		public function charge( gameLogics:GameLogics ):void
 		{
-			handleCommandedToCharge( gameLogics );
+			handleBeeingCommandedToCharge( gameLogics );
 		}
 
 
@@ -192,9 +196,9 @@ package com.potmo.tdm.visuals.unit
 		/**
 		 * Checks if this unit is already targeted by a unit
 		 */
-		final public function isTargetedByAnyUnit():Boolean
+		final public function getNumberOfTargetingUnits():int
 		{
-			return targetedByUnits.length > 0;
+			return targetedByUnits.length;
 		}
 
 
@@ -383,7 +387,7 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function handleCommandedToCharge( gameLogics:GameLogics ):void
+		public function handleBeeingCommandedToCharge( gameLogics:GameLogics ):void
 		{
 			throw new Error( "Override function in unit variant" );
 		}
