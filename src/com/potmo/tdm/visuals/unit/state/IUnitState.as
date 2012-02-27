@@ -18,11 +18,21 @@ package com.potmo.tdm.visuals.unit.state
 		/**
 		 * Initialize the state
 		 */
-		//function init( unit:UnitBase, gameLogics:GameLogics ):void;
+
+		/**
+		 * There should be a enter state but with different arguments
+		 */
+		//function enter( unit:UnitBase, gameLogics:GameLogics ):void;
+
+		/**
+		 * Exit the state. Called before clear
+		 */
+		function exit( gameLogics:GameLogics ):void;
 
 		/**
 		 * Clear the state as if it where new
 		 */
 		function clear():void;
+
 	}
 }

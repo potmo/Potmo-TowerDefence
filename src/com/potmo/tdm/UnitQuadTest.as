@@ -135,6 +135,7 @@ import com.potmo.tdm.visuals.building.BuildingBase;
 import com.potmo.tdm.visuals.unit.IUnit;
 import com.potmo.tdm.visuals.unit.UnitType;
 import com.potmo.tdm.visuals.unit.settings.IUnitSetting;
+import com.potmo.tdm.visuals.unit.state.IUnitState;
 
 import starling.display.DisplayObject;
 
@@ -377,6 +378,18 @@ internal class Unit implements IUnit
 
 
 	public function isTartetingAnyUnit():Boolean
+	{
+		return false;
+	}
+
+
+	public function getState():IUnitState
+	{
+		return null;
+	}
+
+
+	public function isDead():Boolean
 	{
 		return false;
 	}

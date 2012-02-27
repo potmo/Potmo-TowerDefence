@@ -10,7 +10,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 	public class ChargeState extends UnitStateBase implements IUnitState
 	{
 		private var _unit:IChargingUnit;
-		private var _enemy:IUnit;
 
 
 		final public function ChargeState()
@@ -19,7 +18,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function init( unit:IChargingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:IChargingUnit, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
 			_unit.setFrameFromName( "WALK" );
@@ -54,26 +53,21 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( enemy )
 			{
-				_enemy = enemy;
-				_unit.handleChargeStateFinished( this, gameLogics );
+				_unit.handleChargeStateFinished( this, enemy, gameLogics );
 			}
 		}
 
 
-		/**
-		 * If a anemy is found then this isnot null
-		 * otherwise it is null
-		 */
-		public function getEnemy():IUnit
+		public function exit( gameLogics:GameLogics ):void
 		{
-			return _enemy;
+			//nada
 		}
 
 
 		public function clear():void
 		{
 			_unit = null;
-			_enemy = null;
 		}
+
 	}
 }

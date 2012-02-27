@@ -190,6 +190,11 @@ package com.potmo.tdm.visuals.unit
 			{
 				var other:IUnit = unitsToSearch[ i ];
 
+				if ( other.isDead() )
+				{
+					continue;
+				}
+
 				// a unit can only be targeted by x number of other units
 				if ( other.getNumberOfTargetingUnits() >= MAX_NUMBER_OF_TARGETING_UNITS )
 				{

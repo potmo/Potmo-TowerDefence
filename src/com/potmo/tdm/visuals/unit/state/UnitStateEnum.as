@@ -14,10 +14,10 @@ package com.potmo.tdm.visuals.unit.state
 		public static const APPROACH_ATTACK:UnitStateEnum = new UnitStateEnum( "APPROACH_ATTACK" ); // engaging fight with other unit after charging
 		public static const APPROACH_DEFEND:UnitStateEnum = new UnitStateEnum( "APPROACH_DEFEND" ); // engaging fight with other unit after guarding
 
-		public static const ATTACKING:UnitStateEnum = new UnitStateEnum( "ATTACKING" ); // fighting other unit after charging
-		public static const DEFENDING:UnitStateEnum = new UnitStateEnum( "DEFENDING" ); // fighting other unit after guarding
+		public static const FOOTATTACKING:UnitStateEnum = new UnitStateEnum( "FOOTATTACKING" ); // fighting other unit after charging
+		public static const FOOTDEFENDING:UnitStateEnum = new UnitStateEnum( "FOOTDEFENDING" ); // fighting other unit after guarding
 
-		public static var WALKING_DEAD:UnitStateEnum = new UnitStateEnum( "WALKING_DEAD" ); // When a unit is dead but animating to the end
+		public static var DYING:UnitStateEnum = new UnitStateEnum( "DYING" ); // When a unit is dead but animating to the end
 
 		private var name:String;
 

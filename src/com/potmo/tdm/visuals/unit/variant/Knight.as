@@ -8,18 +8,18 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
-	import com.potmo.tdm.visuals.unit.state.variant.AttackState;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
-	import com.potmo.tdm.visuals.unit.state.variant.IAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.IFootAttackingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.IChargingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.IGuardingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 
-	public class Knight extends UnitBase implements IUnitVariant, INoneingUnit, IDeployingUnit, IGuardingUnit, IChargingUnit, IAttackingUnit
+	public class Knight extends UnitBase implements IUnitVariant, INoneingUnit, IDeployingUnit, IGuardingUnit, IChargingUnit, IFootAttackingUnit
 	{
 		private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
 		private static const SETTINGS:KnightSetting = new KnightSetting();
@@ -35,21 +35,22 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 			// start by setting no state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			var noneState:NoneState = unitStateFactory.getNoneState();
-			noneState.init( this, gameLogics );
-			setState( noneState, gameLogics );
+			currentState = unitStateFactory.getNoneState( null, this, gameLogics );
+
 		}
 
 
 		override public function handleBeingKilled( gameLogics:GameLogics ):void
 		{
-			// TODO Auto-generated method stub
+			//TODO: Should go to die state instead of none state
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 		}
 
 
 		override public function handleBeingHurt( damage:int, gameLogics:GameLogics ):void
 		{
-			// TODO Auto-generated method stub
+			//TODO: Do some animation
 		}
 
 
@@ -63,9 +64,7 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 			// set charge state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			var chargeState:ChargeState = unitStateFactory.getChargeState();
-			chargeState.init( this, gameLogics );
-			setState( chargeState, gameLogics );
+			currentState = unitStateFactory.getChargeState( currentState, this, gameLogics );
 		}
 
 
@@ -73,9 +72,7 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 			// set deploy state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			var deployState:DeployState = unitStateFactory.getDeployState();
-			deployState.init( this, x, y, gameLogics );
-			setState( deployState, gameLogics );
+			currentState = unitStateFactory.getDeployState( currentState, this, x, y, gameLogics );
 		}
 
 
@@ -87,36 +84,30 @@ package com.potmo.tdm.visuals.unit.variant
 
 		public function handleNoneStateFinished( state:NoneState, gameLogics:GameLogics ):void
 		{
-			// do nothing
+			// do nothing it always does
 		}
 
 
 		public function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void
 		{
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			var guardState:GuardState = unitStateFactory.getGuardState();
-			guardState.init( this, gameLogics );
-			setState( guardState, gameLogics );
+			currentState = unitStateFactory.getGuardState( state, this, gameLogics );
 		}
 
 
-		public function handleChargeStateFinished( state:ChargeState, gameLogics:GameLogics ):void
+		public function handleChargeStateFinished( state:ChargeState, enemy:IUnit, gameLogics:GameLogics ):void
 		{
-			// get the enemy
-			var enemy:IUnit = state.getEnemy();
 
-			// change state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			var attackState:AttackState = unitStateFactory.getAttackState();
-			attackState.init( this, enemy, gameLogics );
-			setState( attackState, gameLogics );
+			currentState = unitStateFactory.getAttackState( state, this, enemy, gameLogics );
 
 		}
 
 
-		public function handleAttackStateFinished( state:AttackState, gameLogics:GameLogics ):void
+		public function handleFootAttackStateFinished( state:FootAttackState, gameLogics:GameLogics ):void
 		{
-			// TODO Auto-generated method stub
+			// okay back on the road again
+			charge( gameLogics );
 		}
 
 	}

@@ -18,15 +18,20 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function visit( gameLogics:GameLogics ):void
 		{
-			// directly change to a deploying state
-			_unit.handleNoneStateFinished( this, gameLogics );
+			// do nothing
 		}
 
 
-		public function init( unit:INoneingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:INoneingUnit, gameLogics:GameLogics ):void
 		{
 			// just save the unit for later use
 			_unit = unit;
+		}
+
+
+		public function exit( gameLogics:GameLogics ):void
+		{
+			// nada
 		}
 
 

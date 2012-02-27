@@ -59,6 +59,12 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 					continue;
 				}
 
+				// do not check agains dead units
+				if ( otherUnit.isDead() )
+				{
+					continue;
+				}
+
 				dx = unit.getX() - otherUnit.getX();
 				dy = unit.getY() - otherUnit.getY();
 

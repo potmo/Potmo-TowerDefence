@@ -4,6 +4,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.unit.settings.IUnitSetting;
+	import com.potmo.tdm.visuals.unit.state.IUnitState;
 
 	import starling.display.DisplayObject;
 
@@ -24,6 +25,8 @@ package com.potmo.tdm.visuals.unit
 		function getType():UnitType;
 		function getAsDisplayObject():DisplayObject;
 
+		function isDead():Boolean;
+
 		function getX():Number;
 		function getY():Number;
 		function getRadius():Number;
@@ -38,6 +41,8 @@ package com.potmo.tdm.visuals.unit
 		function getOldY():Number;
 		function isPositionDirty():Boolean;
 		function setPositionAsClean():void;
+
+		function getState():IUnitState;
 
 	}
 }

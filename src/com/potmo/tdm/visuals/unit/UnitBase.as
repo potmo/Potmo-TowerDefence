@@ -21,7 +21,7 @@ package com.potmo.tdm.visuals.unit
 	{
 		private var _settings:IUnitSetting;
 
-		private var _state:IUnitState;
+		protected var currentState:IUnitState;
 		private var _type:UnitType;
 		private var _owningPlayer:Player;
 		private var _homeBuilding:BuildingBase;
@@ -91,7 +91,7 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// visit the state to see if we should make any changes to it
-			_state.visit( gameLogics );
+			currentState.visit( gameLogics );
 
 			this.x += _velx;
 			this.y += _vely;
@@ -104,19 +104,6 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		final protected function setState( newState:IUnitState, gameLogics:GameLogics ):void
-		{
-			Logger.log( "Unit: " + this + " transition to state: " + newState + " from: " + _state );
-
-			if ( _state )
-			{
-				gameLogics.getUnitManager().getUnitStateFactory().returnState( _state );
-			}
-			_state = newState;
-
-		}
-
-
 		final public function setFrameFromName( name:String ):void
 		{
 
@@ -125,6 +112,9 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
+		/**
+		 * Set the health and update healthbar
+		 */
 		final protected function setHealth( value:int ):void
 		{
 			var newHealth:int = StrictMath.clamp( value, 0, _settings.maxHealth );
@@ -143,7 +133,12 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function damage( amount:int, gameLogics:GameLogics ):void
+		/**
+		 * Damage this unit.
+		 * If the unit has health left the unit will be hurt
+		 * If the unit has no health left then the unit will be killed and then probably die
+		 */
+		final public function damage( amount:int, gameLogics:GameLogics ):void
 		{
 
 			if ( getHealth() <= 0 )
@@ -166,13 +161,19 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function kill( gameLogics:GameLogics ):void
+		/**
+		 * Kill this unit. It will probably die (but does not have to)
+		 */
+		final public function kill( gameLogics:GameLogics ):void
 		{
 			handleBeingKilled( gameLogics );
 		}
 
 
-		public function heal( amount:int, gameLogics:GameLogics ):void
+		/**
+		 * Heal this unit. Health will increase
+		 */
+		final public function heal( amount:int, gameLogics:GameLogics ):void
 		{
 			var healthBefore:int = getHealth();
 			setHealth( healthBefore + amount );
@@ -181,12 +182,18 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function charge( gameLogics:GameLogics ):void
+		/**
+		 * Tell this unit to charge (start walking towards the enemy base)
+		 */
+		final public function charge( gameLogics:GameLogics ):void
 		{
 			handleBeeingCommandedToCharge( gameLogics );
 		}
 
 
+		/**
+		 * Tell the unit to deploy (start walking from home building to flag position)
+		 */
 		public function deploy( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			handleBeingDeployed( x, y, gameLogics );
@@ -362,7 +369,19 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function getAsDisplayObject():DisplayObject
+		final public function getState():IUnitState
+		{
+			return currentState;
+		}
+
+
+		final public function isDead():Boolean
+		{
+			return getHealth() <= 0;
+		}
+
+
+		final public function getAsDisplayObject():DisplayObject
 		{
 			return this;
 		}

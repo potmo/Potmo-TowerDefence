@@ -19,7 +19,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function init( unit:IDeployingUnit, deployX:int, deployY:int, gameLogics:GameLogics ):void
+		public function enter( unit:IDeployingUnit, deployX:int, deployY:int, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
 
@@ -74,8 +74,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 			// sum up the forces and add them to units velocity
 			toFlagForce.add( unitCollisionForce );
 
-			_unit.setVelX( _unit.getVelX() + toFlagForce.x );
-			_unit.setVelY( _unit.getVelY() + toFlagForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.5 + toFlagForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.5 + toFlagForce.y );
 
 		}
 
@@ -83,6 +83,12 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function clear():void
 		{
 			_unit = null;
+		}
+
+
+		public function exit( gameLogics:GameLogics ):void
+		{
+			//nada
 		}
 	}
 }

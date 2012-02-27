@@ -17,7 +17,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function init( unit:IGuardingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:IGuardingUnit, gameLogics:GameLogics ):void
 		{
 			// just save the unit for later use
 			_unit = unit;
@@ -41,6 +41,12 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function clear():void
 		{
 			_unit = null;
+		}
+
+
+		public function exit( gameLogics:GameLogics ):void
+		{
+			// nada
 		}
 	}
 }
