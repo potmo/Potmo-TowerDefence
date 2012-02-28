@@ -31,9 +31,9 @@ package com.potmo.tdm.visuals.unit
 		function getY():Number;
 		function getRadius():Number;
 
-		function getNumberOfTargetingUnits():int;
-		function startBeingTargetedByUnit( other:IUnit ):void;
-		function stopBeingTargetedByUnit( other:IUnit ):void;
+		/*function getNumberOfTargetingUnits():int;
+		   function startBeingTargetedByUnit( other:IUnit ):void;
+		   function stopBeingTargetedByUnit( other:IUnit ):void;*/
 
 		function getSettings():IUnitSetting;
 

@@ -6,6 +6,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.visuals.unit.state.IUnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	public class FootAttackState extends UnitStateBase implements IUnitState
@@ -27,7 +28,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			this._unit = unit;
 			this._enemy = enemy;
 
-			_enemy.startBeingTargetedByUnit( _unit );
+			//_enemy.startBeingTargetedByUnit( _unit );
 
 			_hitDelay = unit.getSettings().hitDelay;
 		}
@@ -35,7 +36,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function exit( gameLogics:GameLogics ):void
 		{
-
+			//_enemy.stopBeingTargetedByUnit( _unit );
 		}
 
 
@@ -82,21 +83,25 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			//continue calculate force towards flag
 			var toEnemyForce:Force = new Force( dirX, dirY );
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
 			toEnemyForce.normalize();
-			toEnemyForce.scale( movingSpeed );
+			toEnemyForce.scale( 0.1 ); // will be 10% influencal or normalized to 1.0 (if no other forces applies)
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
 			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
-
-			// sum up the forces and add them to units velocity
 			toEnemyForce.add( unitCollisionForce );
 
-			//TODO: Calculate map restriction forces to keep units on the road
+			var unwalkableAreaForce:Force;
+			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			toEnemyForce.add( unwalkableAreaForce );
 
-			_unit.setVelX( _unit.getVelX() * 0.5 + toEnemyForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.5 + toEnemyForce.y );
+			//scale so we do not walk faster than we can
+			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			toEnemyForce.normalize();
+			toEnemyForce.scale( movingSpeed );
+
+			_unit.setVelX( _unit.getVelX() * 0.2 + toEnemyForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.2 + toEnemyForce.y );
 
 		}
 

@@ -58,8 +58,8 @@ package com.potmo.tdm
 				var velX:Number = unit.getVelX();
 				var velY:Number = unit.getVelY();
 
-				//	velX = velX * 0.95 + Math.random() * 1 - 0.5;
-				//	velY = velY * 0.95 + Math.random() * 1 - 0.5;
+				velX = velX * 0.95 + Math.random() * 1 - 0.5;
+				velY = velY * 0.95 + Math.random() * 1 - 0.5;
 
 				var newX:Number = unit.getX() + velX;
 				var newY:Number = unit.getY() + velY;

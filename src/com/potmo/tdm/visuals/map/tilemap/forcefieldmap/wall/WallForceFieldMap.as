@@ -62,7 +62,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.wall
 		}
 
 
-		public function getForce( x:Number, y:Number ):Force
+		public function getPathForce( x:Number, y:Number ):Force
 		{
 
 			//ABC
@@ -157,7 +157,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.wall
 				{
 					var mapX:Number = x / horizontalTileSize;
 					var mapY:Number = y / verticalTileSize;
-					var force:Force = getForce( mapX, mapY );
+					var force:Force = getPathForce( mapX, mapY );
 					MapDrawUtil.drawForce( canvas, x, y, force );
 				}
 			}

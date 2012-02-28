@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.geom.Rectangle;
@@ -34,7 +35,7 @@ package com.potmo.tdm.visuals.unit
 		{
 			var unitsLength:int = _units.length;
 
-			for ( var i:int = 0; i < unitsLength; i++ )
+			for ( var i:int = unitsLength - 1; i >= 0; i-- )
 			{
 				var unit:IUnit = _units[ i ];
 				unit.update( gameLogics );
@@ -70,6 +71,8 @@ package com.potmo.tdm.visuals.unit
 
 			gameView.addUnit( unit );
 
+			Logger.log( "Adding unit: " + unit );
+
 			return unit;
 		}
 
@@ -96,7 +99,6 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get all the close by units
-			//var unitsToSearch:Vector.<IUnit> = _unitLookup.search( x - range, y - range, range * 2, range * 2 );
 			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - range, y - range, range * 2, range * 2 );
 
 			var dist:Number;
@@ -166,11 +168,13 @@ package com.potmo.tdm.visuals.unit
 		 * Return the closest
 		 * @returns the best unit to attack or null if none
 		 */
-		public function getClosestEnemyUnitPossibleToAttack( unit:IUnit, range:int ):IUnit
+		public function getClosestEnemyUnitPossibleToAttack( unit:IUnit ):IUnit
 		{
 
+			// get the range
+			var range:Number = unit.getSettings().targetingRange;
+
 			// get all the close by units
-			//var unitsToSearch:Vector.<IUnit> = _unitLookup.search( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 
 			//square inRange
@@ -178,9 +182,9 @@ package com.potmo.tdm.visuals.unit
 
 			// okay firstly we want to target a unit that is not already targeted by another unit
 			// if we can not find that we will target the first best
-			var bestTargeted:IUnit;
+			//var bestTargeted:IUnit;
 			var bestUntargeted:IUnit;
-			var bestTargetedDist:int = int.MAX_VALUE;
+			//var bestTargetedDist:int = int.MAX_VALUE;
 			var bestUntargetedDist:int = int.MAX_VALUE;
 
 			var dist:Number;
@@ -190,13 +194,8 @@ package com.potmo.tdm.visuals.unit
 			{
 				var other:IUnit = unitsToSearch[ i ];
 
-				if ( other.isDead() )
-				{
-					continue;
-				}
-
-				// a unit can only be targeted by x number of other units
-				if ( other.getNumberOfTargetingUnits() >= MAX_NUMBER_OF_TARGETING_UNITS )
+				// do not check agains my self
+				if ( other == unit )
 				{
 					continue;
 				}
@@ -204,8 +203,23 @@ package com.potmo.tdm.visuals.unit
 				// check for owner
 				if ( other.getOwningPlayer().getColor() == unit.getOwningPlayer().getColor() )
 				{
+					//Logger.log( "Unit is on my team: " + other.getOwningPlayer() + " == " + unit.getOwningPlayer() );
 					continue;
 				}
+
+				// check if dead
+				if ( other.isDead() )
+				{
+					//Logger.log( "Unit is dead" );
+					continue;
+				}
+
+				// a unit can only be targeted by x number of other units
+				/*if ( other.getNumberOfTargetingUnits() >= MAX_NUMBER_OF_TARGETING_UNITS )
+				   {
+				   //Logger.log( "Unit has too many tageted" );
+				   continue;
+				   }*/
 
 				dist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
 
@@ -216,26 +230,26 @@ package com.potmo.tdm.visuals.unit
 
 				// check if it is in range
 
-				if ( other.getNumberOfTargetingUnits() > 0 )
+				/*if ( other.getNumberOfTargetingUnits() > 0 )
+				   {
+				   // targeted must be double as close
+				   if ( dist * 4 <= range )
+				   {
+				   if ( dist < bestTargetedDist )
+				   {
+				   bestTargeted = other;
+				   bestTargetedDist = dist;
+				   }
+				   }
+				   }
+				   else
+				   {*/
+				if ( dist < bestUntargetedDist )
 				{
-					// targeted must be double as close
-					if ( dist * 4 <= range )
-					{
-						if ( dist < bestTargetedDist )
-						{
-							bestTargeted = other;
-							bestTargetedDist = dist;
-						}
-					}
+					bestUntargeted = other;
+					bestUntargetedDist = dist;
 				}
-				else
-				{
-					if ( dist < bestUntargetedDist )
-					{
-						bestUntargeted = other;
-						bestUntargetedDist = dist;
-					}
-				}
+					//}
 
 			}
 
@@ -243,11 +257,11 @@ package com.potmo.tdm.visuals.unit
 			{
 				return bestUntargeted;
 			}
-			else if ( bestTargeted )
-			{
-				return bestTargeted;
+			/*else if ( bestTargeted )
+			   {
+			   return bestTargeted;
 
-			}
+			   }*/
 			else
 			{
 				return null;

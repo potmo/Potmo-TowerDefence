@@ -50,7 +50,8 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap
 			this.x /= l;
 			this.y /= l;
 
-			_lengthDirty = true;
+			_length = 1.0;
+			_lengthDirty = false;
 		}
 
 
@@ -59,7 +60,14 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap
 			this.x *= scalar;
 			this.y *= scalar;
 
-			_lengthDirty = true;
+			// if the length is clean then we can scale 
+			// that as well and have a clean length without calculating it too hard 
+			if ( !_lengthDirty )
+			{
+				// still clean
+				_length *= scalar;
+			} // else it was and will be dirty
+
 		}
 
 

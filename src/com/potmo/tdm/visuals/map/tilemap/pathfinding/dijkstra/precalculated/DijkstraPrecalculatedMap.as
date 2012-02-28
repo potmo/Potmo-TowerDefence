@@ -25,7 +25,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 		}
 
 
-		public function getForce( x:Number, y:Number ):Force
+		public function getPathForce( x:Number, y:Number ):Force
 		{
 			// comment this in if you like fast non bilinear interpolation
 			/*		x = StrictMath.floor( x );
@@ -70,6 +70,55 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 			var bY:Number = _data[ x2 ][ y1 ].getDirectionY();
 			var cY:Number = _data[ x2 ][ y2 ].getDirectionY();
 			var dY:Number = _data[ x1 ][ y2 ].getDirectionY();
+
+			var adY:Number = aY * yInvFrac + dY * yFrac;
+			var bcY:Number = bY * yInvFrac + cY * yFrac;
+
+			var abcdY:Number = adY * xInvFrac + bcY * xFrac;
+
+			return new Force( abcdX, abcdY );
+		}
+
+
+		public function getUnwalkableAreaForce( x:Number, y:Number ):Force
+		{
+			// force is calculated with a bilinear interpolation
+			// this means that the force acting in the centre of a tile might
+			// not be equal to the force acting on the edges depending on the
+			// neighbouring tiles
+
+			x -= 0.5;
+			y -= 0.5;
+			var xTrunc:int = x;
+			var yTrunc:int = y;
+
+			var x1:int = StrictMath.max( 0, StrictMath.min( xTrunc, _width - 1 ) );
+			var x2:int = StrictMath.max( 0, StrictMath.min( xTrunc + 1, _width - 1 ) );
+			var y1:int = StrictMath.max( 0, StrictMath.min( yTrunc, _height - 1 ) );
+			var y2:int = StrictMath.max( 0, StrictMath.min( yTrunc + 1, _height - 1 ) );
+
+			var xFrac:Number = x - xTrunc;
+			var yFrac:Number = y - yTrunc;
+			var xInvFrac:Number = 1.0 - xFrac;
+			var yInvFrac:Number = 1.0 - yFrac;
+
+			//solve x value
+			//walkable tiles do not provide force
+			var aX:Number = _data[ x1 ][ y1 ].getType().isWalkable() ? 0 : _data[ x1 ][ y1 ].getDirectionX();
+			var bX:Number = _data[ x2 ][ y1 ].getType().isWalkable() ? 0 : _data[ x2 ][ y1 ].getDirectionX();
+			var cX:Number = _data[ x2 ][ y2 ].getType().isWalkable() ? 0 : _data[ x2 ][ y2 ].getDirectionX();
+			var dX:Number = _data[ x1 ][ y2 ].getType().isWalkable() ? 0 : _data[ x1 ][ y2 ].getDirectionX();
+
+			var abX:Number = aX * xInvFrac + bX * xFrac;
+			var dcX:Number = dX * xInvFrac + cX * xFrac;
+
+			var abcdX:Number = abX * yInvFrac + dcX * yFrac;
+
+			//solve y value
+			var aY:Number = _data[ x1 ][ y1 ].getType().isWalkable() ? 0 : _data[ x1 ][ y1 ].getDirectionY();
+			var bY:Number = _data[ x2 ][ y1 ].getType().isWalkable() ? 0 : _data[ x2 ][ y1 ].getDirectionY();
+			var cY:Number = _data[ x2 ][ y2 ].getType().isWalkable() ? 0 : _data[ x2 ][ y2 ].getDirectionY();
+			var dY:Number = _data[ x1 ][ y2 ].getType().isWalkable() ? 0 : _data[ x1 ][ y2 ].getDirectionY();
 
 			var adY:Number = aY * yInvFrac + dY * yFrac;
 			var bcY:Number = bY * yInvFrac + cY * yFrac;

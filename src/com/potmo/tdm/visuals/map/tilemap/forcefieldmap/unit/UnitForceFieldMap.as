@@ -19,7 +19,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 		}
 
 
-		public function getForce( x:Number, y:Number ):Force
+		public function getPathForce( x:Number, y:Number ):Force
 		{
 			var force:Force = new Force();
 
@@ -43,7 +43,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 			{
 				for ( var y:int = 0; y < canvas.width; y++ )
 				{
-					var f:Force = this.getForce( x / horizontalTileSize, y / verticalTileSize );
+					var f:Force = this.getPathForce( x / horizontalTileSize, y / verticalTileSize );
 
 					// note this is using platform dependent Math but does not matter since its just display
 					var rad:Number = StrictMath.atan2( f.x, f.y );

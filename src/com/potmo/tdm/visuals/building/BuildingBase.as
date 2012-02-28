@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.building
 
 	public class BuildingBase extends TextureAnimation
 	{
-		protected static const MAX_UNITS:uint = 3;
+		protected static const MAX_UNITS:uint = 1;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;
@@ -80,24 +80,6 @@ package com.potmo.tdm.visuals.building
 			_deployFlagY = y;
 
 			//TODO: Send to all units that they should move
-		}
-
-
-		private function getPathOffsetXForNthUnit( index:int ):int
-		{
-			var ang:Number = index * 120.0 + 60 * StrictMath.floor( index / 3 );
-			ang = StrictMath.degrees2rads( ang );
-			var d:Number = StrictMath.cos( ang ) * ( 15 + index * 2 );
-			return d;
-		}
-
-
-		private function getPathOffsetYForNthUnit( index:int ):int
-		{
-			var ang:Number = index * 120.0 + 60 * StrictMath.floor( index / 3 );
-			ang = StrictMath.degrees2rads( ang );
-			var d:Number = StrictMath.sin( ang ) * ( 15 + index * 2 );
-			return d;
 		}
 
 

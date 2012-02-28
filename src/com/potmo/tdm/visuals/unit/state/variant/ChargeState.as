@@ -34,9 +34,14 @@ package com.potmo.tdm.visuals.unit.state.variant
 			var unitCollisionForce:Force;
 			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
 
+			mapForce.add( unitCollisionForce );
+
+			mapForce.normalize();
+			mapForce.scale( _unit.getSettings().movingSpeed );
+
 			// add force from map and unit collistion force
-			_unit.setVelX( _unit.getVelX() + mapForce.x + unitCollisionForce.x );
-			_unit.setVelY( _unit.getVelY() + mapForce.y + unitCollisionForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.2 + mapForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.2 + mapForce.y );
 
 			// search for nearby enemy units
 			searchForEnemies( gameLogics );
@@ -49,7 +54,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		private function searchForEnemies( gameLogics:GameLogics ):void
 		{
-			var enemy:IUnit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit, _unit.getSettings().targetingRange );
+			var enemy:IUnit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit );
 
 			if ( enemy )
 			{

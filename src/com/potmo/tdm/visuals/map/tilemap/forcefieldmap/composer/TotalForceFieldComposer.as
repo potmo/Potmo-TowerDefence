@@ -23,10 +23,10 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.composer
 		public function getFlowForce( x:Number, y:Number ):Force
 		{
 
-			var wallForce:Force = wallField.getForce( x, y );
+			var wallForce:Force = wallField.getPathForce( x, y );
 
 			var aStarForce:Force = aStarField.getForce( x, y );
-			var unitForce:Force = unitField.getForce( x, y );
+			var unitForce:Force = unitField.getPathForce( x, y );
 
 			/*if ( wallForce.length >= 1 )
 			   {

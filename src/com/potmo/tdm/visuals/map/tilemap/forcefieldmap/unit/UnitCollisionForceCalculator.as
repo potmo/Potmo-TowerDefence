@@ -18,6 +18,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 
 		public function getUnitCollisionForce( gameLogics:GameLogics, unit:IUnit ):Force
 		{
+			//TODO: This should use QuadTree instead
 			var unitManager:UnitManager = gameLogics.getUnitManager();
 			var units:Vector.<IUnit> = unitManager.getUnitsIntersectingCircle( unit.getX(), unit.getY(), unit.getRadius() );
 

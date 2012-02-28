@@ -134,7 +134,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 
 					for ( var k:int = 0; k < nodeStuckChildrenLength; k++ )
 					{
-						unit = node.children[ k ];
+						unit = node.stuckChildren[ k ];
 						this.insert( unit );
 					}
 				}

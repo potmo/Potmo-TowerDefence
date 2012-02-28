@@ -35,7 +35,7 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 			// start by setting no state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getNoneState( null, this, gameLogics );
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 
 		}
 
@@ -45,6 +45,7 @@ package com.potmo.tdm.visuals.unit.variant
 			//TODO: Should go to die state instead of none state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
 			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
+			//gameLogics.getUnitManager().removeUnit( this, gameLogics );
 		}
 
 

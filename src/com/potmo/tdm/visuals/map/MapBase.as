@@ -217,6 +217,9 @@ package com.potmo.tdm.visuals.map
 		}
 
 
+		/**
+		 * Returns the force in the direction of the closest path to the other side
+		 */
 		public function getMapPathForce( gameLogics:GameLogics, unit:IUnit, movingDirection:MapMovingDirection ):Force
 		{
 			var map:IForceFieldMap;
@@ -231,7 +234,29 @@ package com.potmo.tdm.visuals.map
 				map = rightLeftPathfinderForceFieldMap;
 			}
 
-			return map.getForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+			return map.getPathForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+		}
+
+
+		/**
+		 * Returns the force towards the closest walkable place
+		 * If the ground under the unit is walkable this will return a zero length force
+		 */
+		public function getMapUnwalkableAreaForce( gameLogics:GameLogics, unit:IUnit, movingDirection:MapMovingDirection ):Force
+		{
+			var map:IForceFieldMap;
+
+			if ( movingDirection == MapMovingDirection.RIGHT )
+			{
+				map = leftRightPathfinderForceFieldMap;
+
+			}
+			else
+			{
+				map = rightLeftPathfinderForceFieldMap;
+			}
+
+			return map.getUnwalkableAreaForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
 		}
 
 

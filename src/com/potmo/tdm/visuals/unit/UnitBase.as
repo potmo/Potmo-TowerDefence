@@ -2,6 +2,7 @@ package com.potmo.tdm.visuals.unit
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.starling.TextureAnimation;
 	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
@@ -80,7 +81,13 @@ package com.potmo.tdm.visuals.unit
 		 */
 		final public function reset( gameLogics:GameLogics ):void
 		{
-			//TODO: implement reset in unit
+			//TODO: Probably more to reset for unit
+			setHealth( _settings.maxHealth );
+			_owningPlayer = null;
+			// currentState must not be cleared. It will be returned and reset in init
+			_homeBuilding = null;
+			_velx = 0;
+			_vely = 0;
 		}
 
 
@@ -203,39 +210,44 @@ package com.potmo.tdm.visuals.unit
 		/**
 		 * Checks if this unit is already targeted by a unit
 		 */
-		final public function getNumberOfTargetingUnits():int
-		{
-			return targetedByUnits.length;
-		}
-
+		/*final public function getNumberOfTargetingUnits():int
+		   {
+		   return targetedByUnits.length;
+		   }*/
 
 		/**
 		 *Tell this unit that it is targeted by another unit
 		 */
-		final public function startBeingTargetedByUnit( unit:IUnit ):void
-		{
-			var index:int = targetedByUnits.indexOf( unit );
+		/*final public function startBeingTargetedByUnit( unit:IUnit ):void
+		   {
+		   var index:int = targetedByUnits.indexOf( unit );
 
-			if ( index == -1 )
-			{
-				targetedByUnits.push( unit );
-			}
-		}
-
+		   if ( index == -1 )
+		   {
+		   targetedByUnits.push( unit );
+		   }
+		   else
+		   {
+		   throw new Error( "already targeted" );
+		   }
+		   }*/
 
 		/**
 		 * Tell this unit that another unit stopped targeting it
 		 */
-		final public function stopBeingTargetedByUnit( unit:IUnit ):void
-		{
-			var index:int = targetedByUnits.indexOf( unit );
+		/*final public function stopBeingTargetedByUnit( unit:IUnit ):void
+		   {
+		   var index:int = targetedByUnits.indexOf( unit );
 
-			if ( index != -1 )
-			{
-				targetedByUnits.splice( index, 1 );
-			}
-		}
-
+		   if ( index != -1 )
+		   {
+		   targetedByUnits.splice( index, 1 );
+		   }
+		   else
+		   {
+		   throw new Error( "not tarheted targeted" );
+		   }
+		   }*/
 
 		final public function setHomeBuilding( building:BuildingBase ):void
 		{
@@ -252,6 +264,18 @@ package com.potmo.tdm.visuals.unit
 		final public function setOwningPlayer( player:Player ):void
 		{
 			this._owningPlayer = player;
+
+			if ( _owningPlayer )
+			{
+				if ( _owningPlayer.getColor() == PlayerColor.RED )
+				{
+					_healthBar.color = 0xFFFF0000;
+				}
+				else
+				{
+					_healthBar.color = 0xFF0000FF;
+				}
+			}
 		}
 
 
@@ -416,6 +440,12 @@ package com.potmo.tdm.visuals.unit
 		{
 			throw new Error( "Override function in unit variant" );
 
+		}
+
+
+		public function toString():String
+		{
+			return "[" + _type.toString() + " p: " + _owningPlayer.getColor().toString() + "]";
 		}
 
 	}
