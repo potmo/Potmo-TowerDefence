@@ -178,19 +178,17 @@ package com.potmo.tdm.visuals.unit
 			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 
 			//square inRange
-			range *= range;
+			var squaredRange:Number = range * range;
 
 			// okay firstly we want to target a unit that is not already targeted by another unit
 			// if we can not find that we will target the first best
-			//var bestTargeted:IUnit;
 			var bestUntargeted:IUnit;
-			//var bestTargetedDist:int = int.MAX_VALUE;
-			var bestUntargetedDist:int = int.MAX_VALUE;
+			var bestUntargetedDistSquared:int = int.MAX_VALUE;
 
-			var dist:Number;
-			var unitsLength:int = unitsToSearch.length;
+			var squaredDist:Number;
+			var unitsCount:int = unitsToSearch.length;
 
-			for ( var i:int = 0; i < unitsLength; i++ )
+			for ( var i:int = 0; i < unitsCount; i++ )
 			{
 				var other:IUnit = unitsToSearch[ i ];
 
@@ -210,46 +208,23 @@ package com.potmo.tdm.visuals.unit
 				// check if dead
 				if ( other.isDead() )
 				{
-					//Logger.log( "Unit is dead" );
+					Logger.log( "Unit is dead" );
 					continue;
 				}
 
-				// a unit can only be targeted by x number of other units
-				/*if ( other.getNumberOfTargetingUnits() >= MAX_NUMBER_OF_TARGETING_UNITS )
-				   {
-				   //Logger.log( "Unit has too many tageted" );
-				   continue;
-				   }*/
+				squaredDist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
 
-				dist = StrictMath.distSquared( unit.getX(), unit.getY(), other.getX(), other.getY() );
-
-				if ( dist > range )
+				if ( squaredDist > squaredRange )
 				{
 					continue;
 				}
 
 				// check if it is in range
-
-				/*if ( other.getNumberOfTargetingUnits() > 0 )
-				   {
-				   // targeted must be double as close
-				   if ( dist * 4 <= range )
-				   {
-				   if ( dist < bestTargetedDist )
-				   {
-				   bestTargeted = other;
-				   bestTargetedDist = dist;
-				   }
-				   }
-				   }
-				   else
-				   {*/
-				if ( dist < bestUntargetedDist )
+				if ( squaredDist < bestUntargetedDistSquared )
 				{
 					bestUntargeted = other;
-					bestUntargetedDist = dist;
+					bestUntargetedDistSquared = squaredDist;
 				}
-					//}
 
 			}
 

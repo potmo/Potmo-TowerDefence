@@ -100,7 +100,8 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getAttackState( state, this, enemy, gameLogics );
+			//currentState = unitStateFactory.getAttackState( state, this, enemy, gameLogics );
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 
 		}
 

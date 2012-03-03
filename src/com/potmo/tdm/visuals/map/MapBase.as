@@ -1,15 +1,10 @@
 package com.potmo.tdm.visuals.map
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.IForceFieldMap;
-	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.pathfinding.PathfinderForceFieldMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitCollisionForceCalculator;
-	import com.potmo.tdm.visuals.map.tilemap.pathfinding.IPathfindingMap;
-	import com.potmo.tdm.visuals.map.tilemap.pathfinding.astar.AStarMap;
-	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraMap;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated.DijkstraPrecalculatedMap;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
 	import com.potmo.tdm.visuals.unit.IUnit;

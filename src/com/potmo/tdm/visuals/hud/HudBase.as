@@ -11,7 +11,7 @@ package com.potmo.tdm.visuals.hud
 	public class HudBase extends Sprite
 	{
 		private static const BUTTON_SPACING:int = 10;
-		private static const BUTTON_LEFT_PADDING:int = 20;
+		private static const BUTTON_LEFT_PADDING:int = 120;
 		private static const BUTTON_RIGHT_PADDING:int = 20;
 		private static const BUTTON_BOTTOM_SPACING:int = 10;
 
@@ -72,13 +72,14 @@ package com.potmo.tdm.visuals.hud
 			var button:TextureAnimation;
 
 			x = BUTTON_LEFT_PADDING;
-			y = ScreenSize.HEIGHT - BUTTON_BOTTOM_SPACING;
+			//y = ScreenSize.HEIGHT - BUTTON_BOTTOM_SPACING;
+			y = 0 + BUTTON_BOTTOM_SPACING;
 
 			for each ( button in leftButtons )
 			{
 				button.x = x;
 				x += BUTTON_SPACING + button.width;
-				button.y = y - button.height;
+				button.y = y;
 				Logger.log( "Set left button to: " + button.x + "," + button.y );
 
 			}
@@ -89,7 +90,7 @@ package com.potmo.tdm.visuals.hud
 			{
 				button.x = x - button.width;
 				x += -BUTTON_SPACING - button.width;
-				button.y = y - button.height;
+				button.y = y;
 				Logger.log( "Set right button to: " + button.x + "," + button.y );
 
 			}

@@ -6,7 +6,6 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.map.MapItem;
-	import com.potmo.tdm.visuals.starling.SortingSprite;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.projectile.Projectile;
 	import com.potmo.util.input.MouseManager;

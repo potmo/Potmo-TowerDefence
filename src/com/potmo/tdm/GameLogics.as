@@ -1,5 +1,6 @@
 package com.potmo.tdm
 {
+
 	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
@@ -20,6 +21,9 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.unit.projectile.ProjectileType;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.logger.Logger;
+
+	import flash.system.ApplicationDomain;
+	import flash.utils.ByteArray;
 
 	public final class GameLogics
 	{
@@ -47,6 +51,7 @@ package com.potmo.tdm
 
 		public function GameLogics( view:GameView, orderManager:OrderManager )
 		{
+
 			this.gameView = view;
 			this.orderManager = orderManager;
 			this.initialize();
