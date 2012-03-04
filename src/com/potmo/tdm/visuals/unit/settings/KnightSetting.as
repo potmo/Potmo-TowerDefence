@@ -16,7 +16,7 @@ package com.potmo.tdm.visuals.unit.settings
 
 		public function get attackingRange():int
 		{
-			return 20;
+			return 30;
 		}
 
 

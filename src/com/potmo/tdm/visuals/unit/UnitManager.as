@@ -7,9 +7,11 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
+	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
+	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
 
 	public class UnitManager
@@ -27,7 +29,7 @@ package com.potmo.tdm.visuals.unit
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
 			this._units = new Vector.<IUnit>();
-			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 10, 3 );
+			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 10, 5 );
 		}
 
 
@@ -175,7 +177,9 @@ package com.potmo.tdm.visuals.unit
 			var range:Number = unit.getSettings().targetingRange;
 
 			// get all the close by units
-			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+			var unitsToSearch:Vector.<IUnit>;
+			unitsToSearch = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+			//unitsToSearch = _units;
 
 			//square inRange
 			var squaredRange:Number = range * range;
@@ -218,13 +222,13 @@ package com.potmo.tdm.visuals.unit
 				{
 					continue;
 				}
-
-				// check if it is in range
-				if ( squaredDist < bestUntargetedDistSquared )
-				{
-					bestUntargeted = other;
-					bestUntargetedDistSquared = squaredDist;
-				}
+				/*
+				   // check if it is in range
+				   if ( squaredDist < bestUntargetedDistSquared )
+				   {*/
+				bestUntargeted = other;
+				bestUntargetedDistSquared = squaredDist;
+				/*}*/
 
 			}
 
@@ -232,11 +236,6 @@ package com.potmo.tdm.visuals.unit
 			{
 				return bestUntargeted;
 			}
-			/*else if ( bestTargeted )
-			   {
-			   return bestTargeted;
-
-			   }*/
 			else
 			{
 				return null;
@@ -248,6 +247,30 @@ package com.potmo.tdm.visuals.unit
 		public function getUnitStateFactory():UnitStateFactory
 		{
 			return _unitStateFactory;
+		}
+
+
+		public function draw( canvas:BitmapData ):void
+		{
+			BitmapUtil.fill( canvas, 0xFFFFFFFF );
+			BitmapUtil.fill( canvas, 0x55FFFFFF );
+			_unitLookup.draw( canvas, 1 );
+
+			for each ( var unit:IUnit in _units )
+			{
+
+				var range:Number = unit.getSettings().targetingRange;
+				var others:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+
+				BitmapUtil.drawRectangle( unit.getX() - range, unit.getY() - range, range * 2, range * 2, 0x0000FF, canvas );
+
+				for each ( var other:IUnit in others )
+				{
+					BitmapUtil.drawLine( unit.getX(), unit.getY(), other.getX(), other.getY(), 0xFF00FF00, canvas );
+				}
+
+			}
+
 		}
 
 	}

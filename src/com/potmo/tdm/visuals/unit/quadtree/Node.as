@@ -304,8 +304,8 @@ package com.potmo.tdm.visuals.unit.quadtree
 			var by:Number = this.y;
 
 			//floor the values
-			var b_w_h:Number = ( this.width / 2 ) | 0;
-			var b_h_h:Number = ( this.height / 2 ) | 0;
+			var b_w_h:Number = this.width / 2;
+			var b_h_h:Number = this.height / 2;
 			var bx_b_w_h:Number = bx + b_w_h;
 			var by_b_h_h:Number = by + b_h_h;
 
@@ -379,16 +379,23 @@ package com.potmo.tdm.visuals.unit.quadtree
 			}
 
 			var unit:IUnit;
+			var totChildren:int = 0;
 
 			for each ( unit in children )
 			{
 				BitmapUtil.drawCirlce( unit.getX() * 1, unit.getY() * 1, unit.getRadius() * 1, 0xFF0000FF, canvas );
+				totChildren++;
 			}
 
 			for each ( unit in stuckChildren )
 			{
 				BitmapUtil.drawCirlce( unit.getX() * 1, unit.getY() * 1, unit.getRadius() * 1, 0xFFFF0000, canvas );
+				totChildren++;
 			}
+
+			BitmapUtil.drawQuickTextOnBitmapData( canvas, totChildren.toString(), x + width / 2, y + height / 2 + 10, 0xFFFF00FF, 15 );
+
+			BitmapUtil.drawQuickTextOnBitmapData( canvas, depth.toString(), x + width / 2, y + height / 2, 0xFFFFFFFF, 15 );
 
 		}
 

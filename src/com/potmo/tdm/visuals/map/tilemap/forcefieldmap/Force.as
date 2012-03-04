@@ -47,6 +47,11 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap
 		{
 			var l:Number = this.length;
 
+			if ( l == 0 )
+			{
+				return;
+			}
+
 			this.x /= l;
 			this.y /= l;
 

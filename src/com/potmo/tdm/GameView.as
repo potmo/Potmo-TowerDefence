@@ -364,5 +364,11 @@ package com.potmo.tdm
 			ignoreMapInteraction = false;
 		}
 
+
+		public function getCameraPosition():Number
+		{
+			return cameraPosition;
+		}
+
 	}
 }

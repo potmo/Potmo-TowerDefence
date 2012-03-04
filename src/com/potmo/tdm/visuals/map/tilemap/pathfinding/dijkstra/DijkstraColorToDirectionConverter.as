@@ -97,7 +97,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 		public static function isWalkable( color:uint ):Boolean
 		{
 			// mask away biggest and see if that us the unwalkable mask
-			return ( color & 0xFF000000 ) != UNWALKABLE_MASK;
+			return !( ( color & 0xFF000000 | 0x00FFFFFF ) == UNWALKABLE_MASK );
 		}
 
 	}

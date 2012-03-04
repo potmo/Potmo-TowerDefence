@@ -1,10 +1,14 @@
 package com.potmo.tdm
 {
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.util.input.MouseManager;
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
+
+	import starling.core.Starling;
 	import starling.display.Sprite;
 	import starling.events.Event;
-	import com.potmo.tdm.player.OrderManager;
 
 	public class Main extends Sprite
 	{
@@ -13,6 +17,11 @@ package com.potmo.tdm
 		private var gameView:GameView;
 		private var gameLogics:GameLogics;
 		private var orderManager:OrderManager;
+		private var frame:int;
+
+		private var debugCanvas:BitmapData;
+
+		private var debugCanvasBitmap:Bitmap;
 
 
 		public function Main()
@@ -28,10 +37,20 @@ package com.potmo.tdm
 		}
 
 
-		private function onEnterFrame( event:Event ):void
+		private function onEnterFrame( event:Event = null ):void
 		{
 			gameLogics.update();
 			gameView.update();
+
+		/*	frame++;
+
+		   if ( frame % 5 == 0 )
+		   {
+		   debugCanvas.lock();
+		   gameLogics.getUnitManager().draw( debugCanvas );
+		   debugCanvasBitmap.x = -gameView.getCameraPosition();
+		   debugCanvas.unlock();
+		   }*/
 		}
 
 
@@ -54,6 +73,12 @@ package com.potmo.tdm
 			orderManager.setGameLogics( gameLogics );
 
 			addChild( gameView );
+
+			onEnterFrame();
+
+		/*debugCanvas = new BitmapData( gameLogics.getMap().getMapWidth(), gameLogics.getMap().getMapHeight(), true );
+		   debugCanvasBitmap = new Bitmap( debugCanvas );
+		   Starling.current.nativeStage.addChild( debugCanvasBitmap );*/
 
 		}
 	}

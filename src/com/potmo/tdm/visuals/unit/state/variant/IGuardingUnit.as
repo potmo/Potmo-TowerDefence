@@ -11,5 +11,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		function getVelY():Number;
 		function setVelX( value:Number ):void;
 		function setVelY( value:Number ):void;
+		function setX( value:Number ):void;
+		function setY( value:Number ):void;
 	}
 }

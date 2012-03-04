@@ -94,7 +94,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getAttackState( oldState:IUnitState, unit:IFootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):FootAttackState
+		public function getFootAttackState( oldState:IUnitState, unit:IFootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):FootAttackState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );

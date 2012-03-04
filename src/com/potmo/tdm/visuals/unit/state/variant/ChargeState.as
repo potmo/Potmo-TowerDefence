@@ -43,6 +43,9 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit.setVelX( _unit.getVelX() * 0.2 + mapForce.x );
 			_unit.setVelY( _unit.getVelY() * 0.2 + mapForce.y );
 
+			_unit.setX( _unit.getX() + _unit.getVelX() );
+			_unit.setY( _unit.getY() + _unit.getVelY() );
+
 			// search for nearby enemy units
 			searchForEnemies( gameLogics );
 

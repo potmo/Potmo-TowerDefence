@@ -31,8 +31,11 @@ package com.potmo.tdm.visuals.unit.state.variant
 			var unitCollisionForce:Force;
 			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
 
-			_unit.setVelX( _unit.getVelX() + unitCollisionForce.x );
-			_unit.setVelY( _unit.getVelY() + unitCollisionForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.4 + unitCollisionForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.4 + unitCollisionForce.y );
+
+			_unit.setX( _unit.getX() + _unit.getVelX() );
+			_unit.setY( _unit.getY() + _unit.getVelY() );
 
 			//TODO: Guarding units should look for enemies and target them
 		}

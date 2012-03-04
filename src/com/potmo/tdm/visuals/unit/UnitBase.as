@@ -100,12 +100,6 @@ package com.potmo.tdm.visuals.unit
 			// visit the state to see if we should make any changes to it
 			currentState.visit( gameLogics );
 
-			this.x += _velx;
-			this.y += _vely;
-
-			_velx = 0;
-			_vely = 0;
-
 			// update the frames
 			_frameName = _mainGraphics.nextFrame();
 		}

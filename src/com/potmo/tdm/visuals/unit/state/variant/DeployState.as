@@ -63,9 +63,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			//continue calculate force towards flag
 			var toFlagForce:Force = new Force( dirX, dirY );
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
 			toFlagForce.normalize();
-			toFlagForce.scale( movingSpeed );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
@@ -74,8 +72,15 @@ package com.potmo.tdm.visuals.unit.state.variant
 			// sum up the forces and add them to units velocity
 			toFlagForce.add( unitCollisionForce );
 
-			_unit.setVelX( _unit.getVelX() * 0.5 + toFlagForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.5 + toFlagForce.y );
+			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			toFlagForce.normalize();
+			toFlagForce.scale( movingSpeed );
+
+			_unit.setVelX( _unit.getVelX() * 0.3 + toFlagForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.3 + toFlagForce.y );
+
+			_unit.setX( _unit.getX() + _unit.getVelX() );
+			_unit.setY( _unit.getY() + _unit.getVelY() );
 
 		}
 

@@ -45,19 +45,28 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( isEnemyTooFarAwayToAttack() )
 			{
+				//TODO: Animate when moving
+				//TODO: Units should keep on the road
 				moveCloserToEnemy( gameLogics );
-					//TODO: Animate when moving
 			}
 			else
 			{
+				//TODO: Units should keep on the road
+				//TODO: Units should bounce on enemies
+				//TODO: Animate when damaging
 				tryDamageEnemy( gameLogics );
-					//TODO: Animate when damaging
 			}
 
 			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
 			{
 				stopAttack( gameLogics );
 			}
+
+			_unit.setVelX( _unit.getVelX() * 0.4 );
+			_unit.setVelY( _unit.getVelY() * 0.4 );
+
+			_unit.setX( _unit.getX() + _unit.getVelX() );
+			_unit.setY( _unit.getY() + _unit.getVelY() );
 
 		}
 
@@ -84,24 +93,24 @@ package com.potmo.tdm.visuals.unit.state.variant
 			//continue calculate force towards flag
 			var toEnemyForce:Force = new Force( dirX, dirY );
 			toEnemyForce.normalize();
-			toEnemyForce.scale( 0.1 ); // will be 10% influencal or normalized to 1.0 (if no other forces applies)
+			toEnemyForce.scale( 0.1 );
+
+			var unwalkableAreaForce:Force;
+			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			toEnemyForce.add( unwalkableAreaForce );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
 			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
 			toEnemyForce.add( unitCollisionForce );
 
-			var unwalkableAreaForce:Force;
-			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
-			toEnemyForce.add( unwalkableAreaForce );
-
 			//scale so we do not walk faster than we can
 			var movingSpeed:Number = _unit.getSettings().movingSpeed;
 			toEnemyForce.normalize();
 			toEnemyForce.scale( movingSpeed );
 
-			_unit.setVelX( _unit.getVelX() * 0.2 + toEnemyForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.2 + toEnemyForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.1 + toEnemyForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.1 + toEnemyForce.y );
 
 		}
 
