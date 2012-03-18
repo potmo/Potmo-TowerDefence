@@ -1,14 +1,16 @@
 package com.potmo.tdm.visuals.unit.projectile
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
+	import com.potmo.p2d.renderer.Renderer;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.starling.TextureAnimation;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.tdm.display.BasicRenderItem;
+	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.util.math.StrictMath;
 	import com.potmo.util.spline.qubicHermite.Spline;
 
 	import flash.geom.Point;
 
-	public class Projectile extends TextureAnimation
+	public class Projectile extends BasicRenderItem implements ZSortableRenderable
 	{
 		private var _type:ProjectileType;
 		private var _velX:Number;
@@ -28,10 +30,10 @@ package com.potmo.tdm.visuals.unit.projectile
 		private static const DAMAGE:int = 1;
 
 
-		public function Projectile( graphics:TextureAnimationCacheObject, type:ProjectileType )
+		public function Projectile( graphicSequence:SpriteAtlasSequence, type:ProjectileType )
 		{
+			super( graphicSequence );
 			this._type = type;
-			super( graphics );
 		}
 
 
@@ -45,8 +47,8 @@ package com.potmo.tdm.visuals.unit.projectile
 		public function launch( fromX:Number, fromY:Number, toX:Number, toY:Number ):void
 		{
 			//Logger.log( "Launching: " + this + " from " + fromX + "," + fromY + " to " + toX + "," + toY );
-			this.x = fromX;
-			this.y = fromY;
+			x = fromX;
+			y = fromY;
 			_targetX = toX;
 			_targetY = toY;
 
@@ -68,8 +70,7 @@ package com.potmo.tdm.visuals.unit.projectile
 
 		private function updateAngle():void
 		{
-			this.rotation = -StrictMath.getAngle( _velX, _velY );
-
+			rotation = -StrictMath.getAngle( _velX, _velY );
 		}
 
 
@@ -143,14 +144,14 @@ package com.potmo.tdm.visuals.unit.projectile
 				updateAngle();
 
 				var trajectoryPos:Point = _trajectory[ _trajectoryFrame ];
-				this.x = trajectoryPos.x;
-				this.y = trajectoryPos.y;
+				x = trajectoryPos.x;
+				y = trajectoryPos.y;
 
 			}
 			else if ( _trajectoryFrame == _trajectoryFrames - 1 )
 			{
-				this.x = _targetX;
-				this.y = _targetY;
+				x = _targetX;
+				y = _targetY;
 
 				gameLogics.projectileReachedTarget( this );
 
@@ -158,6 +159,12 @@ package com.potmo.tdm.visuals.unit.projectile
 
 			}
 
+		}
+
+
+		public function getZDepth():int
+		{
+			return y;
 		}
 
 
@@ -204,5 +211,6 @@ package com.potmo.tdm.visuals.unit.projectile
 		{
 			return _type;
 		}
+
 	}
 }

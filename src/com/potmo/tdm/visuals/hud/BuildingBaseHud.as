@@ -1,45 +1,50 @@
 package com.potmo.tdm.visuals.hud
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.player.OrderManager;
-	import com.potmo.tdm.asset.button.AttackButton_Asset;
-	import com.potmo.tdm.asset.button.DemolishButton_Asset;
-	import com.potmo.tdm.asset.button.DeployFlag_Button;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.starling.TextureAnimation;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 
 	public class BuildingBaseHud extends HudBase
 	{
 
-		private static const demolishButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new DemolishButton_Asset() );
-		private static const attackButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new AttackButton_Asset() );
-		private static const deployFlagButtonGraphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new DeployFlag_Button() );
-		protected var demolishButton:TextureAnimation;
-		protected var attackButton:TextureAnimation;
-		protected var deployFlagButton:TextureAnimation;
-		private var building:BuildingBase;
+		private var _building:BuildingBase;
+		private var demolishButton:BasicRenderItem;
+		private var deployFlagButton:BasicRenderItem;
+		private var attackButton:BasicRenderItem;
+
+		private static const DEMOLISH_BUTTON_SEQUENCE:String = "demoloshbutton";
+		private static const DEPLOY_FLAG_BUTTON_SEQUENCE:String = "deployflagbutton";
+		private static const ATTACK_BUTTON_SEQUENCE:String = "attackbutton";
 
 
-		public function BuildingBaseHud( building:BuildingBase )
+		public function BuildingBaseHud( spriteAtlas:SpriteAtlas )
 		{
-			super();
-			this.building = building;
+			super( spriteAtlas );
+
+			setupGui( spriteAtlas );
 
 		}
 
 
-		protected function setupGui():void
+		public function setBuilding( building:BuildingBase ):void
 		{
-			demolishButton = new TextureAnimation( demolishButtonGraphics );
+			this._building = building;
+		}
+
+
+		protected function setupGui( spriteAtlas:SpriteAtlas ):void
+		{
+			demolishButton = BasicRenderItem( spriteAtlas.getSequenceByName( DEMOLISH_BUTTON_SEQUENCE ) );
 
 			addButtonLast( demolishButton, false );
 
-			deployFlagButton = new TextureAnimation( deployFlagButtonGraphics );
+			deployFlagButton = new BasicRenderItem( spriteAtlas.getSequenceByName( DEPLOY_FLAG_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( deployFlagButton, true );
 
-			attackButton = new TextureAnimation( attackButtonGraphics );
+			attackButton = new BasicRenderItem( spriteAtlas.getSequenceByName( ATTACK_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( attackButton, true );
 
@@ -48,25 +53,32 @@ package com.potmo.tdm.visuals.hud
 
 		public override function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
-			if ( demolishButton.getBounds( this ).contains( x, y ) )
+			if ( demolishButton.containsPoint( x, y ) )
 			{
-				orderManager.requestDemolishHouse( building );
+				orderManager.requestDemolishHouse( _building );
 				return true;
 			}
 
-			if ( attackButton.getBounds( this ).contains( x, y ) )
+			if ( attackButton.containsPoint( x, y ) )
 			{
-				orderManager.requestAttack( building );
+				orderManager.requestAttack( _building );
 				return true;
 			}
 
-			if ( deployFlagButton.getBounds( this ).contains( x, y ) )
+			if ( deployFlagButton.containsPoint( x, y ) )
 			{
-				orderManager.requestShowDeployFlag( building );
+				gameLogics.getHudManager().showConstructionDeployFlagHud( _building );
 				return true;
 			}
 
 			return false;
+		}
+
+
+		override public function clear():void
+		{
+			super.clear();
+			_building = null;
 		}
 
 	}

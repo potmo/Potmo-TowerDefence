@@ -1,14 +1,14 @@
 package com.potmo.tdm.visuals.unit
 {
+	import com.potmo.p2d.renderer.Renderable;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.unit.settings.IUnitSetting;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
+	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
+	import com.potmo.tdm.visuals.unit.state.UnitState;
 
-	import starling.display.DisplayObject;
-
-	public interface IUnit
+	public interface IUnit extends ZSortableRenderable
 	{
 		function init( gameLogics:GameLogics ):void;
 		function reset( gameLogics:GameLogics ):void;
@@ -23,7 +23,6 @@ package com.potmo.tdm.visuals.unit
 		function getOwningPlayer():Player;
 		function setOwningPlayer( player:Player ):void;
 		function getType():UnitType;
-		function getAsDisplayObject():DisplayObject;
 
 		function isDead():Boolean;
 
@@ -35,14 +34,14 @@ package com.potmo.tdm.visuals.unit
 		   function startBeingTargetedByUnit( other:IUnit ):void;
 		   function stopBeingTargetedByUnit( other:IUnit ):void;*/
 
-		function getSettings():IUnitSetting;
+		function getSettings():UnitSetting;
 
 		function getOldX():Number;
 		function getOldY():Number;
 		function isPositionDirty():Boolean;
 		function setPositionAsClean():void;
 
-		function getState():IUnitState;
+		function getState():UnitState;
 
 	}
 }

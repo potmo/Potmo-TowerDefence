@@ -1,10 +1,9 @@
 package com.potmo.tdm.visuals.building.variant
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.asset.building.Camp_Asset;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.hud.CampHud;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.tdm.visuals.hud.variant.CampHud;
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.util.logger.Logger;
 
@@ -18,24 +17,23 @@ package com.potmo.tdm.visuals.building.variant
 	public class Camp extends BuildingBase
 	{
 
-		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Camp_Asset() );
-
 		private static const UNIT_DEPLOY_DELAY:uint = 15;
-		private var unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;
+		private var _unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;
+		private static const SEQUENCE_NAME:String = "camp";
 
 
-		public function Camp()
+		public function Camp( spriteAtlas:SpriteAtlas )
 		{
-			super( graphics );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 
 		}
 
 
-		public override function handleClick( x:int, y:int, logics:GameLogics ):void
+		public override function handleClick( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			Logger.log( "Camp was clicked" );
-			logics.setHud( new CampHud( this ) );
 
+			gameLogics.getHudManager().showCampHud( this );
 		}
 
 
@@ -44,12 +42,12 @@ package com.potmo.tdm.visuals.building.variant
 
 			if ( units.length != MAX_UNITS )
 			{
-				unitDeployCountdown--;
+				_unitDeployCountdown--;
 
-				if ( unitDeployCountdown == 0 )
+				if ( _unitDeployCountdown == 0 )
 				{
 					Logger.log( "Deploy Knight" );
-					unitDeployCountdown = UNIT_DEPLOY_DELAY;
+					_unitDeployCountdown = UNIT_DEPLOY_DELAY;
 					gameLogics.getUnitManager().addUnit( UnitType.KNIGHT, this, gameLogics );
 				}
 			}

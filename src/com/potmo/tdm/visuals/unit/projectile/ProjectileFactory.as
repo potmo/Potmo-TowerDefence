@@ -1,14 +1,16 @@
 package com.potmo.tdm.visuals.unit.projectile
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 
 	public class ProjectileFactory
 	{
 		private var arrowPool:Vector.<Projectile> = new Vector.<Projectile>();
+		private var _spriteAtlas:SpriteAtlas;
 
 
-		public function ProjectileFactory()
+		public function ProjectileFactory( spriteAtlas:SpriteAtlas )
 		{
-
+			this._spriteAtlas = spriteAtlas;
 		}
 
 
@@ -66,7 +68,7 @@ package com.potmo.tdm.visuals.unit.projectile
 
 			while ( count > 0 )
 			{
-				projectile = new clazz();
+				projectile = new clazz( _spriteAtlas );
 				pool.push( projectile );
 				count--;
 			}

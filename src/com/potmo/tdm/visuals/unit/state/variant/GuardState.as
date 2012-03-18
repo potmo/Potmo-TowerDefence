@@ -2,13 +2,13 @@ package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
+	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 
-	public class GuardState extends UnitStateBase implements IUnitState
+	public class GuardState extends UnitStateBase implements UnitState
 	{
-		private var _unit:IGuardingUnit;
+		private var _unit:GuardingUnit;
 
 
 		final public function GuardState()
@@ -17,7 +17,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:IGuardingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:GuardingUnit, gameLogics:GameLogics ):void
 		{
 			// just save the unit for later use
 			_unit = unit;

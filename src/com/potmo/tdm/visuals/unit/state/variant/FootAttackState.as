@@ -3,16 +3,16 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
+	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	public class FootAttackState extends UnitStateBase implements IUnitState
+	public class FootAttackState extends UnitStateBase implements UnitState
 	{
 		private var _enemy:IUnit;
-		private var _unit:IFootAttackingUnit;
+		private var _unit:FootAttackingUnit;
 
 		private var _hitDelay:int = 0;
 
@@ -23,7 +23,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:IFootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):void
+		public function enter( unit:FootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):void
 		{
 			this._unit = unit;
 			this._enemy = enemy;
@@ -57,16 +57,16 @@ package com.potmo.tdm.visuals.unit.state.variant
 				tryDamageEnemy( gameLogics );
 			}
 
-			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
-			{
-				stopAttack( gameLogics );
-			}
-
 			_unit.setVelX( _unit.getVelX() * 0.4 );
 			_unit.setVelY( _unit.getVelY() * 0.4 );
 
 			_unit.setX( _unit.getX() + _unit.getVelX() );
 			_unit.setY( _unit.getY() + _unit.getVelY() );
+
+			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
+			{
+				stopAttack( gameLogics );
+			}
 
 		}
 

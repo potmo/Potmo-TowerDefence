@@ -1,13 +1,13 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
+	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 
-	public class NoneState extends UnitStateBase implements IUnitState
+	public class NoneState extends UnitStateBase implements UnitState
 	{
-		private var _unit:INoneingUnit;
+		private var _unit:NoneingUnit;
 
 
 		public function NoneState():void
@@ -22,7 +22,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:INoneingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:NoneingUnit, gameLogics:GameLogics ):void
 		{
 			// just save the unit for later use
 			_unit = unit;

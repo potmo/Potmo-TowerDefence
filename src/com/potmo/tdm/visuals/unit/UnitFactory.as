@@ -1,5 +1,6 @@
 package com.potmo.tdm.visuals.unit
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
 
@@ -8,12 +9,13 @@ package com.potmo.tdm.visuals.unit
 
 		private var knightPool:Vector.<IUnit> = new Vector.<IUnit>();
 
-
 		//private var archerPool:Vector.<UnitBase> = new Vector.<UnitBase>();
+		private var _spriteAtlas:SpriteAtlas;
 
-		public function UnitFactory()
+
+		public function UnitFactory( spriteAtlas:SpriteAtlas )
 		{
-
+			this._spriteAtlas = spriteAtlas;
 			populatePool( knightPool, UnitType.KNIGHT, 10 );
 			//populatePool( archerPool, UnitType.ARCHER, 10 );
 		}
@@ -69,7 +71,7 @@ package com.potmo.tdm.visuals.unit
 
 			while ( units > 0 )
 			{
-				unit = new clazz();
+				unit = new clazz( _spriteAtlas );
 				pool.push( unit );
 				units--;
 			}

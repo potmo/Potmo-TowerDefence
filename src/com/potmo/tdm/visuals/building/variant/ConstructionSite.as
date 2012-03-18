@@ -1,11 +1,10 @@
 package com.potmo.tdm.visuals.building.variant
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.asset.building.ConstructionSite_Asset;
-	import com.potmo.tdm.visuals.hud.ConstructionSiteHud;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
-	import com.potmo.util.logger.Logger;
 	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.hud.variant.ConstructionSiteHud;
+	import com.potmo.util.logger.Logger;
 
 	/**
 	 * The construction site can be built into any other building
@@ -14,19 +13,20 @@ package com.potmo.tdm.visuals.building.variant
 	public class ConstructionSite extends BuildingBase
 	{
 
-		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new ConstructionSite_Asset() );
+		private static const SEQUENCE_NAME:String = "constructionsite";
 
 
-		public function ConstructionSite()
+		public function ConstructionSite( spriteAtlas:SpriteAtlas )
 		{
-			super( graphics );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
+
 		}
 
 
-		public override function handleClick( x:int, y:int, logics:GameLogics ):void
+		public override function handleClick( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			Logger.log( "construction site was clicked" );
-			logics.setHud( new ConstructionSiteHud( this ) );
+			gameLogics.getHudManager().showConstructionSiteHud( this );
 
 		}
 

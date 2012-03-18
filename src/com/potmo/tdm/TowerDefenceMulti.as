@@ -1,28 +1,79 @@
 package com.potmo.tdm
 {
+	import com.potmo.p2d.atlas.P2DTextureAtlas;
+	import com.potmo.p2d.atlas.animation.P2DSpriteAtlas;
+	import com.potmo.p2d.atlas.parser.AtlasParser;
+	import com.potmo.p2d.atlas.parser.Cocos2DParser;
+	import com.potmo.p2d.renderer.P2DRenderer;
 	import com.potmo.tdm.connection.Connector;
+	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
+	import com.potmo.tdm.visuals.building.BuildingFactory;
+	import com.potmo.tdm.visuals.building.BuildingManager;
+	import com.potmo.tdm.visuals.hud.HudManager;
+	import com.potmo.tdm.visuals.map.MapBase;
+	import com.potmo.tdm.visuals.map.MapZero;
 	import com.potmo.tdm.visuals.unit.UnitBase;
+	import com.potmo.tdm.visuals.unit.UnitFactory;
+	import com.potmo.tdm.visuals.unit.UnitManager;
+	import com.potmo.tdm.visuals.unit.projectile.ProjectileFactory;
+	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.fpsCounter.FPSCounter;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
+	import flash.display.Bitmap;
+	import flash.display.BitmapData;
 	import flash.display.Sprite;
+	import flash.display.Stage3D;
 	import flash.display.StageAlign;
 	import flash.display.StageScaleMode;
+	import flash.display3D.Context3D;
+	import flash.display3D.Context3DBlendFactor;
+	import flash.display3D.Context3DCompareMode;
+	import flash.display3D.Context3DRenderMode;
+	import flash.display3D.Context3DTriangleFace;
+	import flash.events.ErrorEvent;
 	import flash.events.Event;
+	import flash.geom.Rectangle;
 	import flash.system.Capabilities;
-
-	import starling.core.Starling;
-	import starling.display.Sprite;
 
 	[SWF( backgroundColor = "0xCCCCCC", frameRate = "30", width = "960", height = "640" )]
 	public class TowerDefenceMulti extends flash.display.Sprite
 	{
-		private var starlingInstance:Starling;
 
-		private var frameRateCounter:FPSCounter;
+		private var _renderer:P2DRenderer;
+
+		private var _textureAtlas0:P2DTextureAtlas;
+		private var _spriteAtlas0:P2DSpriteAtlas;
+
+		[Embed( source = "assets/atlas.xml", mimeType = "application/octet-stream" )]
+		private static const ATLAS_DESCRIPTOR:Class;
+
+		[Embed( source = "assets/atlas.png", mimeType = "image/png" )]
+		private static const ATLAS_TEXTURE:Class;
+
+		[Embed( source = "assets/maps/map0_atlas.xml", mimeType = "application/octet-stream" )]
+		private static const MAP_ATLAS_DESCRIPTOR:Class;
+
+		[Embed( source = "assets/maps/map0_atlas.png", mimeType = "image/png" )]
+		private static const MAP_ATLAS_TEXTURE:Class;
+
+		private var _frameRateCounter:FPSCounter;
+		private var _gameView:GameView;
+		private var _orderManager:OrderManager;
+		private var _gameLogics:GameLogics;
+		private var _map:MapBase;
+		private var _unitStateFactory:UnitStateFactory;
+		private var _unitFactory:UnitFactory;
+		private var _buildingFactory:BuildingFactory;
+		private var _projectileFactory:ProjectileFactory;
+		private var _unitManager:UnitManager;
+		private var _buildingManager:BuildingManager;
+		private var _hudManager:HudManager;
+		private var _textureAtlas1:P2DTextureAtlas;
+		private var _spriteAtlas1:P2DSpriteAtlas;
 
 
 		public function TowerDefenceMulti()
@@ -32,18 +83,88 @@ package com.potmo.tdm
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			stage.align = StageAlign.TOP_LEFT;
 
-			this.frameRateCounter = new FPSCounter();
-			addChild( frameRateCounter );
-
-			Starling.multitouchEnabled = true;
-
-			starlingInstance = new Starling( Main, stage );
-			starlingInstance.antiAliasing = 0;
-			starlingInstance.simulateMultitouch = false;
-			starlingInstance.enableErrorChecking = false;
-			starlingInstance.start();
+			this._frameRateCounter = new FPSCounter();
+			addChild( _frameRateCounter );
 
 			MouseManager.initialize( stage );
+
+			// Request a 3D context instance
+			var stage3D:Stage3D = stage.stage3Ds[ 0 ];
+			stage3D.addEventListener( Event.CONTEXT3D_CREATE, onContextCreated );
+			stage3D.addEventListener( ErrorEvent.ERROR, onContextLost );
+			stage3D.requestContext3D( Context3DRenderMode.AUTO );
+
+			var viewPort:Rectangle = new Rectangle( 0, 0, 800, 600 );
+
+			var xmlDescriptor:XML = new XML( new ATLAS_DESCRIPTOR() );
+			var texture:BitmapData = ( new ATLAS_TEXTURE() as Bitmap ).bitmapData;
+			var parser:AtlasParser = new Cocos2DParser();
+
+			_textureAtlas0 = new P2DTextureAtlas( 0, xmlDescriptor, texture, parser );
+			_spriteAtlas0 = new P2DSpriteAtlas( 0, _textureAtlas0.getFrameNames(), _textureAtlas0.getFrameSizes() );
+
+			var mapXmlDescriptor:XML = new XML( new MAP_ATLAS_DESCRIPTOR() );
+			var mapTexture:BitmapData = ( new MAP_ATLAS_TEXTURE() as Bitmap ).bitmapData;
+
+			_textureAtlas1 = new P2DTextureAtlas( 0, mapXmlDescriptor, mapTexture, parser );
+			_spriteAtlas1 = new P2DSpriteAtlas( 0, _textureAtlas1.getFrameNames(), _textureAtlas1.getFrameSizes() );
+
+			_renderer = new P2DRenderer( viewPort, 0, new <P2DTextureAtlas>[ _textureAtlas0, _textureAtlas1 ] );
+
+			addGame();
+
+		}
+
+
+		private function onContextLost( event:ErrorEvent ):void
+		{
+			_renderer.handleContentLost();
+		}
+
+
+		private function onContextCreated( event:Event ):void
+		{
+			var stage3D:Stage3D = event.target as Stage3D;
+			var context3D:Context3D = stage3D.context3D;
+			context3D.enableErrorChecking = true;
+			context3D.setDepthTest( false, Context3DCompareMode.NEVER );
+			context3D.setBlendFactors( Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA );
+			context3D.setCulling( Context3DTriangleFace.NONE );
+
+			_renderer.handleContextCreated( context3D );
+
+			addEventListener( Event.ENTER_FRAME, onEnterFrame );
+
+		}
+
+
+		private function onEnterFrame( event:Event = null ):void
+		{
+			_renderer.clear();
+			_renderer.prepareRender();
+			_renderer.render( _gameView );
+			_renderer.present();
+
+			_gameLogics.update();
+		}
+
+
+		private function addGame():void
+		{
+
+			_gameView = new GameView();
+			_orderManager = new OrderManager();
+			_map = new MapZero( _spriteAtlas1 );
+			_unitStateFactory = new UnitStateFactory();
+			_unitFactory = new UnitFactory( _spriteAtlas0 );
+			_buildingFactory = new BuildingFactory( _spriteAtlas0 );
+			_projectileFactory = new ProjectileFactory( _spriteAtlas0 );
+
+			_unitManager = new UnitManager( _unitFactory, _unitStateFactory, _map );
+			_buildingManager = new BuildingManager( _buildingFactory );
+			_hudManager = new HudManager( _spriteAtlas0, _gameView );
+
+			_gameLogics = new GameLogics( _gameView, _orderManager, _unitManager, _buildingManager, _projectileFactory, _hudManager, _map );
 
 		}
 

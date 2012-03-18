@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.unit.settings
 {
 
-	public class ArcherSetting implements IUnitSetting
+	public class ArcherSetting implements UnitSetting
 	{
 		public function ArcherSetting()
 		{

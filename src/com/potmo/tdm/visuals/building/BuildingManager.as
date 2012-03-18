@@ -60,11 +60,11 @@ package com.potmo.tdm.visuals.building
 			_buildings.push( newBuilding );
 			gameView.addBuilding( newBuilding );
 
-			newBuilding.x = building.x;
-			newBuilding.y = building.y;
+			newBuilding.setX( building.getX() );
+			newBuilding.setY( building.getY() );
 
 			//TODO: Initial deploy flag position should be calculated better than this 
-			newBuilding.setDeployFlag( newBuilding.x, newBuilding.y + 10, gameLogics );
+			newBuilding.setDeployFlag( newBuilding.getX(), newBuilding.getY() + 10, gameLogics );
 
 			_buildingFactory.returnBuilding( building );
 
@@ -108,8 +108,8 @@ package com.potmo.tdm.visuals.building
 			for each ( spot in buildingSpots )
 			{
 				building = _buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerRed );
-				building.x = spot.x;
-				building.y = spot.y;
+				building.setX( spot.x );
+				building.setY( spot.y );
 				_buildings.push( building );
 				gameView.addBuilding( building );
 			}
@@ -119,8 +119,8 @@ package com.potmo.tdm.visuals.building
 			for each ( spot in buildingSpots )
 			{
 				building = _buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerBlue );
-				building.x = spot.x;
-				building.y = spot.y;
+				building.setX( spot.x );
+				building.setY( spot.y );
 				_buildings.push( building );
 				gameView.addBuilding( building );
 			}

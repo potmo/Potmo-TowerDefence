@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.unit.settings
 {
 
-	public class KnightSetting implements IUnitSetting
+	public class KnightSetting implements UnitSetting
 	{
 		public function KnightSetting()
 		{

@@ -1,33 +1,34 @@
 package com.potmo.tdm.visuals.unit.variant
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
+	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.asset.unit.Knight_Asset;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
-	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
-	import com.potmo.tdm.visuals.unit.state.variant.IFootAttackingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IChargingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IGuardingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 
-	public class Knight extends UnitBase implements IUnitVariant, INoneingUnit, IDeployingUnit, IGuardingUnit, IChargingUnit, IFootAttackingUnit
+	public class Knight extends UnitBase implements UnitVariant, NoneingUnit, DeployingUnit, GuardingUnit, ChargingUnit, FootAttackingUnit
 	{
-		private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
+		//private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
+		private static const SEQUENCE_NAME:String = "knight";
 		private static const SETTINGS:KnightSetting = new KnightSetting();
 
 
-		public function Knight()
+		public function Knight( spriteAtlas:SpriteAtlas )
 		{
-			super( ASSET, UnitType.KNIGHT, SETTINGS );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), UnitType.KNIGHT, SETTINGS );
 		}
 
 

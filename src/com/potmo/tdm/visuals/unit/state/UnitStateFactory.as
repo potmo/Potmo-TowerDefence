@@ -2,21 +2,21 @@ package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.settings.IUnitSetting;
+	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
-	import com.potmo.tdm.visuals.unit.state.variant.IFootAttackingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IChargingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IDeployingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.IGuardingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.INoneingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 
 	public class UnitStateFactory
 	{
-		private var none:IUnitState;
+		private var none:UnitState;
 
 
 		public function UnitStateFactory()
@@ -25,7 +25,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function returnState( state:IUnitState ):void
+		public function returnState( state:UnitState ):void
 		{
 			if ( !state )
 			{
@@ -43,7 +43,7 @@ package com.potmo.tdm.visuals.unit.state
 		 * @param gameLogics
 		 * @returns a NoneState
 		 */
-		public function getNoneState( oldState:IUnitState, unit:INoneingUnit, gameLogics:GameLogics ):NoneState
+		public function getNoneState( oldState:UnitState, unit:NoneingUnit, gameLogics:GameLogics ):NoneState
 		{
 
 			if ( oldState )
@@ -59,7 +59,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getDeployState( oldState:IUnitState, unit:IDeployingUnit, deployX:int, deployY:int, gameLogics:GameLogics ):DeployState
+		public function getDeployState( oldState:UnitState, unit:DeployingUnit, deployX:int, deployY:int, gameLogics:GameLogics ):DeployState
 		{
 
 			oldState.exit( gameLogics );
@@ -71,7 +71,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getGuardState( oldState:IUnitState, unit:IGuardingUnit, gameLogics:GameLogics ):GuardState
+		public function getGuardState( oldState:UnitState, unit:GuardingUnit, gameLogics:GameLogics ):GuardState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
@@ -82,7 +82,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getChargeState( oldState:IUnitState, unit:IChargingUnit, gameLogics:GameLogics ):ChargeState
+		public function getChargeState( oldState:UnitState, unit:ChargingUnit, gameLogics:GameLogics ):ChargeState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
@@ -94,7 +94,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getFootAttackState( oldState:IUnitState, unit:IFootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):FootAttackState
+		public function getFootAttackState( oldState:UnitState, unit:FootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):FootAttackState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );

@@ -1,16 +1,16 @@
 package com.potmo.tdm.visuals.unit.projectile
 {
-	import com.potmo.tdm.asset.projectile.Arrow_Asset;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 
 	public class Arrow extends Projectile
 	{
-		private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Arrow_Asset() );
+
+		private static const SEQUENCE_NAME:String = "arrow";
 
 
-		public function Arrow()
+		public function Arrow( spriteAtlas:SpriteAtlas )
 		{
-			super( ASSET, ProjectileType.ARROW );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), ProjectileType.ARROW );
 		}
 
 	}

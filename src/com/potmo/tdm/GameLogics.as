@@ -7,72 +7,66 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.building.BuildingFactory;
 	import com.potmo.tdm.visuals.building.BuildingManager;
-	import com.potmo.tdm.visuals.hud.DeployFlagHud;
-	import com.potmo.tdm.visuals.hud.HudBase;
+	import com.potmo.tdm.visuals.hud.HudManager;
+	import com.potmo.tdm.visuals.hud.variant.DeployFlagHud;
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.tdm.visuals.map.MapBase;
-	import com.potmo.tdm.visuals.map.MapZero;
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitFactory;
 	import com.potmo.tdm.visuals.unit.UnitManager;
 	import com.potmo.tdm.visuals.unit.projectile.Projectile;
 	import com.potmo.tdm.visuals.unit.projectile.ProjectileFactory;
 	import com.potmo.tdm.visuals.unit.projectile.ProjectileType;
-	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.logger.Logger;
-
-	import flash.system.ApplicationDomain;
-	import flash.utils.ByteArray;
 
 	public final class GameLogics
 	{
 
 		//TODO: Add the real players
-		private var playerRed:Player = new Player( 0, "RedPlayer", PlayerColor.RED, true );
-		private var playerBlue:Player = new Player( 1, "BluePlayer", PlayerColor.BLUE, false );
+		private var _playerRed:Player = new Player( 0, "RedPlayer", PlayerColor.RED, true );
+		private var _playerBlue:Player = new Player( 1, "BluePlayer", PlayerColor.BLUE, false );
 
-		private var projectiles:Vector.<Projectile> = new Vector.<Projectile>();
+		private var _projectiles:Vector.<Projectile> = new Vector.<Projectile>();
 
-		private var map:MapBase;
-		private var hud:HudBase;
+		private var _map:MapBase;
 
-		private var gameView:GameView;
-		private var orderManager:OrderManager;
+		private var _gameView:GameView;
+		private var _orderManager:OrderManager;
 
-		private var unitStateFactory:UnitStateFactory;
-		private var unitFactory:UnitFactory;
-		private var buildingFactory:BuildingFactory;
-		private var projectileFactory:ProjectileFactory;
+		private var _unitFactory:UnitFactory;
+		private var _buildingFactory:BuildingFactory;
+		private var _projectileFactory:ProjectileFactory;
 
-		private var unitManager:UnitManager;
-		private var buildingManager:BuildingManager;
+		private var _unitManager:UnitManager;
+		private var _buildingManager:BuildingManager;
+		private var _hudManager:HudManager;
 
 
-		public function GameLogics( view:GameView, orderManager:OrderManager )
+		public function GameLogics( view:GameView, orderManager:OrderManager, unitManager:UnitManager, buildingManager:BuildingManager, projectileFactory:ProjectileFactory, hudManager:HudManager, map:MapBase )
 		{
 
-			this.gameView = view;
-			this.orderManager = orderManager;
+			this._gameView = view;
+			this._orderManager = orderManager;
+			this._projectileFactory = projectileFactory;
+			this._unitManager = unitManager;
+			this._buildingManager = buildingManager;
+			this._hudManager = hudManager;
+			this._map = map;
+
 			this.initialize();
 		}
 
 
 		private function initialize():void
 		{
-			map = new MapZero();
 
-			gameView.addMap( map );
+			_gameView.setGameLogics( this );
+			_gameView.setOrderManager( _orderManager );
+			_orderManager.setGameLogics( this );
 
-			unitStateFactory = new UnitStateFactory();
-			unitFactory = new UnitFactory();
-			buildingFactory = new BuildingFactory();
-			projectileFactory = new ProjectileFactory();
+			_gameView.addMap( _map );
 
-			unitManager = new UnitManager( unitFactory, unitStateFactory, map );
-			buildingManager = new BuildingManager( buildingFactory );
-
-			buildingManager.createDefaultConstructionSites( playerRed, playerBlue, this );
+			_buildingManager.createDefaultConstructionSites( _playerRed, _playerBlue, this );
 
 		}
 
@@ -82,36 +76,28 @@ package com.potmo.tdm
 
 			var building:BuildingBase;
 
-			buildingManager.update( this );
+			_buildingManager.update( this );
 
-			var length:int = projectiles.length;
+			var length:int = _projectiles.length;
 
 			for ( var i:int = length - 1; i >= 0; i-- )
 			{
-				projectiles[ i ].update( this );
+				_projectiles[ i ].update( this );
 
 			}
 
-			unitManager.update( this );
+			_unitManager.update( this );
 
 		}
 
 
-		/*
-		   TODO: Comment in this function in GameLogics and fix it
-		   public function getNextCheckpointForUnit( unit:UnitBase ):PathCheckpoint
-		   {
-		   return map.getNextCheckpoint( unit );
-		   }
-		 */
-
 		public function onMapClicked( x:int, y:int ):void
 		{
 
-			removeHud();
+			_hudManager.hideHud();
 
 			// check if a building was clicked
-			var clickedBuilding:BuildingBase = buildingManager.getBuildingUnderPosition( x, y );
+			var clickedBuilding:BuildingBase = _buildingManager.getBuildingUnderPosition( x, y );
 
 			//send to the clicked building that it was clicked if any
 			//TODO: Comment this in if you dont want to be able to alter other players buildings
@@ -122,109 +108,16 @@ package com.potmo.tdm
 
 			}
 
-			// send to all other building that they where not clicked
-		/*
-		   var building:BuildingBase;
-
-		   for each ( building in buildings )
-		   {
-		   if ( building != clickedBuilding && building.getOwningPlayer().isMe() )
-		   {
-		   building.handleClickOutside( x, y, this );
-		   }
-		   }*/
-
 		}
 
 
-		/**
-		 * Make a building to another type
-		 * This is typically done when transforming a constructionsite to a tower
-		 * or when demolishing a tower making it a construction site
-		 */
-		/*public function swapBuildingType( building:BuildingBase, type:BuildingType ):BuildingBase
-		   {
-
-		   var owner:Player = building.getOwningPlayer();
-		   var newBuilding:BuildingBase = buildingFactory.getBuilding( type, owner );
-
-		   var index:int = buildings.indexOf( building );
-
-		   if ( index == -1 )
-		   {
-		   throw new Error( "Building does not exist" );
-		   }
-
-		   // remove the old
-		   buildings.splice( index, 1 );
-		   gameView.removeBuilding( building );
-
-		   // add the new
-		   buildings.push( newBuilding );
-		   gameView.addBuilding( newBuilding );
-
-		   newBuilding.x = building.x;
-		   newBuilding.y = building.y;
-
-		   var closestPointOnPath:Point = map.getPointOnPathClosestToPoint( newBuilding.x, newBuilding.y );
-
-		   newBuilding.setDeployFlag( closestPointOnPath.x, closestPointOnPath.y, this );
-
-		   buildingFactory.returnBuilding( building );
-
-		   return newBuilding;
-		   }*/
-
-		/*public function upgradeBuilding( building:BuildingBase ):void
-		   {
-		   var currentType:BuildingType = building.getType();
-		   var upgradeType:BuildingType = BuildingType.getUpgrade( currentType );
-
-		   //TODO: Upgrade all the units as well when updgrading building
-		   swapBuildingType( building, upgradeType );
-
-		   }*/
-
-		/*	public function demolishBuilding( building:BuildingBase ):void
-		   {
-		   // make all the units attack first
-		   building.killAllUnits( this );
-
-		   // swap the building to a contruction site again
-		   swapBuildingType( building, BuildingType.CONSTRUCTION_SITE );
-		   }*/
-
-		/*	public function addUnit( type:UnitType, building:BuildingBase ):UnitBase
-		   {
-		   var owner:Player = building.getOwningPlayer();
-		   var unit:UnitBase = unitFactory.getUnit( type, owner );
-
-		   units.push( unit );
-		   building.deployUnit( unit, this );
-		   gameView.addUnit( unit );
-
-		   return unit;
-		   }*/
-
-		/*public function removeUnit( unit:UnitBase ):void
-		   {
-		   var index:int = units.indexOf( unit );
-		   units.splice( index, 1 );
-		   gameView.removeUnit( unit );
-		   unitFactory.returnUnit( unit, this );
-		   }*/
-
 		public function shootProjectile( type:ProjectileType, fromX:int, fromY:int, toX:int, toY:int ):void
 		{
-			var projectile:Projectile = projectileFactory.getProjectile( type );
-			projectiles.push( projectile );
-			gameView.addProjectile( projectile );
+			var projectile:Projectile = _projectileFactory.getProjectile( type );
+			_projectiles.push( projectile );
+			_gameView.addProjectile( projectile );
 			projectile.launch( fromX, fromY, toX, toY );
 
-		/*var marker:MapItem = new Marker();
-		   marker.x = toX;
-		   marker.y = toY;
-		   gameView.addMapItem( marker );*/
 		}
 
 
@@ -235,7 +128,7 @@ package com.potmo.tdm
 			var hitY:int = projectile.getTargetY();
 			var damage:int = projectile.getDamage();
 
-			var unit:IUnit = unitManager.getClosestUnitToPointWithinRange( hitX, hitY, hitRadius );
+			var unit:IUnit = _unitManager.getClosestUnitToPointWithinRange( hitX, hitY, hitRadius );
 
 			if ( unit )
 			{
@@ -250,65 +143,10 @@ package com.potmo.tdm
 
 		public function removeProjectile( projectile:Projectile ):void
 		{
-			var index:int = projectiles.indexOf( projectile );
-			projectiles.splice( index, 1 );
-			gameView.removeProjectile( projectile );
-			projectileFactory.returnProjectile( projectile );
-		}
-
-
-		/*private function createDefaultConstructionSites():void
-		   {
-		   var buildingSpots:Vector.<Point> = new Vector.<Point>();
-
-		   var spot:Point;
-		   var building:BuildingBase;
-
-		   buildingSpots = map.getPlayer0BuildingPositions();
-
-		   for each ( spot in buildingSpots )
-		   {
-		   building = buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerRed );
-		   building.x = spot.x;
-		   building.y = spot.y;
-		   buildings.push( building );
-		   gameView.addBuilding( building );
-		   }
-
-		   buildingSpots = map.getPlayer1BuildingPositions();
-
-		   for each ( spot in buildingSpots )
-		   {
-		   building = buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerBlue );
-		   building.x = spot.x;
-		   building.y = spot.y;
-		   buildings.push( building );
-		   gameView.addBuilding( building );
-		   }
-
-		   }*/
-
-		public function setHud( hud:HudBase ):void
-		{
-			gameView.setHud( hud );
-			this.hud = hud;
-		}
-
-
-		public function removeHud():void
-		{
-			gameView.removeHud();
-			this.hud = null;
-		}
-
-
-		public function showDeployFlag( building:BuildingBase ):void
-		{
-
-			var deployFlag:DeployFlag = new DeployFlag();
-			var hud:DeployFlagHud = new DeployFlagHud( deployFlag, building, gameView );
-			gameView.addMapItem( deployFlag );
-			gameView.setHud( hud );
+			var index:int = _projectiles.indexOf( projectile );
+			_projectiles.splice( index, 1 );
+			_gameView.removeProjectile( projectile );
+			_projectileFactory.returnProjectile( projectile );
 		}
 
 
@@ -318,146 +156,34 @@ package com.potmo.tdm
 		}
 
 
-		/**
-		 * Get the building under (map)position or return null
-		 */
-		/*	private function getBuildingUnderPosition( x:int, y:int ):BuildingBase
-		   {
-		   var building:BuildingBase
-
-		   for each ( building in buildings )
-		   {
-		   if ( building.isUnderPosition( x, y ) )
-		   {
-		   return building;
-		   }
-		   }
-
-		   return null;
-		   }*/
-
-		/**
-		 * Finds the unit that is closest to the point and within the range from the point
-		 * @returns the closest unit or null
-		 */
-		/*public function getClosestUnitToPointWithinRange( x:Number, y:Number, range:Number ):UnitBase
-		   {
-		   // sqraure
-		   range *= range;
-
-		   var dist:Number;
-		   var closestUnitDist:Number = Number.MAX_VALUE;
-		   var closestUnit:UnitBase;
-
-		   for each ( var unit:UnitBase in units )
-		   {
-		   dist = StrictMath.distSquared( unit.x, unit.y, x, y );
-
-		   if ( dist <= range )
-		   {
-		   if ( dist < closestUnitDist )
-		   {
-		   closestUnit = unit;
-		   }
-		   }
-		   }
-
-		   return closestUnit;
-		   }*/
-
-		/**
-		 * Find units that is in range and that are in the other team
-		 * Return the closest
-		 * @returns the best unit to attack or null if none
-		 */
-		/*public function getEnemyUnitCloseEnough( unit:UnitBase, inRange:int ):UnitBase
-		   {
-		   //square inRange
-		   inRange *= inRange;
-
-		   // okay firstly we want to target a unit that is not already targeted by another unit
-		   // if we can not find that we will target the first best
-		   var bestTargeted:UnitBase;
-		   var bestUntargeted:UnitBase;
-		   var bestTargetedDist:int = int.MAX_VALUE;
-		   var bestUntargetedDist:int = int.MAX_VALUE;
-
-		   var dist:Number;
-
-		   for each ( var other:UnitBase in units )
-		   {
-		   // check for owner
-		   if ( other.getOwningPlayer().getColor() != unit.getOwningPlayer().getColor() )
-		   {
-		   dist = StrictMath.distSquared( unit.x, unit.y, other.x, other.y );
-
-		   // check if it is in range
-		   if ( dist <= inRange )
-		   {
-		   if ( other.isTargetedByAnyUnit() )
-		   {
-		   // targeted must be double as close
-		   if ( dist * 4 <= inRange )
-		   {
-		   if ( dist < bestTargetedDist )
-		   {
-		   bestTargeted = other;
-		   bestTargetedDist = dist;
-		   }
-		   }
-		   }
-		   else
-		   {
-		   if ( dist < bestUntargetedDist )
-		   {
-		   bestUntargeted = other;
-		   bestUntargetedDist = dist;
-		   }
-		   }
-
-		   }
-		   }
-
-		   }
-
-		   if ( bestUntargeted )
-		   {
-		   return bestUntargeted;
-		   }
-		   else if ( bestTargeted )
-		   {
-		   return bestTargeted;
-
-		   }
-		   else
-		   {
-		   return null;
-		   }
-
-		   }
-		 */
-
 		public function getBuildingManager():BuildingManager
 		{
-			return buildingManager;
+			return _buildingManager;
 		}
 
 
 		public function getGameView():GameView
 		{
-			return gameView;
+			return _gameView;
 		}
 
 
 		public function getUnitManager():UnitManager
 		{
-			return unitManager;
+			return _unitManager;
 		}
 
 
 		public function getMap():MapBase
 		{
-			return map;
+			return _map;
+		}
+
+
+		public function getHudManager():HudManager
+		{
+			return _hudManager;
+
 		}
 	}
 }

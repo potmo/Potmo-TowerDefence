@@ -29,7 +29,6 @@ package com.potmo.tdm.player
 		{
 			// TODO: Let message go over network first
 			gameLogics.getBuildingManager().swapBuildingType( constructionSite, type, gameLogics );
-			gameLogics.removeHud();
 		}
 
 
@@ -40,7 +39,6 @@ package com.potmo.tdm.player
 		{
 			// TODO: Let message go over network first
 			gameLogics.getBuildingManager().demolishBuilding( building, gameLogics );
-			gameLogics.removeHud();
 		}
 
 
@@ -51,7 +49,6 @@ package com.potmo.tdm.player
 		{
 			// TODO: Let message go over network first			
 			building.chargeWithAllUnits( gameLogics );
-			gameLogics.removeHud();
 		}
 
 
@@ -62,20 +59,12 @@ package com.potmo.tdm.player
 		{
 			// TODO: Let message go over network first
 			gameLogics.getBuildingManager().upgradeBuilding( building, gameLogics );
-			gameLogics.removeHud();
-		}
-
-
-		public function requestShowDeployFlag( building:BuildingBase ):void
-		{
-			gameLogics.showDeployFlag( building );
 		}
 
 
 		public function requestSetDeployFlag( x:int, y:int, building:BuildingBase ):void
 		{
 			// TODO: Let message go over network first	
-			gameLogics.removeHud();
 			gameLogics.setDeployFlag( x, y, building );
 		}
 

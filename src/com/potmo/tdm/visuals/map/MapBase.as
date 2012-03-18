@@ -1,6 +1,11 @@
 package com.potmo.tdm.visuals.map
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
+	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
+	import com.potmo.p2d.renderer.Renderable;
+	import com.potmo.p2d.renderer.Renderer;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.IForceFieldMap;
@@ -14,11 +19,7 @@ package com.potmo.tdm.visuals.map
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
 
-	import starling.display.DisplayObjectContainer;
-	import starling.display.Image;
-	import starling.textures.Texture;
-
-	public class MapBase extends DisplayObjectContainer
+	public class MapBase extends BasicRenderItem
 	{
 
 		protected var mapImageAnalyzer:MapImageAnalyzer;
@@ -33,34 +34,39 @@ package com.potmo.tdm.visuals.map
 		protected var rightLeftPathfinderForceFieldMap:DijkstraPrecalculatedMap;
 		protected var tileWidth:Number;
 		protected var tileHeight:Number;
-		private var mapName:String;
+		private var _mapName:String;
 
-		private var mapWidth:int;
-		private var mapHeight:int;
+		private var _mapWidth:int;
+		private var _mapHeight:int;
+
+		private var _graphicsSequence:SpriteAtlasSequence;
 
 
-		public function MapBase( visualMap:BitmapData, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData, name:String )
+		public function MapBase( spriteAtlas:SpriteAtlas, spriteName:String, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData, name:String )
 		{
-			super();
+			_graphicsSequence = spriteAtlas.getSequenceByName( spriteName );
+
+			super( _graphicsSequence );
 
 			validateDataImageSizes( mapDataImage, directionLeftRightDataImage, directionRightLeftDataImage );
 
-			this.mapName = name;
+			this._mapName = name;
 			// setup a device to analyze an image and get data from it
 			mapImageAnalyzer = new MapImageAnalyzer();
 
-			// calculate the scale between tile and visual map
-			tileWidth = visualMap.width / mapDataImage.width;
-			tileHeight = visualMap.height / mapDataImage.height;
+			var visualMapSize:Point = _graphicsSequence.getSizeOfFrame( 0 );
+			this._mapWidth = visualMapSize.x;
+			this._mapHeight = visualMapSize.y;
 
-			this.mapWidth = visualMap.width;
-			this.mapHeight = visualMap.height;
+			// calculate the scale between tile and visual map
+			tileWidth = _mapWidth / mapDataImage.width;
+			tileHeight = _mapHeight / mapDataImage.height;
 
 			// configure endpoints
-			this.setEndPoints( mapDataImage, visualMap, tileWidth );
+			this.setEndPoints( mapDataImage, tileWidth );
 
 			// configure buildingpositions
-			this.setBuildingPositions( mapDataImage, visualMap, tileWidth );
+			this.setBuildingPositions( mapDataImage, tileWidth );
 
 			// create a object that can calculate the forces on a unit
 			unitCollisionForceCalculator = new UnitCollisionForceCalculator();
@@ -77,7 +83,7 @@ package com.potmo.tdm.visuals.map
 			rightLeftPathfinderForceFieldMap.setupFromImage( directionRightLeftDataImage );
 
 			// set up the background visuals
-			this.setupBackground( visualMap )
+			//this.setupBackground( visualMap )
 
 			// tell subclasses to initialize
 			this.initialize();
@@ -99,58 +105,56 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		private function setupBackground( visualMap:BitmapData ):void
-		{
-			var textureParts:Vector.<Texture>;
-			textureParts = splitBitmapIntoTextures( visualMap );
+		/*private function setupBackground( visualMap:BitmapData ):void
+		   {
+		   var textureParts:Vector.<Texture>;
+		   textureParts = splitBitmapIntoTextures( visualMap );
 
-			var image:Image;
-			var o:int = 0;
+		   var image:Image;
+		   var o:int = 0;
 
-			for each ( var texture:Texture in textureParts )
-			{
-				image = new Image( texture );
+		   for each ( var texture:Texture in textureParts )
+		   {
+		   image = new Image( texture );
 
-				addChild( image );
-				image.x = o;
-				o += image.width;
-			}
-		}
+		   addChild( image );
+		   image.x = o;
+		   o += image.width;
+		   }
+		   }*/
 
+		/*private function splitBitmapIntoTextures( bitmap:BitmapData ):Vector.<Texture>
+		   {
+		   var img:BitmapData;
+		   var texture:Texture;
+		   var textures:Vector.<Texture> = new Vector.<Texture>();
 
-		private function splitBitmapIntoTextures( bitmap:BitmapData ):Vector.<Texture>
-		{
-			var img:BitmapData;
-			var texture:Texture;
-			var textures:Vector.<Texture> = new Vector.<Texture>();
+		   var max:int = 1024;
+		   var o:int = 0;
+		   var left:int = bitmap.width;
+		   var cut:int;
+		   var height:int = bitmap.height;
+		   var rect:Rectangle = new Rectangle();
+		   var p:Point = new Point();
 
-			var max:int = 1024;
-			var o:int = 0;
-			var left:int = bitmap.width;
-			var cut:int;
-			var height:int = bitmap.height;
-			var rect:Rectangle = new Rectangle();
-			var p:Point = new Point();
+		   while ( left > 0 )
+		   {
+		   cut = StrictMath.min( left, max ); // take as mutch as possible but stay within max
+		   img = new BitmapData( cut, height, false, 0xFF0000 );
+		   rect.setTo( o, 0, cut, height );
+		   img.copyPixels( bitmap, rect, p );
+		   texture = Texture.fromBitmapData( img, false, false );
+		   img.dispose();
+		   textures.push( texture );
+		   o += cut;
+		   left -= cut;
+		   }
 
-			while ( left > 0 )
-			{
-				cut = StrictMath.min( left, max ); // take as mutch as possible but stay within max
-				img = new BitmapData( cut, height, false, 0xFF0000 );
-				rect.setTo( o, 0, cut, height );
-				img.copyPixels( bitmap, rect, p );
-				texture = Texture.fromBitmapData( img, false, false );
-				img.dispose();
-				textures.push( texture );
-				o += cut;
-				left -= cut;
-			}
+		   return textures;
 
-			return textures;
+		   }*/
 
-		}
-
-
-		protected function setEndPoints( mapDataImage:BitmapData, visualMap:BitmapData, scale:Number ):void
+		protected function setEndPoints( mapDataImage:BitmapData, scale:Number ):void
 		{
 			var endpoints:Vector.<Point> = mapImageAnalyzer.getEndPoints( mapDataImage, scale );
 			player0EndPoint = endpoints[ 0 ];
@@ -159,7 +163,7 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		protected function setBuildingPositions( mapDataImage:BitmapData, visualMap:BitmapData, scale:Number ):void
+		protected function setBuildingPositions( mapDataImage:BitmapData, scale:Number ):void
 		{
 			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( mapDataImage, scale );
 			player0BuildingPositions = buildingPositions[ 0 ];
@@ -178,13 +182,13 @@ package com.potmo.tdm.visuals.map
 		 */
 		public function getMapWidth():uint
 		{
-			return this.mapWidth;
+			return this._mapWidth;
 		}
 
 
 		public function getMapHeight():uint
 		{
-			return this.mapHeight;
+			return this._mapHeight;
 		}
 
 
@@ -266,7 +270,7 @@ package com.potmo.tdm.visuals.map
 
 		public function getMapName():String
 		{
-			return this.mapName;
+			return this._mapName;
 		}
 
 

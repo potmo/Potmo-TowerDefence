@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+    <dict>
+        <key>frames</key>
+        <dict>
+            <key>map0/00000_.png</key>
+            <dict>
+                <key>frame</key>
+                <string>{{0,0},{2048,640}}</string>
+                <key>offset</key>
+                <string>{0,0}</string>
+                <key>rotated</key>
+                <false/>
+                <key>sourceColorRect</key>
+                <string>{{0,0},{2048,640}}</string>
+                <key>sourceSize</key>
+                <string>{2048,640}</string>
+            </dict>
+        </dict>
+        <key>metadata</key>
+        <dict>
+            <key>format</key>
+            <integer>2</integer>
+            <key>realTextureFileName</key>
+            <string>map0_atlas.png</string>
+            <key>size</key>
+            <string>{2048,1024}</string>
+            <key>smartupdate</key>
+            <string>$TexturePacker:SmartUpdate:43453f3db66b5d2c6cf9e7d93324de15$</string>
+            <key>textureFileName</key>
+            <string>map0_atlas.png</string>
+        </dict>
+    </dict>
+</plist>

@@ -3,13 +3,13 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.IUnit;
-	import com.potmo.tdm.visuals.unit.state.IUnitState;
+	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 
-	public class ChargeState extends UnitStateBase implements IUnitState
+	public class ChargeState extends UnitStateBase implements UnitState
 	{
-		private var _unit:IChargingUnit;
+		private var _unit:ChargingUnit;
 
 
 		final public function ChargeState()
@@ -18,7 +18,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:IChargingUnit, gameLogics:GameLogics ):void
+		public function enter( unit:ChargingUnit, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
 			_unit.setFrameFromName( "WALK" );

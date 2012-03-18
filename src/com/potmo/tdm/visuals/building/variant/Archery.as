@@ -1,23 +1,20 @@
 package com.potmo.tdm.visuals.building.variant
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.asset.building.Archery_Asset;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
-	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 
 	public class Archery extends BuildingBase
 	{
 
-		private static const graphics:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Archery_Asset() );
-
 		private static const UNIT_DEPLOY_DELAY:uint = 30;
-		private var unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;;
+		private var unitDeployCountdown:uint = UNIT_DEPLOY_DELAY;
+		private static const SEQUENCE_NAME:String = "archery";
 
 
-		public function Archery()
+		public function Archery( spriteAtlas:SpriteAtlas )
 		{
-			super( graphics );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 		}
 
 

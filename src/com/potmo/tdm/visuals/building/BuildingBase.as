@@ -1,14 +1,14 @@
 package com.potmo.tdm.visuals.building
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.display.BasicRenderItem;
+	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
-	import com.potmo.tdm.visuals.starling.TextureAnimation;
-	import com.potmo.tdm.visuals.starling.TextureAnimationCacheObject;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
-	import com.potmo.util.math.StrictMath;
 
-	public class BuildingBase extends TextureAnimation
+	public class BuildingBase extends BasicRenderItem implements ZSortableRenderable
 	{
 		protected static const MAX_UNITS:uint = 3;
 
@@ -23,9 +23,9 @@ package com.potmo.tdm.visuals.building
 		protected var units:Vector.<IUnit> = new Vector.<IUnit>();
 
 
-		public function BuildingBase( graphics:TextureAnimationCacheObject )
+		public function BuildingBase( graphicsSequence:SpriteAtlasSequence )
 		{
-			super( graphics );
+			super( graphicsSequence );
 
 		}
 
@@ -146,7 +146,7 @@ package com.potmo.tdm.visuals.building
 
 		public function isUnderPosition( x:int, y:int ):Boolean
 		{
-			return getBounds( parent ).contains( x, y );
+			return this.containsPoint( x, y );
 		}
 
 
@@ -165,6 +165,12 @@ package com.potmo.tdm.visuals.building
 		public function getDeployFlagY():int
 		{
 			return _deployFlagY;
+		}
+
+
+		public function getZDepth():int
+		{
+			return y;
 		}
 
 	}
