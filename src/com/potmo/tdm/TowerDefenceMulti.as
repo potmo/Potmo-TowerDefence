@@ -4,6 +4,7 @@ package com.potmo.tdm
 	import com.potmo.p2d.atlas.animation.P2DSpriteAtlas;
 	import com.potmo.p2d.atlas.parser.AtlasParser;
 	import com.potmo.p2d.atlas.parser.Cocos2DParser;
+	import com.potmo.p2d.renderer.P2DCamera;
 	import com.potmo.p2d.renderer.P2DRenderer;
 	import com.potmo.tdm.connection.Connector;
 	import com.potmo.tdm.player.OrderManager;
@@ -45,8 +46,8 @@ package com.potmo.tdm
 
 		private var _renderer:P2DRenderer;
 
-		private var _textureAtlas0:P2DTextureAtlas;
-		private var _spriteAtlas0:P2DSpriteAtlas;
+		private var _textureAtlas:P2DTextureAtlas;
+		private var _spriteAtlas:P2DSpriteAtlas;
 
 		[Embed( source = "assets/atlas.xml", mimeType = "application/octet-stream" )]
 		private static const ATLAS_DESCRIPTOR:Class;
@@ -72,8 +73,7 @@ package com.potmo.tdm
 		private var _unitManager:UnitManager;
 		private var _buildingManager:BuildingManager;
 		private var _hudManager:HudManager;
-		private var _textureAtlas1:P2DTextureAtlas;
-		private var _spriteAtlas1:P2DSpriteAtlas;
+		private var _camera:P2DCamera;
 
 
 		public function TowerDefenceMulti()
@@ -94,22 +94,25 @@ package com.potmo.tdm
 			stage3D.addEventListener( ErrorEvent.ERROR, onContextLost );
 			stage3D.requestContext3D( Context3DRenderMode.AUTO );
 
-			var viewPort:Rectangle = new Rectangle( 0, 0, 800, 600 );
+			var viewPort:Rectangle = new Rectangle( 0, 0, 960, 640 );
 
 			var xmlDescriptor:XML = new XML( new ATLAS_DESCRIPTOR() );
 			var texture:BitmapData = ( new ATLAS_TEXTURE() as Bitmap ).bitmapData;
-			var parser:AtlasParser = new Cocos2DParser();
-
-			_textureAtlas0 = new P2DTextureAtlas( 0, xmlDescriptor, texture, parser );
-			_spriteAtlas0 = new P2DSpriteAtlas( 0, _textureAtlas0.getFrameNames(), _textureAtlas0.getFrameSizes() );
 
 			var mapXmlDescriptor:XML = new XML( new MAP_ATLAS_DESCRIPTOR() );
 			var mapTexture:BitmapData = ( new MAP_ATLAS_TEXTURE() as Bitmap ).bitmapData;
 
-			_textureAtlas1 = new P2DTextureAtlas( 0, mapXmlDescriptor, mapTexture, parser );
-			_spriteAtlas1 = new P2DSpriteAtlas( 0, _textureAtlas1.getFrameNames(), _textureAtlas1.getFrameSizes() );
+			var parser:AtlasParser = new Cocos2DParser();
 
-			_renderer = new P2DRenderer( viewPort, 0, new <P2DTextureAtlas>[ _textureAtlas0, _textureAtlas1 ] );
+			_textureAtlas = new P2DTextureAtlas();
+			_textureAtlas.addTexture( xmlDescriptor, texture, parser );
+			_textureAtlas.addTexture( mapXmlDescriptor, mapTexture, parser );
+
+			_spriteAtlas = new P2DSpriteAtlas( _textureAtlas.getFrameNames(), _textureAtlas.getFrameSizes() );
+
+			_camera = new P2DCamera();
+
+			_renderer = new P2DRenderer( viewPort, 0, _textureAtlas, _camera );
 
 			addGame();
 
@@ -127,7 +130,7 @@ package com.potmo.tdm
 			var stage3D:Stage3D = event.target as Stage3D;
 			var context3D:Context3D = stage3D.context3D;
 			context3D.enableErrorChecking = true;
-			context3D.setDepthTest( false, Context3DCompareMode.NEVER );
+			context3D.setDepthTest( false, Context3DCompareMode.ALWAYS );
 			context3D.setBlendFactors( Context3DBlendFactor.SOURCE_ALPHA, Context3DBlendFactor.ONE_MINUS_SOURCE_ALPHA );
 			context3D.setCulling( Context3DTriangleFace.NONE );
 
@@ -140,29 +143,25 @@ package com.potmo.tdm
 
 		private function onEnterFrame( event:Event = null ):void
 		{
-			_renderer.clear();
-			_renderer.prepareRender();
-			_renderer.render( _gameView );
-			_renderer.present();
-
 			_gameLogics.update();
+			_renderer.render( _gameView );
 		}
 
 
 		private function addGame():void
 		{
 
-			_gameView = new GameView();
+			_gameView = new GameView( _camera );
 			_orderManager = new OrderManager();
-			_map = new MapZero( _spriteAtlas1 );
+			_map = new MapZero( _spriteAtlas );
 			_unitStateFactory = new UnitStateFactory();
-			_unitFactory = new UnitFactory( _spriteAtlas0 );
-			_buildingFactory = new BuildingFactory( _spriteAtlas0 );
-			_projectileFactory = new ProjectileFactory( _spriteAtlas0 );
+			_unitFactory = new UnitFactory( _spriteAtlas );
+			_buildingFactory = new BuildingFactory( _spriteAtlas );
+			_projectileFactory = new ProjectileFactory( _spriteAtlas );
 
 			_unitManager = new UnitManager( _unitFactory, _unitStateFactory, _map );
 			_buildingManager = new BuildingManager( _buildingFactory );
-			_hudManager = new HudManager( _spriteAtlas0, _gameView );
+			_hudManager = new HudManager( _spriteAtlas, _gameView );
 
 			_gameLogics = new GameLogics( _gameView, _orderManager, _unitManager, _buildingManager, _projectileFactory, _hudManager, _map );
 

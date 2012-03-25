@@ -26,7 +26,7 @@ package com.potmo.tdm.display
 
 		public function render( renderer:Renderer ):void
 		{
-			renderer.draw( graphicsSequence.getAtlasId(), currentFrame, x, y, rotation, scaleX, scaleY );
+			renderer.draw( currentFrame, x, y, rotation, scaleX, scaleY );
 		}
 
 
@@ -68,7 +68,7 @@ package com.potmo.tdm.display
 
 		public function getY():Number
 		{
-			return x;
+			return y;
 		}
 
 

@@ -45,12 +45,14 @@ package com.potmo.tdm.visuals.hud.variant
 			if ( _campButton.containsPoint( x, y ) )
 			{
 				orderManager.requestConstructBuilding( _constructionSite, BuildingType.CAMP );
+				gameLogics.getHudManager().hideHud();
 				return true;
 			}
 
 			if ( _archeryButton.containsPoint( x, y ) )
 			{
 				orderManager.requestConstructBuilding( _constructionSite, BuildingType.ARCHERY );
+				gameLogics.getHudManager().hideHud();
 				return true;
 			}
 			return false;

@@ -303,7 +303,7 @@
                 <key>sourceSize</key>
                 <string>{101,64}</string>
             </dict>
-            <key>cencelbutton/00000_.png</key>
+            <key>cancelbutton/00000_.png</key>
             <dict>
                 <key>frame</key>
                 <string>{{2,342},{61,61}}</string>

@@ -50,7 +50,7 @@ package com.potmo.tdm.visuals.unit
 
 			_health = settings.maxHealth;
 
-			_graphicSequence = _graphicSequence;
+			_graphicSequence = graphicSequence;
 
 		/*_healthBarBackground = new Quad( HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, 0xFFCCCCCC );
 		   _healthBarBackground.x = -_healthBarBackground.width / 2;
@@ -104,7 +104,6 @@ package com.potmo.tdm.visuals.unit
 		final public function setFrameFromName( name:String ):void
 		{
 			currentFrame = _graphicSequence.getFrameOfLabel( name );
-
 		}
 
 

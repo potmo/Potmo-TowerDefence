@@ -54,7 +54,7 @@ package com.potmo.tdm.visuals.map
 			// setup a device to analyze an image and get data from it
 			mapImageAnalyzer = new MapImageAnalyzer();
 
-			var visualMapSize:Point = _graphicsSequence.getSizeOfFrame( 0 );
+			var visualMapSize:Point = _graphicsSequence.getSizeOfFrame( _graphicsSequence.getNthFrame( 0 ) );
 			this._mapWidth = visualMapSize.x;
 			this._mapHeight = visualMapSize.y;
 

@@ -1,5 +1,6 @@
 package com.potmo.tdm
 {
+	import com.potmo.p2d.renderer.P2DCamera;
 	import com.potmo.p2d.renderer.Renderable;
 	import com.potmo.p2d.renderer.Renderer;
 	import com.potmo.tdm.display.ZSortableRenderContainer;
@@ -30,7 +31,6 @@ package com.potmo.tdm
 		private static const CLICK_MAX_FRAMES:uint = 6;
 		private static const CLICK_MAX_MOVE:uint = 20;
 
-		private var _cameraPosition:Number = 0;
 		private var _cameraVelocity:Number = 0;
 		private var _isCameraSliding:Boolean = false;
 
@@ -50,12 +50,13 @@ package com.potmo.tdm
 		private var _hud:HudBase;
 
 		private var _ignoreMapInteraction:Boolean = false;
+		private var _camera:P2DCamera;
 
 
-		public function GameView()
+		public function GameView( camera:P2DCamera )
 		{
 			_inbetweenItems = new ZSortableRenderContainer();
-
+			_camera = camera;
 		}
 
 
@@ -167,7 +168,7 @@ package com.potmo.tdm
 				Logger.log( "StartDrag" );
 				_isDragging = true;
 				_dragStartMouse = MouseManager.pos.x;
-				_dragStartCamera = _cameraPosition;
+				_dragStartCamera = _camera.getCameraX();
 				_startDragFrame = _currentFrame;
 
 			}
@@ -195,13 +196,14 @@ package com.potmo.tdm
 					{
 						Logger.log( "hud was clicked" );
 						hudTakenClick = _hud.handleClick( MouseManager.pos.x, MouseManager.pos.y, _orderManager, _gameLogics );
+
 					}
 
 					// if the map is clicked its ok for the gameLogics to handle the click. This can not have any effect on the game outcome
 					if ( !hudTakenClick && !_ignoreMapInteraction )
 					{
 						Logger.log( "map was clicked" );
-						_gameLogics.onMapClicked( _cameraPosition + MouseManager.pos.x, MouseManager.pos.y );
+						_gameLogics.onMapClicked( MouseManager.pos.x + _camera.getCameraX(), MouseManager.pos.y );
 					}
 				}
 				else if ( !_ignoreMapInteraction )
@@ -216,7 +218,7 @@ package com.potmo.tdm
 				slideCamera();
 			}
 
-			_map.setX( -StrictMath.round( _cameraPosition ) );
+			//_map.setX( -StrictMath.round( camera ) );
 
 			// z sort units and buildings
 
@@ -248,7 +250,7 @@ package com.potmo.tdm
 			// both scale the velocity down but also add a coifficient
 			_cameraVelocity = ( _cameraVelocity * CAMERA_MOVE_FRICTION ) - CAMERA_MOVE_FRICTION_COIFFICIENT * _cameraVelocity;
 
-			_cameraPosition += _cameraVelocity;
+			_camera.setCameraX( _camera.getCameraX() + _cameraVelocity );
 
 			// check if it hit any border
 			if ( restrictCameraPositon() )
@@ -272,15 +274,15 @@ package com.potmo.tdm
 		 */
 		private final function restrictCameraPositon():Boolean
 		{
-			if ( _cameraPosition < 0 )
+			if ( _camera.getCameraX() < 0 )
 			{
-				_cameraPosition = 0;
+				_camera.setCameraX( 0 );
 				return true;
 			}
 
-			if ( _cameraPosition > _map.getMapWidth() - ScreenSize.WIDTH )
+			if ( _camera.getCameraX() > _map.getMapWidth() - ScreenSize.WIDTH )
 			{
-				_cameraPosition = _map.getMapWidth() - ScreenSize.WIDTH;
+				_camera.setCameraX( _map.getMapWidth() - ScreenSize.WIDTH );
 				return true;
 			}
 
@@ -297,8 +299,8 @@ package com.potmo.tdm
 		public function slideCameraToPosition( pos:Number ):void
 		{
 			Logger.log( "Move camera to: " + pos );
-			_cameraVelocity = pos - _cameraPosition;
-			_cameraPosition = pos;
+			_cameraVelocity = pos - _camera.getCameraX();
+			_camera.setCameraX( pos );
 
 			restrictCameraPositon();
 		}
@@ -312,7 +314,7 @@ package com.potmo.tdm
 		public function slideCameraToRelativePosition( pos:Number ):void
 		{
 			_cameraVelocity = pos;
-			_cameraPosition = _cameraPosition + pos;
+			_camera.setCameraX( _camera.getCameraX() + pos );
 
 			restrictCameraPositon();
 		}
@@ -326,7 +328,7 @@ package com.potmo.tdm
 
 		public function convertScreenPositionToMapPosition( mousePos:Point ):Point
 		{
-			return new Point( mousePos.x + _cameraPosition, mousePos.y );
+			return new Point( mousePos.x + _camera.getCameraX(), mousePos.y );
 		}
 
 
@@ -344,7 +346,7 @@ package com.potmo.tdm
 
 		public function getCameraPosition():Number
 		{
-			return _cameraPosition;
+			return _camera.getCameraX();
 		}
 
 	}

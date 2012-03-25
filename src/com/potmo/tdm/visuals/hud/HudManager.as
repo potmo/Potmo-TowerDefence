@@ -77,6 +77,11 @@ package com.potmo.tdm.visuals.hud
 
 		private function setHud( hud:HudBase ):void
 		{
+			if ( _currentHud == hud )
+			{
+				return;
+			}
+
 			if ( _currentHud )
 			{
 				removeHud();
@@ -94,6 +99,7 @@ package com.potmo.tdm.visuals.hud
 				_gameView.removeHud();
 
 				_gameView.stopIgnoreMapInteraction();
+				_currentHud = null;
 			}
 		}
 

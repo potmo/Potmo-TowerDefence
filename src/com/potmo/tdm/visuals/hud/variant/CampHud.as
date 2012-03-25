@@ -27,25 +27,26 @@ package com.potmo.tdm.visuals.hud.variant
 		override protected function setupGui( spriteAtlas:SpriteAtlas ):void
 		{
 			super.setupGui( spriteAtlas );
-			_keepButton = new BasicRenderItem( spriteAtlas.getSequenceByName( KEEP_BUTTON_SEQUENCE ) );
-			addButtonLast( _keepButton );
+			//_keepButton = new BasicRenderItem( spriteAtlas.getSequenceByName( KEEP_BUTTON_SEQUENCE ) );
+			//addButtonLast( _keepButton );
 		}
 
 
 		public override function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
 
-			if ( _keepButton.containsPoint( x, y ) )
-			{
-				orderManager.requestUpgradeBuilding( _camp );
-				return true;
-			}
+			/*	if ( _keepButton.containsPoint( x, y ) )
+			   {
+			   orderManager.requestUpgradeBuilding( _camp );
+			   return true;
+			   }*/
 			return super.handleClick( x, y, orderManager, gameLogics );
 		}
 
 
 		public function setCamp( camp:Camp ):void
 		{
+			super.setBuilding( camp );
 			this._camp = camp;
 		}
 
