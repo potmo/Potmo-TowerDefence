@@ -963,7 +963,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3b38037f66e0c8d010f64fdbb6f454fd$</string>
+            <string>$TexturePacker:SmartUpdate:1a541a57c2061f1b0351cf0c8a296868$</string>
             <key>textureFileName</key>
             <string>atlas.png</string>
         </dict>

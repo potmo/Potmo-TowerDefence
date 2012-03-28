@@ -40,6 +40,7 @@ package com.potmo.tdm.visuals.unit
 		private var _oldY:Number;
 		private var _positionIsDirty:Boolean;
 		private var _targetUnit:IUnit;
+		private var _spawned:Boolean;
 
 
 		public function UnitBase( graphicSequence:SpriteAtlasSequence, type:UnitType, settings:UnitSetting )
@@ -51,6 +52,8 @@ package com.potmo.tdm.visuals.unit
 			_health = settings.maxHealth;
 
 			_graphicSequence = graphicSequence;
+
+			_spawned = false;
 
 		/*_healthBarBackground = new Quad( HEALTH_BAR_WIDTH, HEALTH_BAR_HEIGHT, 0xFFCCCCCC );
 		   _healthBarBackground.x = -_healthBarBackground.width / 2;
@@ -78,12 +81,22 @@ package com.potmo.tdm.visuals.unit
 		final public function reset( gameLogics:GameLogics ):void
 		{
 			//TODO: Probably more to reset for unit
-			setHealth( _settings.maxHealth );
+
+			// make sure its dead
+			setHealth( 0 );
 			_owningPlayer = null;
 			// currentState must not be cleared. It will be returned and reset in init
 			_homeBuilding = null;
 			_velx = 0;
 			_vely = 0;
+			_spawned = false;
+		}
+
+
+		final public function spawn( gameLogics:GameLogics ):void
+		{
+			_spawned = true;
+			setHealth( _settings.maxHealth );
 		}
 
 
@@ -136,11 +149,6 @@ package com.potmo.tdm.visuals.unit
 		final public function damage( amount:int, gameLogics:GameLogics ):void
 		{
 
-			if ( getHealth() <= 0 )
-			{
-				return;
-			}
-
 			amount = StrictMath.min( getHealth(), amount );
 
 			setHealth( getHealth() - amount );
@@ -161,6 +169,7 @@ package com.potmo.tdm.visuals.unit
 		 */
 		final public function kill( gameLogics:GameLogics ):void
 		{
+			Logger.log( "Kill Unit: " + this );
 			handleBeingKilled( gameLogics );
 		}
 
@@ -335,7 +344,7 @@ package com.potmo.tdm.visuals.unit
 
 		final public function isDead():Boolean
 		{
-			return getHealth() <= 0;
+			return !_spawned || getHealth() <= 0;
 		}
 
 
@@ -373,7 +382,7 @@ package com.potmo.tdm.visuals.unit
 
 		public function toString():String
 		{
-			return "[" + _type.toString() + " p: " + _owningPlayer.getColor().toString() + "]";
+			return "[" + _type.toString() + " p: " + ( _owningPlayer ? _owningPlayer.getColor().toString() : null ) + "]";
 		}
 
 	}

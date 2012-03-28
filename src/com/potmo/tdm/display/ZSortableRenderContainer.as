@@ -19,7 +19,15 @@ package com.potmo.tdm.display
 
 		public function addChild( child:ZSortableRenderable ):void
 		{
+			var index:int = _children.indexOf( child );
+
+			if ( index != -1 )
+			{
+				throw new Error( "Can not add child that is already child of this container" + child );
+			}
+
 			_children.push( child );
+
 			_numChildren++;
 		}
 
@@ -27,6 +35,11 @@ package com.potmo.tdm.display
 		public function removeChild( child:ZSortableRenderable ):void
 		{
 			var index:int = _children.indexOf( child );
+
+			if ( index == -1 )
+			{
+				throw new Error( "Can not remove child that is not child of this container" + child );
+			}
 			_children.splice( index, 1 );
 			_numChildren--;
 		}

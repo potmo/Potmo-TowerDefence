@@ -48,6 +48,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 				//TODO: Animate when moving
 				//TODO: Units should keep on the road
 				moveCloserToEnemy( gameLogics );
+
 			}
 			else
 			{
@@ -55,6 +56,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 				//TODO: Units should bounce on enemies
 				//TODO: Animate when damaging
 				tryDamageEnemy( gameLogics );
+
 			}
 
 			_unit.setVelX( _unit.getVelX() * 0.4 );
@@ -65,6 +67,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
 			{
+				Logger.log( "Stop attacking unit" );
 				stopAttack( gameLogics );
 			}
 
@@ -73,11 +76,19 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		private function tryDamageEnemy( gameLogics:GameLogics ):void
 		{
+
+			if ( isEnemyDead() )
+			{
+				return;
+			}
+
 			_hitDelay--;
 
 			if ( _hitDelay <= 0 )
 			{
 				damageEnemy( gameLogics );
+
+				_unit.setFrameFromName( "DAMAGE" );
 			}
 
 		}
@@ -109,8 +120,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 			toEnemyForce.normalize();
 			toEnemyForce.scale( movingSpeed );
 
-			_unit.setVelX( _unit.getVelX() * 0.1 + toEnemyForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.1 + toEnemyForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.8 + toEnemyForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.8 + toEnemyForce.y );
 
 		}
 

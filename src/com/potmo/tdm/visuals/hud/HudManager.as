@@ -1,6 +1,7 @@
 package com.potmo.tdm.visuals.hud
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
+	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.building.variant.Camp;
@@ -9,6 +10,7 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.visuals.hud.variant.ConstructionSiteHud;
 	import com.potmo.tdm.visuals.hud.variant.DeployFlagHud;
 	import com.potmo.tdm.visuals.map.DeployFlag;
+	import com.potmo.util.math.StrictMath;
 
 	public class HudManager
 	{
@@ -103,5 +105,14 @@ package com.potmo.tdm.visuals.hud
 			}
 		}
 
+
+		public function update( gameLogics:GameLogics ):void
+		{
+			if ( _currentHud )
+			{
+				_currentHud.setX( Math.round( _gameView.getCameraPosition() ) );
+				_currentHud.update( gameLogics );
+			}
+		}
 	}
 }

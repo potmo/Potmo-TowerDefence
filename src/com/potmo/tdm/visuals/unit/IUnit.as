@@ -12,6 +12,7 @@ package com.potmo.tdm.visuals.unit
 	{
 		function init( gameLogics:GameLogics ):void;
 		function reset( gameLogics:GameLogics ):void;
+		function spawn( gameLogics:GameLogics ):void;
 		function update( gameLogics:GameLogics ):void;
 		function damage( amount:int, gameLogics:GameLogics ):void;
 		function kill( gameLogics:GameLogics ):void;

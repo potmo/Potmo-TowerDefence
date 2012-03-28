@@ -29,6 +29,7 @@ package com.potmo.tdm.visuals.unit
 			unit = getUnitFromPool( pool, type );
 			unit.setOwningPlayer( player );
 			unit.init( gameLogics );
+			unit.spawn( gameLogics );
 			return unit;
 		}
 

@@ -28,6 +28,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 		public function remove( unit:IUnit ):void
 		{
 			root.remove( unit );
+			unit.setPositionAsClean();
 		}
 
 
@@ -53,9 +54,26 @@ package com.potmo.tdm.visuals.unit.quadtree
 		public function cleanPosition( unit:IUnit ):void
 		{
 			// we should remove from the old node and then update new to old and then add
-			root.remove( unit );
+			var removed:Boolean = root.remove( unit );
+
+			if ( !removed )
+			{
+				removed = root.searchHarderAndRemove( unit );
+
+				if ( !removed )
+				{
+					throw new Error( "Could not remove" );
+				}
+			}
 			unit.setPositionAsClean();
-			root.insert( unit );
+
+			var inserted:Boolean = root.insert( unit );
+
+			if ( !inserted )
+			{
+				throw new Error( "Could not insert" );
+			}
+
 		}
 	}
 }

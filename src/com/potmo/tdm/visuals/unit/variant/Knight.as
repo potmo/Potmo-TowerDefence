@@ -1,7 +1,6 @@
 package com.potmo.tdm.visuals.unit.variant
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
-	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
@@ -9,15 +8,15 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
-	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
-	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
-	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
+	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 
 	public class Knight extends UnitBase implements UnitVariant, NoneingUnit, DeployingUnit, GuardingUnit, ChargingUnit, FootAttackingUnit
 	{
@@ -43,10 +42,13 @@ package com.potmo.tdm.visuals.unit.variant
 
 		override public function handleBeingKilled( gameLogics:GameLogics ):void
 		{
+
 			//TODO: Should go to die state instead of none state
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
 			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
-			//gameLogics.getUnitManager().removeUnit( this, gameLogics );
+
+			gameLogics.getUnitManager().removeUnit( this, gameLogics );
+
 		}
 
 
@@ -58,7 +60,7 @@ package com.potmo.tdm.visuals.unit.variant
 
 		override public function handleBeingHealed( aid:int, gameLogics:GameLogics ):void
 		{
-			// TODO Auto-generated method stub
+			//TODO: Do some animation
 		}
 
 

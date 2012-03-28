@@ -113,7 +113,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function onUnitDied( unit:UnitBase ):void
+		public function onUnitRemoved( unit:IUnit ):void
 		{
 			var index:int = units.indexOf( unit );
 

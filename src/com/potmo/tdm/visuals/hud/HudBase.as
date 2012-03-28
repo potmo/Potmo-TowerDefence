@@ -17,6 +17,7 @@ package com.potmo.tdm.visuals.hud
 
 		private var leftButtons:Vector.<BasicRenderItem> = new Vector.<BasicRenderItem>();
 		private var rightButtons:Vector.<BasicRenderItem> = new Vector.<BasicRenderItem>();
+		private var xOffset:int = 0;
 
 
 		public function HudBase( spriteAtlas:SpriteAtlas )
@@ -71,7 +72,7 @@ package com.potmo.tdm.visuals.hud
 			var y:int;
 			var button:BasicRenderItem;
 
-			x = BUTTON_LEFT_PADDING;
+			x = xOffset + BUTTON_LEFT_PADDING;
 			//y = ScreenSize.HEIGHT - BUTTON_BOTTOM_SPACING;
 			y = 0 + BUTTON_BOTTOM_SPACING;
 
@@ -80,18 +81,16 @@ package com.potmo.tdm.visuals.hud
 				button.setX( x );
 				x += BUTTON_SPACING + button.getWidth();
 				button.setY( y );
-				Logger.log( "Set left button to: " + button.getX() + "," + button.getY() );
 
 			}
 
-			x = ScreenSize.WIDTH - BUTTON_RIGHT_PADDING;
+			x = xOffset + ScreenSize.WIDTH - BUTTON_RIGHT_PADDING;
 
 			for each ( button in rightButtons )
 			{
 				button.setX( x - button.getWidth() );
 				x += -BUTTON_SPACING - button.getWidth();
 				button.setY( y );
-				Logger.log( "Set right button to: " + button.getX() + "," + button.getY() );
 
 			}
 		}
@@ -106,6 +105,13 @@ package com.potmo.tdm.visuals.hud
 		public function clear():void
 		{
 			// override
+		}
+
+
+		public function setX( xOffset:int ):void
+		{
+			this.xOffset = xOffset;
+			this.updateButtonLayout();
 		}
 	}
 }

@@ -29,7 +29,7 @@ package com.potmo.tdm.visuals.unit
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
 			this._units = new Vector.<IUnit>();
-			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 10, 5 );
+			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 20, 5 );
 		}
 
 
@@ -84,12 +84,26 @@ package com.potmo.tdm.visuals.unit
 		 */
 		public function removeUnit( unit:IUnit, gameLogics:GameLogics ):void
 		{
+
+			var homeBuilding:BuildingBase = unit.getHomeBuilding();
+
+			if ( homeBuilding )
+			{
+				homeBuilding.onUnitRemoved( unit );
+			}
+
 			var index:int = _units.indexOf( unit );
+
+			if ( index == -1 )
+			{
+				throw new Error( "Unit is not handled by UnitManager" );
+			}
 			_units.splice( index, 1 );
 			_unitLookup.remove( unit );
 			var gameView:GameView = gameLogics.getGameView();
 			gameView.removeUnit( unit );
 			_unitFactory.returnUnit( unit, gameLogics );
+
 		}
 
 
@@ -202,17 +216,17 @@ package com.potmo.tdm.visuals.unit
 					continue;
 				}
 
-				// check for owner
-				if ( other.getOwningPlayer().getColor() == unit.getOwningPlayer().getColor() )
-				{
-					//Logger.log( "Unit is on my team: " + other.getOwningPlayer() + " == " + unit.getOwningPlayer() );
-					continue;
-				}
-
 				// check if dead
 				if ( other.isDead() )
 				{
 					Logger.log( "Unit is dead" );
+					continue;
+				}
+
+				// check for owner
+				if ( other.getOwningPlayer().getColor() == unit.getOwningPlayer().getColor() )
+				{
+					//Logger.log( "Unit is on my team: " + other.getOwningPlayer() + " == " + unit.getOwningPlayer() );
 					continue;
 				}
 

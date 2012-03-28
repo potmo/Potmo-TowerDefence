@@ -158,11 +158,6 @@ package com.potmo.tdm
 
 			_currentFrame++;
 
-			if ( _hud )
-			{
-				_hud.update( _gameLogics );
-			}
-
 			if ( MouseManager.isDown && !_isDragging )
 			{
 				Logger.log( "StartDrag" );
@@ -195,7 +190,7 @@ package com.potmo.tdm
 					if ( _hud )
 					{
 						Logger.log( "hud was clicked" );
-						hudTakenClick = _hud.handleClick( MouseManager.pos.x, MouseManager.pos.y, _orderManager, _gameLogics );
+						hudTakenClick = _hud.handleClick( MouseManager.pos.x + _camera.getCameraX(), MouseManager.pos.y, _orderManager, _gameLogics );
 
 					}
 

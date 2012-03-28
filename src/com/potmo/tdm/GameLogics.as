@@ -88,6 +88,7 @@ package com.potmo.tdm
 
 			_unitManager.update( this );
 			_gameView.update();
+			_hudManager.update( this );
 
 		}
 
