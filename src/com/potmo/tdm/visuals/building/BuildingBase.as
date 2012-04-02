@@ -23,9 +23,9 @@ package com.potmo.tdm.visuals.building
 		protected var units:Vector.<IUnit> = new Vector.<IUnit>();
 
 
-		public function BuildingBase( graphicsSequence:SpriteAtlasSequence )
+		public function BuildingBase( graphicsSequence:SpriteAtlasSequence, regpointX:Number, regpointY:Number )
 		{
-			super( graphicsSequence );
+			super( graphicsSequence, regpointX, regpointY );
 
 		}
 

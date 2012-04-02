@@ -33,7 +33,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
 			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
-
+			unitCollisionForce.scale( 3.0 );
 			mapForce.add( unitCollisionForce );
 
 			mapForce.normalize();

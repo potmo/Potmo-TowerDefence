@@ -6,10 +6,7 @@ package com.potmo.tdm.visuals
 
 	public class AssetHolder
 	{
-		// Map Sero
-		[Embed( source = "../assets/maps/map0-visuals.png" )]
-		public static const MAP_ZERO_VISUAL_ASSET:Class;
-
+		// Map zero
 		[Embed( source = "../assets/maps/map0-walkmap.png" )]
 		public static const MAP_ZERO_WALK_DATA_IMAGE_ASSET:Class;
 

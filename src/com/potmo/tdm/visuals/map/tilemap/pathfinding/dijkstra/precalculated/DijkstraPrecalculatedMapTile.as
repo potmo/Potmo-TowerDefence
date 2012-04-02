@@ -10,6 +10,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 		private var _y:int;
 		private var _xDir:int;
 		private var _yDir:int;
+		private var _type:MapTileType;
 
 
 		public function DijkstraPrecalculatedMapTile( x:int, y:int )
@@ -52,13 +53,13 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 
 		public function getType():MapTileType
 		{
-			return MapTileType.DEFAULT_WALKABLE_TILE;
+			return _type;
 		}
 
 
 		public function setType( type:MapTileType ):void
 		{
-			// Nada
+			_type = type;
 		}
 
 

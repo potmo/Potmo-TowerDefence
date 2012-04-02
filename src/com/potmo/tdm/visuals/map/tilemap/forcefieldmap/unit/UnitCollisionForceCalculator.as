@@ -8,8 +8,6 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 
 	public class UnitCollisionForceCalculator
 	{
-		private static const FORCE_SCALAR:Number = 5.0;
-
 
 		public function UnitCollisionForceCalculator()
 		{
@@ -85,7 +83,6 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 				dy /= dist;
 
 				var magnitude:Number = ( 1.0 - dist / combinedRadius );
-				magnitude *= FORCE_SCALAR;
 				output.addComponents( dx * magnitude, dy * magnitude );
 			}
 

@@ -16,7 +16,6 @@ package com.potmo.tdm.visuals.map
 			var mapDataImage:Bitmap = new AssetHolder.MAP_ZERO_WALK_DATA_IMAGE_ASSET() as Bitmap;
 			var dijkstraLeftRight:Bitmap = new AssetHolder.MAP_ZERO_DIJKSTRA_LEFT_RIGHT_DATA_IMAGE_ASSET() as Bitmap;
 			var dijkstraRightLeft:Bitmap = new AssetHolder.MAP_ZERO_DIJKSTRA_RIGHT_LEFT_DATA_IMAGE_ASSET() as Bitmap;
-			var visualMap:Bitmap = new AssetHolder.MAP_ZERO_VISUAL_ASSET() as Bitmap;
 
 			// Just for a while copy the mapDataImage onto the background
 			/*var matrix:Matrix = new Matrix();

@@ -15,18 +15,22 @@ package com.potmo.tdm.display
 		protected var rotation:Number = 0;
 		protected var scaleX:Number = 1.0;
 		protected var scaleY:Number = 1.0;
+		protected var regpointX:Number = 0.0;
+		protected var regpointY:Number = 0.0;
 
 
-		public function BasicRenderItem( graphicsSequence:SpriteAtlasSequence )
+		public function BasicRenderItem( graphicsSequence:SpriteAtlasSequence, regpointX:Number = 0.0, regpointY:Number = 0.0 )
 		{
 			this.graphicsSequence = graphicsSequence;
 			this.currentFrame = graphicsSequence.getNthFrame( 0 );
+			this.regpointX = regpointX;
+			this.regpointY = regpointY;
 		}
 
 
 		public function render( renderer:Renderer ):void
 		{
-			renderer.draw( currentFrame, x, y, rotation, scaleX, scaleY );
+			renderer.draw( currentFrame, x - regpointX, y - regpointY, rotation, scaleX, scaleY );
 		}
 
 
@@ -34,9 +38,9 @@ package com.potmo.tdm.display
 		{
 			var frameSize:Point = graphicsSequence.getSizeOfFrame( currentFrame );
 
-			if ( x > this.x && x < this.x + frameSize.x )
+			if ( x > this.x - regpointX && x < this.x - regpointX + frameSize.x )
 			{
-				if ( y > this.y && y < this.y + frameSize.y )
+				if ( y > this.y - regpointY && y < this.y - regpointY + frameSize.y )
 				{
 					return true;
 				}

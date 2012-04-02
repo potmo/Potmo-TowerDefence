@@ -43,9 +43,9 @@ package com.potmo.tdm.visuals.unit
 		private var _spawned:Boolean;
 
 
-		public function UnitBase( graphicSequence:SpriteAtlasSequence, type:UnitType, settings:UnitSetting )
+		public function UnitBase( graphicSequence:SpriteAtlasSequence, regpointX:Number, regpointY:Number, type:UnitType, settings:UnitSetting )
 		{
-			super( graphicSequence );
+			super( graphicSequence, regpointX, regpointY );
 			this._settings = settings;
 			this._type = type;
 

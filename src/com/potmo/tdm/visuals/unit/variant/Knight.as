@@ -27,7 +27,7 @@ package com.potmo.tdm.visuals.unit.variant
 
 		public function Knight( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), UnitType.KNIGHT, SETTINGS );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), 12, 35, UnitType.KNIGHT, SETTINGS );
 		}
 
 

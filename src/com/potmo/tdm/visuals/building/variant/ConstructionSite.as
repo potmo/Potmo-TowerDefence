@@ -18,7 +18,7 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function ConstructionSite( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), 50, 40 );
 
 		}
 
