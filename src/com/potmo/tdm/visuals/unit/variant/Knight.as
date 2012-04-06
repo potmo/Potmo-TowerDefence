@@ -13,12 +13,16 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootDefendState;
+	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 
-	public class Knight extends UnitBase implements UnitVariant, NoneingUnit, DeployingUnit, GuardingUnit, ChargingUnit, FootAttackingUnit
+	public class Knight extends UnitBase implements UnitVariant, NoneingUnit, DeployingUnit, GuardingUnit, ChargingUnit, FootAttackingUnit, MovingToPositionUnit, FootDefendingUnit
 	{
 		//private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
 		private static const SEQUENCE_NAME:String = "knight";
@@ -80,9 +84,18 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleGuardStateFinished( state:GuardState, gameLogics:GameLogics ):void
+		override public function handleBeeingCommandedToMoveToPosition( x:int, y:int, gameLogics:GameLogics ):void
 		{
-			//TODO: Get the targeted unit from the state and have a hunt
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getMoveToPositionState( currentState, this, x, y, gameLogics );
+		}
+
+
+		public function handleGuardStateFinished( state:GuardState, enemy:IUnit, gameLogics:GameLogics ):void
+		{
+
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getFootDefendState( state, this, enemy, gameLogics );
 		}
 
 
@@ -95,7 +108,7 @@ package com.potmo.tdm.visuals.unit.variant
 		public function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void
 		{
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getGuardState( state, this, gameLogics );
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 		}
 
 
@@ -112,6 +125,20 @@ package com.potmo.tdm.visuals.unit.variant
 		{
 			// okay back on the road again
 			charge( gameLogics );
+		}
+
+
+		public function handleFootDefendStateFinished( state:FootDefendState, gameLogics:GameLogics ):void
+		{
+			// okay back to the flag again
+			moveToFlag( gameLogics );
+		}
+
+
+		public function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void
+		{
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getGuardState( state, this, gameLogics );
 		}
 
 	}

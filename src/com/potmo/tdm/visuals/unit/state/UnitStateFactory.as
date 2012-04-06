@@ -3,16 +3,20 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.unit.IUnit;
 	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
-	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
-	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
-	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
-	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
+	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.FootDefendState;
+	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
+	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 
 	public class UnitStateFactory
 	{
@@ -71,6 +75,18 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
+		public function getMoveToPositionState( oldState:UnitState, unit:MovingToPositionUnit, posX:int, posY:int, gameLogics:GameLogics ):MovingToPositionState
+		{
+
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:MovingToPositionState = new MovingToPositionState();
+			newState.enter( unit, posX, posY, gameLogics );
+			return newState;
+		}
+
+
 		public function getGuardState( oldState:UnitState, unit:GuardingUnit, gameLogics:GameLogics ):GuardState
 		{
 			oldState.exit( gameLogics );
@@ -100,6 +116,17 @@ package com.potmo.tdm.visuals.unit.state
 			returnState( oldState );
 
 			var newState:FootAttackState = new FootAttackState();
+			newState.enter( unit, enemy, gameLogics );
+			return newState;
+		}
+
+
+		public function getFootDefendState( oldState:UnitState, unit:FootDefendingUnit, enemy:IUnit, gameLogics:GameLogics ):FootDefendState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:FootDefendState = new FootDefendState();
 			newState.enter( unit, enemy, gameLogics );
 			return newState;
 		}

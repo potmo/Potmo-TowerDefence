@@ -10,6 +10,7 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.visuals.hud.variant.ConstructionSiteHud;
 	import com.potmo.tdm.visuals.hud.variant.DeployFlagHud;
 	import com.potmo.tdm.visuals.map.DeployFlag;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	public class HudManager
@@ -32,40 +33,42 @@ package com.potmo.tdm.visuals.hud
 
 		public function showCampHud( camp:Camp ):void
 		{
+			Logger.log( "showCampHud" );
+
 			if ( !_campHud )
 			{
 				_campHud = new CampHud( _spriteAtlas );
 			}
 
-			_campHud.setCamp( camp );
+			_campHud.setup( camp );
 			setHud( _campHud );
 		}
 
 
 		public function showConstructionSiteHud( constructionSite:ConstructionSite ):void
 		{
+			Logger.log( "showConstructionSiteHud" );
+
 			if ( !_constructionSiteHud )
 			{
 				_constructionSiteHud = new ConstructionSiteHud( _spriteAtlas );
 			}
 
-			_constructionSiteHud.setConstructionSite( constructionSite );
+			_constructionSiteHud.setup( constructionSite );
 			setHud( _constructionSiteHud );
 		}
 
 
-		public function showConstructionDeployFlagHud( building:BuildingBase ):void
+		public function showDeployFlagHud( building:BuildingBase ):void
 		{
+			Logger.log( "showDeployFlagHud" );
+
 			if ( !_deployFlagHud )
 			{
 				_deployFlagHud = new DeployFlagHud( _spriteAtlas );
 			}
-			var deployFlag:DeployFlag = new DeployFlag( _spriteAtlas );
-			_gameView.addMapItem( deployFlag );
 
-			_deployFlagHud.setDeployFlagAndBuilding( deployFlag, building );
-
-			_gameView.startIgnoreMapInteraction();
+			_deployFlagHud.setup( building, _gameView );
 
 			setHud( _deployFlagHud );
 		}
@@ -73,6 +76,7 @@ package com.potmo.tdm.visuals.hud
 
 		public function hideHud():void
 		{
+			Logger.log( "hideHud" );
 			removeHud();
 		}
 

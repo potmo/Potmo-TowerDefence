@@ -7,7 +7,7 @@
             <key>affirmbutton/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{65,412},{61,61}}</string>
+                <string>{{65,349},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -228,7 +228,7 @@
             <key>archerybutton/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{65,349},{61,61}}</string>
+                <string>{{191,286},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -254,7 +254,7 @@
             <key>attackbutton/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{191,286},{61,61}}</string>
+                <string>{{128,286},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -280,7 +280,7 @@
             <key>campbutton/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{128,286},{61,61}}</string>
+                <string>{{65,286},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -293,7 +293,7 @@
             <key>cancelbutton/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{65,286},{61,61}}</string>
+                <string>{{2,405},{61,61}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -315,19 +315,6 @@
                 <string>{{0,0},{101,64}}</string>
                 <key>sourceSize</key>
                 <string>{101,64}</string>
-            </dict>
-            <key>cencelbutton/00000_.png</key>
-            <dict>
-                <key>frame</key>
-                <string>{{2,405},{61,61}}</string>
-                <key>offset</key>
-                <string>{0,0}</string>
-                <key>rotated</key>
-                <false/>
-                <key>sourceColorRect</key>
-                <string>{{0,0},{61,61}}</string>
-                <key>sourceSize</key>
-                <string>{61,61}</string>
             </dict>
             <key>citadell/00000_.png</key>
             <dict>
@@ -384,7 +371,7 @@
             <key>deployflag/00000_.png</key>
             <dict>
                 <key>frame</key>
-                <string>{{128,349},{55,56}}</string>
+                <string>{{65,412},{55,56}}</string>
                 <key>offset</key>
                 <string>{0,0}</string>
                 <key>rotated</key>
@@ -963,7 +950,7 @@
             <key>size</key>
             <string>{256,512}</string>
             <key>smartupdate</key>
-            <string>$TexturePacker:SmartUpdate:3b38037f66e0c8d010f64fdbb6f454fd$</string>
+            <string>$TexturePacker:SmartUpdate:1d5835dc8beddbedce3ec842036e32d6$</string>
             <key>textureFileName</key>
             <string>atlas.png</string>
         </dict>

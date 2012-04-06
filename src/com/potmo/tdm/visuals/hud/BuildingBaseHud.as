@@ -67,10 +67,16 @@ package com.potmo.tdm.visuals.hud
 
 			if ( _deployFlagButton.containsPoint( x, y ) )
 			{
-				gameLogics.getHudManager().showConstructionDeployFlagHud( _building );
+				// when removing the hud this hud will be cleared and the building will be null
+				// so save it first
+				var building:BuildingBase = _building;
 				gameLogics.getHudManager().hideHud();
+				gameLogics.getHudManager().showDeployFlagHud( building );
 				return true;
 			}
+
+			// nothing took the click so hide us
+			gameLogics.getHudManager().hideHud();
 
 			return false;
 		}

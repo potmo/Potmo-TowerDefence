@@ -9,6 +9,7 @@ package com.potmo.tdm.visuals.hud.variant
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.util.input.MouseManager;
+	import com.potmo.util.logger.Logger;
 
 	import flash.geom.Point;
 
@@ -27,16 +28,27 @@ package com.potmo.tdm.visuals.hud.variant
 		{
 			super( spriteAtlas );
 
+			setupGui( spriteAtlas );
+		}
+
+
+		private function setupGui( spriteAtlas:SpriteAtlas ):void
+		{
 			_affirmButton = new BasicRenderItem( spriteAtlas.getSequenceByName( AFFIRM_BUTTON_SEQUENCE ) );
 			_cancelButton = new BasicRenderItem( spriteAtlas.getSequenceByName( CENCEL_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( _affirmButton );
 			addButtonFirst( _cancelButton, false );
+
+			// add it later to gameview
+			_flag = new DeployFlag( spriteAtlas );
 		}
 
 
 		override public function update( gameLogics:GameLogics ):void
 		{
+			Logger.log( "updating" );
+
 			//TODO: Make the flag restrict to not be too far from building
 			if ( MouseManager.isDown )
 			{
@@ -49,6 +61,7 @@ package com.potmo.tdm.visuals.hud.variant
 				{
 					return;
 				}
+
 				var mapPoint:Point = gameLogics.getGameView().convertScreenPositionToMapPosition( MouseManager.pos );
 				this._flag.setX( mapPoint.x );
 				this._flag.setY( mapPoint.y );
@@ -58,47 +71,55 @@ package com.potmo.tdm.visuals.hud.variant
 
 		override public function handleClick( x:int, y:int, orderManager:OrderManager, gameLogics:GameLogics ):Boolean
 		{
+
 			if ( _affirmButton.containsPoint( x, y ) )
 			{
 				//send new positions
 				orderManager.requestSetDeployFlag( _flag.getX(), _flag.getY(), _building );
 
-				gameLogics.getGameView().removeMapItem( _flag );
 				gameLogics.getHudManager().hideHud();
 
 				// make the map take clicks again
-				gameLogics.getGameView().stopIgnoreMapInteraction();
-				return true;
+				cleanUp( gameLogics );
 			}
 
 			if ( _cancelButton.containsPoint( x, y ) )
 			{
-				gameLogics.getGameView().removeMapItem( _flag );
 				gameLogics.getHudManager().hideHud();
 
 				// make the map take clicks again
-				gameLogics.getGameView().stopIgnoreMapInteraction();
-				return true;
+				cleanUp( gameLogics );
 			}
 
-			return false;
+			return true;
 		}
 
 
-		public function setDeployFlagAndBuilding( deployFlag:DeployFlag, building:BuildingBase ):void
+		public function setup( building:BuildingBase, gameView:GameView ):void
 		{
-			_flag = deployFlag;
 			_building = building;
 
-			this._flag.setX( building.getDeployFlagX() );
-			this._flag.setY( building.getDeployFlagY() );
+			gameView.startIgnoreMapInteraction();
+			gameView.addMapItem( _flag );
+
+			_flag.setX( _building.getDeployFlagX() );
+			_flag.setY( _building.getDeployFlagY() );
+
+		}
+
+
+		private function cleanUp( gameLogics:GameLogics ):void
+		{
+
+			gameLogics.getGameView().stopIgnoreMapInteraction();
+			gameLogics.getGameView().removeMapItem( _flag );
 		}
 
 
 		override public function clear():void
 		{
 			super.clear();
-			_flag = null;
+
 			_building = null;
 		}
 

@@ -5,6 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+	import com.potmo.tdm.visuals.unit.IUnit;
 
 	public class GuardState extends UnitStateBase implements UnitState
 	{
@@ -28,16 +29,39 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 			// calculate forces from other units that pushes the unit
-			var unitCollisionForce:Force;
-			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
-
-			_unit.setVelX( _unit.getVelX() * 0.4 + unitCollisionForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.4 + unitCollisionForce.y );
+			avoidCollisions( gameLogics );
 
 			_unit.setX( _unit.getX() + _unit.getVelX() );
 			_unit.setY( _unit.getY() + _unit.getVelY() );
 
-			//TODO: Guarding units should look for enemies and target them
+			var enemy:IUnit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit );
+
+			if ( enemy )
+			{
+				_unit.handleGuardStateFinished( this, enemy, gameLogics );
+			}
+		}
+
+
+		private function avoidCollisions( gameLogics:GameLogics ):void
+		{
+			var unwalkableAreaForce:Force;
+			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			unwalkableAreaForce.scale( 5.0 );
+
+			// calculate forces from other units that pushes the unit
+			var unitCollisionForce:Force;
+			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
+			unitCollisionForce.scale( 2.0 );
+			unwalkableAreaForce.add( unitCollisionForce );
+
+			//scale so we do not walk faster than we can
+			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			unwalkableAreaForce.normalize();
+			unwalkableAreaForce.scale( movingSpeed * 0.2 );
+
+			_unit.setVelX( _unit.getVelX() * 0.6 + unwalkableAreaForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.6 + unwalkableAreaForce.y );
 		}
 
 

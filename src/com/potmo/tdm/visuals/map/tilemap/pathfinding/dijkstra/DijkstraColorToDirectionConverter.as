@@ -1,6 +1,7 @@
 package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 {
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
+	import com.potmo.util.logger.Logger;
 
 	public class DijkstraColorToDirectionConverter
 	{
@@ -89,7 +90,9 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 				case CENTER_MIDDLE:
 					return new Force( 0, 0 );
 				default:
-					throw new Error( "color can not be converted: 0x" + color.toString( 16 ) + " : 0x" + uint( color | 0xFF000000 ).toString( 16 ) );
+					//throw new Error( "color can not be converted: 0x" + color.toString( 16 ) + " : 0x" + uint( color | 0xFF000000 ).toString( 16 ) );
+					Logger.error( "color can not be converted: 0x" + color.toString( 16 ) + " : 0x" + uint( color | 0xFF000000 ).toString( 16 ) );
+					return new Force( 0, 0 );
 			}
 		}
 

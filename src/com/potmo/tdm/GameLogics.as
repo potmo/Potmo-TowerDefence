@@ -96,8 +96,6 @@ package com.potmo.tdm
 		public function onMapClicked( x:int, y:int ):void
 		{
 
-			_hudManager.hideHud();
-
 			// check if a building was clicked
 			var clickedBuilding:BuildingBase = _buildingManager.getBuildingUnderPosition( x, y );
 

@@ -42,7 +42,7 @@ package com.potmo.tdm.visuals.map
 		private var _graphicsSequence:SpriteAtlasSequence;
 
 
-		public function MapBase( spriteAtlas:SpriteAtlas, spriteName:String, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData, name:String )
+		public function MapBase( spriteAtlas:SpriteAtlas, spriteName:String, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData )
 		{
 			_graphicsSequence = spriteAtlas.getSequenceByName( spriteName );
 
@@ -50,7 +50,7 @@ package com.potmo.tdm.visuals.map
 
 			validateDataImageSizes( mapDataImage, directionLeftRightDataImage, directionRightLeftDataImage );
 
-			this._mapName = name;
+			this._mapName = spriteName;
 			// setup a device to analyze an image and get data from it
 			mapImageAnalyzer = new MapImageAnalyzer();
 

@@ -9,9 +9,9 @@ package com.potmo.tdm.visuals.map
 	public class MapItem extends BasicRenderItem implements ZSortableRenderable
 	{
 
-		public function MapItem( graphicsSequence:SpriteAtlasSequence )
+		public function MapItem( graphicsSequence:SpriteAtlasSequence, regpointX:Number = 0.0, regpointY:Number = 0.0 )
 		{
-			super( graphicsSequence );
+			super( graphicsSequence, regpointX, regpointY );
 
 		}
 

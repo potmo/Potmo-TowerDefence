@@ -19,6 +19,8 @@ package com.potmo.tdm.visuals.unit
 		function heal( amount:int, gameLogics:GameLogics ):void;
 		function charge( gameLogics:GameLogics ):void;
 		function deploy( x:int, y:int, gameLogics:GameLogics ):void;
+		function moveToFlag( gameLogics:GameLogics ):void;
+
 		function getHomeBuilding():BuildingBase;
 		function setHomeBuilding( building:BuildingBase ):void;
 		function getOwningPlayer():Player;

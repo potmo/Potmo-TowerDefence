@@ -71,6 +71,7 @@ package com.potmo.tdm.visuals.building
 			units.push( unit );
 			unit.setHomeBuilding( this );
 			unit.deploy( x, y, gameLogics );
+			unit.moveToFlag( gameLogics );
 		}
 
 
@@ -79,7 +80,10 @@ package com.potmo.tdm.visuals.building
 			_deployFlagX = x;
 			_deployFlagY = y;
 
-			//TODO: Send to all units that they should move
+			for each ( var unit:UnitBase in units )
+			{
+				unit.moveToFlag( gameLogics );
+			}
 		}
 
 

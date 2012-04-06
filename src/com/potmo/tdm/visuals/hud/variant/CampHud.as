@@ -44,7 +44,7 @@ package com.potmo.tdm.visuals.hud.variant
 		}
 
 
-		public function setCamp( camp:Camp ):void
+		public function setup( camp:Camp ):void
 		{
 			super.setBuilding( camp );
 			this._camp = camp;

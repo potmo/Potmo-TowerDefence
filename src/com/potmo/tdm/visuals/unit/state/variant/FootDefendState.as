@@ -9,21 +9,21 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	public class FootAttackState extends UnitStateBase implements UnitState
+	public class FootDefendState extends UnitStateBase implements UnitState
 	{
 		private var _enemy:IUnit;
-		private var _unit:FootAttackingUnit;
+		private var _unit:FootDefendingUnit;
 
 		private var _hitDelay:int = 0;
 
 
-		final public function FootAttackState()
+		final public function FootDefendState()
 		{
-			super( UnitStateEnum.FOOTATTACKING );
+			super( UnitStateEnum.FOOTDEFENDING );
 		}
 
 
-		public function enter( unit:FootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):void
+		public function enter( unit:FootDefendingUnit, enemy:IUnit, gameLogics:GameLogics ):void
 		{
 			this._unit = unit;
 			this._enemy = enemy;
@@ -67,7 +67,11 @@ package com.potmo.tdm.visuals.unit.state.variant
 			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
 			{
 				Logger.log( "Stop attacking unit" );
-				stopAttack( gameLogics );
+				stopDefend( gameLogics );
+
+					//TODO: Maybe the unit should look for other units close by before
+					// exiting
+
 			}
 
 		}
@@ -180,9 +184,9 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		private function stopAttack( gameLogics:GameLogics ):void
+		private function stopDefend( gameLogics:GameLogics ):void
 		{
-			_unit.handleFootAttackStateFinished( this, gameLogics );
+			_unit.handleFootDefendStateFinished( this, gameLogics );
 		}
 
 

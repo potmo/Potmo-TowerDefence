@@ -55,11 +55,14 @@ package com.potmo.tdm.visuals.hud.variant
 				gameLogics.getHudManager().hideHud();
 				return true;
 			}
+
+			gameLogics.getHudManager().hideHud();
+
 			return false;
 		}
 
 
-		public function setConstructionSite( constructionSite:ConstructionSite ):void
+		public function setup( constructionSite:ConstructionSite ):void
 		{
 			_constructionSite = constructionSite;
 

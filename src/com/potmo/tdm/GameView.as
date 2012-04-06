@@ -74,12 +74,12 @@ package com.potmo.tdm
 
 		public function setHud( hud:HudBase ):void
 		{
-			if ( hud )
+			if ( _hud )
 			{
 				removeHud();
 			}
 
-			this._hud = hud;
+			_hud = hud;
 		}
 
 
@@ -172,7 +172,7 @@ package com.potmo.tdm
 			{
 				var diff:Number = MouseManager.pos.x - _dragStartMouse;
 				slideCameraToPosition( _dragStartCamera - diff );
-				Logger.log( "Move camera: " + diff );
+					//Logger.log( "Move camera: " + diff );
 			}
 			else if ( !MouseManager.isDown && _isDragging )
 			{
@@ -293,7 +293,6 @@ package com.potmo.tdm
 		 */
 		public function slideCameraToPosition( pos:Number ):void
 		{
-			Logger.log( "Move camera to: " + pos );
 			_cameraVelocity = pos - _camera.getCameraX();
 			_camera.setCameraX( pos );
 

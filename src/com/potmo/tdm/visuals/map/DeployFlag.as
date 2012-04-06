@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.map
 
 		public function DeployFlag( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), 3, 54 );
 		}
 	}
 }

@@ -24,63 +24,15 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit = unit;
 
 			_unit.setX( deployX );
-			_unit.setY( deployY + 20 );
+			_unit.setY( deployY );
 
-			_unit.setFrameFromName( "WALK" );
 		}
 
 
-		/**
-		 *
-		 * @param gameLogics
-		 */
-		/**
-		 *
-		 * @param gameLogics
-		 */
 		public function visit( gameLogics:GameLogics ):void
 		{
 
-			// move towards the deploy flag
-			var building:BuildingBase = _unit.getHomeBuilding();
-
-			var flagX:int = building.getDeployFlagX();
-			var flagY:int = building.getDeployFlagY();
-
-			// calculate force towards flag
-			var dirX:Number = flagX - _unit.getX();
-			var dirY:Number = flagY - _unit.getY();
-
-			// if flag is too close then exit
-			var distanceToFlag:Number = StrictMath.get2DLength( dirX, dirY );
-
-			if ( distanceToFlag <= 2 )
-			{
-				// we are close enough so we can end this
-				_unit.handleDeployStateFinished( this, gameLogics );
-				return;
-			}
-
-			//continue calculate force towards flag
-			var toFlagForce:Force = new Force( dirX, dirY );
-			toFlagForce.normalize();
-
-			// calculate forces from other units that pushes the unit
-			var unitCollisionForce:Force;
-			unitCollisionForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
-
-			// sum up the forces and add them to units velocity
-			toFlagForce.add( unitCollisionForce );
-
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
-			toFlagForce.normalize();
-			toFlagForce.scale( movingSpeed );
-
-			_unit.setVelX( _unit.getVelX() * 0.3 + toFlagForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.3 + toFlagForce.y );
-
-			_unit.setX( _unit.getX() + _unit.getVelX() );
-			_unit.setY( _unit.getY() + _unit.getVelY() );
+			_unit.handleDeployStateFinished( this, gameLogics );
 
 		}
 

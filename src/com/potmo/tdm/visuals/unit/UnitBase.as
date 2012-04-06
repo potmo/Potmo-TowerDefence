@@ -196,11 +196,20 @@ package com.potmo.tdm.visuals.unit
 
 
 		/**
-		 * Tell the unit to deploy (start walking from home building to flag position)
+		 * Tell the unit to deploy (just set the position where to start)
 		 */
 		final public function deploy( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			handleBeingDeployed( x, y, gameLogics );
+		}
+
+
+		final public function moveToFlag( gameLogics:GameLogics ):void
+		{
+			var homeBuilding:BuildingBase = this.getHomeBuilding();
+			var deployFlagX:int = homeBuilding.getDeployFlagX();
+			var deployFlagY:int = homeBuilding.getDeployFlagY();
+			handleBeeingCommandedToMoveToPosition( deployFlagX, deployFlagY, gameLogics );
 		}
 
 
@@ -374,6 +383,13 @@ package com.potmo.tdm.visuals.unit
 
 
 		public function handleBeingDeployed( x:int, y:int, gameLogics:GameLogics ):void
+		{
+			throw new Error( "Override function in unit variant" );
+
+		}
+
+
+		public function handleBeeingCommandedToMoveToPosition( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			throw new Error( "Override function in unit variant" );
 
