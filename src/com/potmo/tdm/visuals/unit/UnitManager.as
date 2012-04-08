@@ -36,11 +36,21 @@ package com.potmo.tdm.visuals.unit
 		public function update( gameLogics:GameLogics ):void
 		{
 			var unitsLength:int = _units.length;
+			var unit:Unit;
+			var i:int;
 
-			for ( var i:int = unitsLength - 1; i >= 0; i-- )
+			for ( i = unitsLength - 1; i >= 0; i-- )
 			{
-				var unit:Unit = _units[ i ];
+				unit = _units[ i ];
 				unit.update( gameLogics );
+
+			}
+
+			unitsLength = _units.length;
+
+			for ( i = unitsLength - 1; i >= 0; i-- )
+			{
+				unit = _units[ i ];
 
 				// update the lookup if the unit moved
 				if ( unit.isPositionDirty() )

@@ -12,5 +12,6 @@ package com.potmo.tdm.visuals.unit.variant
 		function handleBeingHealed( aid:int, gameLogics:GameLogics ):void;
 		function handleBeeingCommandedToCharge( gameLogics:GameLogics ):void;
 		function handleBeingDeployed( x:int, y:int, gameLogics:GameLogics ):void;
+		function handleBeeingCommandedToMoveToPosition( x:int, y:int, gameLogics:GameLogics ):void;
 	}
 }
