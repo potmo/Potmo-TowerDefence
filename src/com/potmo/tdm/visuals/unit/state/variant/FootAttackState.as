@@ -102,16 +102,14 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			//continue calculate force towards flag
 			var toEnemyForce:Force = new Force( dirX, dirY );
-			toEnemyForce.normalize();
-			toEnemyForce.scale( 0.4 );
 
 			//scale so we do not walk faster than we can
 			var movingSpeed:Number = _unit.getSettings().movingSpeed;
 			toEnemyForce.normalize();
 			toEnemyForce.scale( movingSpeed );
 
-			_unit.setVelX( _unit.getVelX() * 0.8 + toEnemyForce.x );
-			_unit.setVelY( _unit.getVelY() * 0.8 + toEnemyForce.y );
+			_unit.setVelX( _unit.getVelX() * 0.9 + toEnemyForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.9 + toEnemyForce.y );
 
 		}
 

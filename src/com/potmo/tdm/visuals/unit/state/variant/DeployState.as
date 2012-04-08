@@ -1,6 +1,8 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.player.PlayerColor;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
@@ -25,6 +27,15 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			_unit.setX( deployX );
 			_unit.setY( deployY );
+
+			if ( _unit.getOwningPlayer().getColor() == PlayerColor.RED )
+			{
+				_unit.setColorMultiplyer( 1, 2.5, 1, 1 );
+			}
+			else
+			{
+				_unit.setColorMultiplyer( 1, 1, 1, 2.5 );
+			}
 
 		}
 

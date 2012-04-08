@@ -333,6 +333,15 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
+		public function setColorMultiplyer( alpha:Number, red:Number, green:Number, blue:Number ):void
+		{
+			this.redMultiplyer = red;
+			this.greenMultiplyer = green;
+			this.blueMultiplyer = blue;
+			this.alphaMultiplyer = alpha;
+		}
+
+
 		final public function getRadius():Number
 		{
 			return _settings.radius;

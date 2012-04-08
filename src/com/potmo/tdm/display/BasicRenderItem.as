@@ -17,6 +17,10 @@ package com.potmo.tdm.display
 		protected var scaleY:Number = 1.0;
 		protected var regpointX:Number = 0.0;
 		protected var regpointY:Number = 0.0;
+		protected var alphaMultiplyer:Number = 1.0;
+		protected var redMultiplyer:Number = 1.0;
+		protected var greenMultiplyer:Number = 1.0;
+		protected var blueMultiplyer:Number = 1.0;
 
 
 		public function BasicRenderItem( graphicsSequence:SpriteAtlasSequence, regpointX:Number = 0.0, regpointY:Number = 0.0 )
@@ -30,7 +34,7 @@ package com.potmo.tdm.display
 
 		public function render( renderer:Renderer ):void
 		{
-			renderer.draw( currentFrame, x - regpointX, y - regpointY, rotation, scaleX, scaleY );
+			renderer.draw( currentFrame, x - regpointX, y - regpointY, rotation, scaleX, scaleY, alphaMultiplyer, redMultiplyer, greenMultiplyer, blueMultiplyer );
 		}
 
 

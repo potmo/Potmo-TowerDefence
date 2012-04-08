@@ -14,5 +14,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		function setX( value:Number ):void;
 		function setY( value:Number ):void;
 		function setFrameFromName( name:String ):void;
+
+		function setColorMultiplyer( alpha:Number, red:Number, green:Number, blue:Number ):void;
 	}
 }
