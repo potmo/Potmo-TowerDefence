@@ -1,6 +1,6 @@
 package com.potmo.tdm.visuals.unit.quadtree
 {
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.math.StrictMath;
 
@@ -20,9 +20,9 @@ package com.potmo.tdm.visuals.unit.quadtree
 		private var _depth:int; // the current depth of this node
 		private var _maxDepth:int; // the maximum number of times we can subdivide the node from the root level
 		private var _maxChildren:int; // the max number of children we have in one node
-		private var _children:Vector.<IUnit>; // the children that are in this node. Typically if this is a leaf node
+		private var _children:Vector.<Unit>; // the children that are in this node. Typically if this is a leaf node
 		private var _nodes:Vector.<Node>; // all the subnodes
-		private var _stuckChildren:Vector.<IUnit>; // theese are children that are in multiple subnodes
+		private var _stuckChildren:Vector.<Unit>; // theese are children that are in multiple subnodes
 		private var _parent:Node; // the parent node
 
 
@@ -37,9 +37,9 @@ package com.potmo.tdm.visuals.unit.quadtree
 			this._maxChildren = maxChildren;
 			this._parent = parent;
 
-			this._children = new Vector.<IUnit>();
+			this._children = new Vector.<Unit>();
 			this._nodes = new Vector.<Node>();
-			this._stuckChildren = new Vector.<IUnit>();
+			this._stuckChildren = new Vector.<Unit>();
 
 		}
 
@@ -47,7 +47,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 		/**
 		 * @returns true if removed else false
 		 */
-		public function remove( unit:IUnit ):Boolean
+		public function remove( unit:Unit ):Boolean
 		{
 			var index:int;
 
@@ -127,7 +127,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 				{
 					var node:Node = copyNodes[ i ];
 					node.combineSubnodes();
-					var unit:IUnit;
+					var unit:Unit;
 
 					var nodeChildrenLength:int = node._children.length;
 
@@ -173,7 +173,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function insert( unit:IUnit ):Boolean
+		public function insert( unit:Unit ):Boolean
 		{
 
 			if ( _nodes.length != 0 )
@@ -221,7 +221,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 					this.subdivide();
 
 					// put all old children in newly created subnodes
-					var oldChildren:Vector.<IUnit> = _children.concat(); // clone
+					var oldChildren:Vector.<Unit> = _children.concat(); // clone
 					_children.length = 0;
 
 					for ( var i:int = 0; i < len; i++ )
@@ -246,15 +246,15 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function getChildren():Vector.<IUnit>
+		public function getChildren():Vector.<Unit>
 		{
 			return _children.concat( _stuckChildren );
 		}
 
 
-		public function retrieveFromPosition( x:Number, y:Number ):Vector.<IUnit>
+		public function retrieveFromPosition( x:Number, y:Number ):Vector.<Unit>
 		{
-			var out:Vector.<IUnit> = new Vector.<IUnit>();
+			var out:Vector.<Unit> = new Vector.<Unit>();
 
 			if ( _nodes.length != 0 )
 			{
@@ -273,7 +273,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function retrieveFromRect( x:Number, y:Number, width:Number, height:Number ):Vector.<IUnit>
+		public function retrieveFromRect( x:Number, y:Number, width:Number, height:Number ):Vector.<Unit>
 		{
 
 			// check if the bounding box is containg all the node
@@ -283,7 +283,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 				return getAllChildrenRecursive();
 			}
 
-			var out:Vector.<IUnit> = new Vector.<IUnit>();
+			var out:Vector.<Unit> = new Vector.<Unit>();
 
 			// check if it intersects the rect (does not have to be all of the rect)
 			if ( StrictMath.rectIntersectsRect( x, y, width, height, this._x, this._y, this._width, this._height ) )
@@ -306,9 +306,9 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		private function getAllChildrenRecursive():Vector.<IUnit>
+		private function getAllChildrenRecursive():Vector.<Unit>
 		{
-			var out:Vector.<IUnit> = new Vector.<IUnit>();
+			var out:Vector.<Unit> = new Vector.<Unit>();
 			out = out.concat( getChildren() );
 
 			var nodeLength:int = _nodes.length;
@@ -404,7 +404,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 				}
 			}
 
-			var unit:IUnit;
+			var unit:Unit;
 			var totChildren:int = 0;
 
 			for each ( unit in _children )
@@ -426,9 +426,9 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function searchHarderAndRemove( unit:IUnit ):Boolean
+		public function searchHarderAndRemove( unit:Unit ):Boolean
 		{
-			var child:IUnit;
+			var child:Unit;
 			var num:int;
 			var index:int;
 			index = _stuckChildren.indexOf( unit );

@@ -1,9 +1,9 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
-	public interface MovingToPositionUnit extends IUnit
+	public interface MovingToPositionUnit extends Unit
 	{
 		function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void;
 

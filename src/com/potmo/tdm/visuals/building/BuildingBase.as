@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 
 	public class BuildingBase extends BasicRenderItem implements ZSortableRenderable
@@ -20,7 +20,7 @@ package com.potmo.tdm.visuals.building
 		protected var _deployFlagX:int;
 		protected var _deployFlagY:int;
 
-		protected var units:Vector.<IUnit> = new Vector.<IUnit>();
+		protected var units:Vector.<Unit> = new Vector.<Unit>();
 
 
 		public function BuildingBase( graphicsSequence:SpriteAtlasSequence, regpointX:Number, regpointY:Number )
@@ -66,7 +66,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function deployUnit( unit:IUnit, gameLogics:GameLogics ):void
+		public function deployUnit( unit:Unit, gameLogics:GameLogics ):void
 		{
 			units.push( unit );
 			unit.setHomeBuilding( this );
@@ -117,7 +117,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function onUnitRemoved( unit:IUnit ):void
+		public function onUnitRemoved( unit:Unit ):void
 		{
 			var index:int = units.indexOf( unit );
 

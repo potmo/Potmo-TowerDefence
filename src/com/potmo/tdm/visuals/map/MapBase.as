@@ -12,12 +12,15 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit.UnitCollisionForceCalculator;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated.DijkstraPrecalculatedMap;
 	import com.potmo.tdm.visuals.map.util.MapImageAnalyzer;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.display.BitmapData;
 	import flash.geom.Point;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
+	import flash.utils.CompressionAlgorithm;
 
 	public class MapBase extends BasicRenderItem
 	{
@@ -42,13 +45,13 @@ package com.potmo.tdm.visuals.map
 		private var _graphicsSequence:SpriteAtlasSequence;
 
 
-		public function MapBase( spriteAtlas:SpriteAtlas, spriteName:String, mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData )
+		public function MapBase( spriteAtlas:SpriteAtlas, spriteName:String, mapDataImage:BitmapData, dijkstraMap:ByteArray )
 		{
+			Logger.info( "Creating map: " + spriteName );
+
 			_graphicsSequence = spriteAtlas.getSequenceByName( spriteName );
 
 			super( _graphicsSequence );
-
-			validateDataImageSizes( mapDataImage, directionLeftRightDataImage, directionRightLeftDataImage );
 
 			this._mapName = spriteName;
 			// setup a device to analyze an image and get data from it
@@ -76,83 +79,25 @@ package com.potmo.tdm.visuals.map
 
 			// create a map containing information on shortest path from
 			// all point in the map to the final point
+
+			// uncompress since it should be compressed with DEFLATE
+			dijkstraMap.uncompress( CompressionAlgorithm.DEFLATE );
+			Logger.info( "Byte available: " + dijkstraMap.bytesAvailable );
+
 			leftRightPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
-			leftRightPathfinderForceFieldMap.setupFromImage( directionLeftRightDataImage );
+			var leftRightData:ByteArray = new ByteArray();
+			dijkstraMap.readBytes( leftRightData, 0, dijkstraMap.bytesAvailable / 2 ); // read first half
+			Logger.info( "leftRight data available: " + leftRightData.bytesAvailable );
+			leftRightPathfinderForceFieldMap.setupFromByteArray( leftRightData );
 
 			rightLeftPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
-			rightLeftPathfinderForceFieldMap.setupFromImage( directionRightLeftDataImage );
-
-			// set up the background visuals
-			//this.setupBackground( visualMap )
-
-			// tell subclasses to initialize
-			this.initialize();
+			var rightLeftData:ByteArray = new ByteArray();
+			dijkstraMap.readBytes( rightLeftData ); // read the rest
+			Logger.info( "rightLeft data available: " + rightLeftData.bytesAvailable );
+			rightLeftPathfinderForceFieldMap.setupFromByteArray( rightLeftData );
 
 		}
 
-
-		private function validateDataImageSizes( mapDataImage:BitmapData, directionLeftRightDataImage:BitmapData, directionRightLeftDataImage:BitmapData ):void
-		{
-			if ( mapDataImage.width != directionLeftRightDataImage.width || mapDataImage.height != directionLeftRightDataImage.height )
-			{
-				throw new Error( "Image sizes not match. - directionLeftRightDataImage" );
-			}
-
-			if ( mapDataImage.width != directionRightLeftDataImage.width || mapDataImage.height != directionRightLeftDataImage.height )
-			{
-				throw new Error( "Image sizes not match. - directionRightLeftDataImage" );
-			}
-		}
-
-
-		/*private function setupBackground( visualMap:BitmapData ):void
-		   {
-		   var textureParts:Vector.<Texture>;
-		   textureParts = splitBitmapIntoTextures( visualMap );
-
-		   var image:Image;
-		   var o:int = 0;
-
-		   for each ( var texture:Texture in textureParts )
-		   {
-		   image = new Image( texture );
-
-		   addChild( image );
-		   image.x = o;
-		   o += image.width;
-		   }
-		   }*/
-
-		/*private function splitBitmapIntoTextures( bitmap:BitmapData ):Vector.<Texture>
-		   {
-		   var img:BitmapData;
-		   var texture:Texture;
-		   var textures:Vector.<Texture> = new Vector.<Texture>();
-
-		   var max:int = 1024;
-		   var o:int = 0;
-		   var left:int = bitmap.width;
-		   var cut:int;
-		   var height:int = bitmap.height;
-		   var rect:Rectangle = new Rectangle();
-		   var p:Point = new Point();
-
-		   while ( left > 0 )
-		   {
-		   cut = StrictMath.min( left, max ); // take as mutch as possible but stay within max
-		   img = new BitmapData( cut, height, false, 0xFF0000 );
-		   rect.setTo( o, 0, cut, height );
-		   img.copyPixels( bitmap, rect, p );
-		   texture = Texture.fromBitmapData( img, false, false );
-		   img.dispose();
-		   textures.push( texture );
-		   o += cut;
-		   left -= cut;
-		   }
-
-		   return textures;
-
-		   }*/
 
 		protected function setEndPoints( mapDataImage:BitmapData, scale:Number ):void
 		{
@@ -168,12 +113,6 @@ package com.potmo.tdm.visuals.map
 			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( mapDataImage, scale );
 			player0BuildingPositions = buildingPositions[ 0 ];
 			player1BuildingPositions = buildingPositions[ 1 ];
-		}
-
-
-		protected function initialize():void
-		{
-			//override	
 		}
 
 
@@ -210,7 +149,7 @@ package com.potmo.tdm.visuals.map
 		}
 
 
-		public function getUnitCollisionForce( gameLogics:GameLogics, unit:IUnit ):Force
+		public function getUnitCollisionForce( gameLogics:GameLogics, unit:Unit ):Force
 		{
 			return unitCollisionForceCalculator.getUnitCollisionForce( gameLogics, unit );
 		}
@@ -219,7 +158,7 @@ package com.potmo.tdm.visuals.map
 		/**
 		 * Returns the force in the direction of the closest path to the other side
 		 */
-		public function getMapPathForce( gameLogics:GameLogics, unit:IUnit, movingDirection:MapMovingDirection ):Force
+		public function getMapPathForce( gameLogics:GameLogics, unit:Unit, movingDirection:MapMovingDirection ):Force
 		{
 			var map:IForceFieldMap;
 
@@ -241,7 +180,7 @@ package com.potmo.tdm.visuals.map
 		 * Returns the force towards the closest walkable place
 		 * If the ground under the unit is walkable this will return a zero length force
 		 */
-		public function getMapUnwalkableAreaForce( gameLogics:GameLogics, unit:IUnit, movingDirection:MapMovingDirection ):Force
+		public function getMapUnwalkableAreaForce( gameLogics:GameLogics, unit:Unit, movingDirection:MapMovingDirection ):Force
 		{
 			var map:IForceFieldMap;
 

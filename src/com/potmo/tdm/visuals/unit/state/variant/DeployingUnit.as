@@ -1,9 +1,9 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
-	public interface DeployingUnit extends IUnit
+	public interface DeployingUnit extends Unit
 	{
 		function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void;
 

@@ -2,7 +2,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
@@ -11,7 +11,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public class FootDefendState extends UnitStateBase implements UnitState
 	{
-		private var _enemy:IUnit;
+		private var _enemy:Unit;
 		private var _unit:FootDefendingUnit;
 
 		private var _hitDelay:int = 0;
@@ -23,7 +23,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:FootDefendingUnit, enemy:IUnit, gameLogics:GameLogics ):void
+		public function enter( unit:FootDefendingUnit, enemy:Unit, gameLogics:GameLogics ):void
 		{
 			this._unit = unit;
 			this._enemy = enemy;

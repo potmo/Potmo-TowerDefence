@@ -9,6 +9,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 
 	import flash.display.BitmapData;
 	import flash.geom.Rectangle;
+	import flash.utils.ByteArray;
 
 	public class DijkstraMap implements IPathfindingMap
 	{
@@ -374,6 +375,52 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra
 				}
 			}
 			canvas.unlock();
+		}
+
+
+		public function getAsBytes():ByteArray
+		{
+			var out:ByteArray = new ByteArray();
+
+			// write with and length
+			out.writeInt( _width );
+			out.writeInt( _height );
+
+			var serializer:DijkstraSerializer = new DijkstraSerializer();
+
+			for ( var x:int = 0; x < _width; x++ )
+			{
+				for ( var y:int = 0; y < _height; y++ )
+				{
+					var tile:DijkstraMapTile = _data[ x ][ y ];
+
+					// add direction
+					var xDir:int;
+					var yDir:int;
+
+					if ( !tile.bestPredessesor )
+					{
+						xDir = 0;
+						yDir = 0;
+					}
+					else
+					{
+						xDir = tile.bestPredessesor.x - tile.x;
+						yDir = tile.bestPredessesor.y - tile.y;
+
+						xDir = StrictMath.clamp( xDir, -1, 1 );
+						yDir = StrictMath.clamp( yDir, -1, 1 );
+					}
+
+					// add walkable
+					var walkable:Boolean = tile.getType().isWalkable();
+
+					var byte:uint = serializer.getAsBinary( xDir, yDir, walkable );
+					out.writeByte( byte );
+				}
+			}
+
+			return out;
 		}
 
 

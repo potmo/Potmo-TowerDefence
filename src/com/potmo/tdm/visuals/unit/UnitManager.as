@@ -19,7 +19,7 @@ package com.potmo.tdm.visuals.unit
 		private static const MAX_NUMBER_OF_TARGETING_UNITS:int = 2;
 
 		private var _unitLookup:QuadTree;
-		private var _units:Vector.<IUnit>;
+		private var _units:Vector.<Unit>;
 		private var _unitFactory:UnitFactory;
 		private var _unitStateFactory:UnitStateFactory;
 
@@ -28,7 +28,7 @@ package com.potmo.tdm.visuals.unit
 		{
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
-			this._units = new Vector.<IUnit>();
+			this._units = new Vector.<Unit>();
 			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 20, 5 );
 		}
 
@@ -39,7 +39,7 @@ package com.potmo.tdm.visuals.unit
 
 			for ( var i:int = unitsLength - 1; i >= 0; i-- )
 			{
-				var unit:IUnit = _units[ i ];
+				var unit:Unit = _units[ i ];
 				unit.update( gameLogics );
 
 				// update the lookup if the unit moved
@@ -55,10 +55,10 @@ package com.potmo.tdm.visuals.unit
 		/**
 		 * Add a unit to the map and to the game
 		 */
-		public function addUnit( type:UnitType, building:BuildingBase, gameLogics:GameLogics ):IUnit
+		public function addUnit( type:UnitType, building:BuildingBase, gameLogics:GameLogics ):Unit
 		{
 			var owner:Player = building.getOwningPlayer();
-			var unit:IUnit = _unitFactory.getUnit( type, owner, gameLogics );
+			var unit:Unit = _unitFactory.getUnit( type, owner, gameLogics );
 
 			// push it to the array
 			_units.push( unit );
@@ -82,7 +82,7 @@ package com.potmo.tdm.visuals.unit
 		/**
 		 * Remove a unit from the map and the game
 		 */
-		public function removeUnit( unit:IUnit, gameLogics:GameLogics ):void
+		public function removeUnit( unit:Unit, gameLogics:GameLogics ):void
 		{
 
 			var homeBuilding:BuildingBase = unit.getHomeBuilding();
@@ -111,15 +111,15 @@ package com.potmo.tdm.visuals.unit
 		 * Finds the unit that is closest to the point and within the range from the point
 		 * @returns the closest unit or null
 		 */
-		public function getClosestUnitToPointWithinRange( x:Number, y:Number, range:Number ):IUnit
+		public function getClosestUnitToPointWithinRange( x:Number, y:Number, range:Number ):Unit
 		{
 
 			// get all the close by units
-			var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - range, y - range, range * 2, range * 2 );
+			var unitsToSearch:Vector.<Unit> = _unitLookup.retriveFromRect( x - range, y - range, range * 2, range * 2 );
 
 			var dist:Number;
 			var closestUnitDist:Number = Number.MAX_VALUE;
-			var closestUnit:IUnit;
+			var closestUnit:Unit;
 
 			// square for faster lookup
 			range *= range;
@@ -128,7 +128,7 @@ package com.potmo.tdm.visuals.unit
 
 			for ( var i:int = 0; i < unitsLength; i++ )
 			{
-				var unit:IUnit = unitsToSearch[ i ];
+				var unit:Unit = unitsToSearch[ i ];
 				dist = StrictMath.distSquared( unit.getX(), unit.getY(), x, y );
 
 				if ( dist <= range )
@@ -147,21 +147,21 @@ package com.potmo.tdm.visuals.unit
 		/**
 		 * Get a list of units that is intersecting the circle
 		 */
-		public function getUnitsIntersectingCircle( x:Number, y:Number, radius:Number ):Vector.<IUnit>
+		public function getUnitsIntersectingCircle( x:Number, y:Number, radius:Number ):Vector.<Unit>
 		{
 
 			// get all the close by units
 			//var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - radius, y - radius, radius * 2, radius * 2 );
-			var unitsToSearch:Vector.<IUnit> = _units;
+			var unitsToSearch:Vector.<Unit> = _units;
 
 			var maxDist:Number;
-			var output:Vector.<IUnit> = new Vector.<IUnit>();
+			var output:Vector.<Unit> = new Vector.<Unit>();
 
 			var unitsLength:int = unitsToSearch.length;
 
 			for ( var i:int = 0; i < unitsLength; i++ )
 			{
-				var unit:IUnit = unitsToSearch[ i ];
+				var unit:Unit = unitsToSearch[ i ];
 				//see if unit and circle intersects
 				var unitX:Number = unit.getX();
 				var unitY:Number = unit.getY();
@@ -184,14 +184,14 @@ package com.potmo.tdm.visuals.unit
 		 * Return the closest
 		 * @returns the best unit to attack or null if none
 		 */
-		public function getClosestEnemyUnitPossibleToAttack( unit:IUnit ):IUnit
+		public function getClosestEnemyUnitPossibleToAttack( unit:Unit ):Unit
 		{
 
 			// get the range
 			var range:Number = unit.getSettings().targetingRange;
 
 			// get all the close by units
-			var unitsToSearch:Vector.<IUnit>;
+			var unitsToSearch:Vector.<Unit>;
 			unitsToSearch = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 			//unitsToSearch = _units;
 
@@ -200,7 +200,7 @@ package com.potmo.tdm.visuals.unit
 
 			// okay firstly we want to target a unit that is not already targeted by another unit
 			// if we can not find that we will target the first best
-			var bestUntargeted:IUnit;
+			var bestUntargeted:Unit;
 			var bestUntargetedDistSquared:int = int.MAX_VALUE;
 
 			var squaredDist:Number;
@@ -208,7 +208,7 @@ package com.potmo.tdm.visuals.unit
 
 			for ( var i:int = 0; i < unitsCount; i++ )
 			{
-				var other:IUnit = unitsToSearch[ i ];
+				var other:Unit = unitsToSearch[ i ];
 
 				// do not check agains my self
 				if ( other == unit )
@@ -270,15 +270,15 @@ package com.potmo.tdm.visuals.unit
 			BitmapUtil.fill( canvas, 0x55FFFFFF );
 			_unitLookup.draw( canvas, 1 );
 
-			for each ( var unit:IUnit in _units )
+			for each ( var unit:Unit in _units )
 			{
 
 				var range:Number = unit.getSettings().targetingRange;
-				var others:Vector.<IUnit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
+				var others:Vector.<Unit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 
 				BitmapUtil.drawRectangle( unit.getX() - range, unit.getY() - range, range * 2, range * 2, 0x0000FF, canvas );
 
-				for each ( var other:IUnit in others )
+				for each ( var other:Unit in others )
 				{
 					BitmapUtil.drawLine( unit.getX(), unit.getY(), other.getX(), other.getY(), 0xFF00FF00, canvas );
 				}

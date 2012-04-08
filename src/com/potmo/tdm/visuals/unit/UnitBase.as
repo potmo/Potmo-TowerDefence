@@ -15,7 +15,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	public class UnitBase extends BasicRenderItem implements IUnit
+	public class UnitBase extends BasicRenderItem implements Unit
 	{
 		private var _settings:UnitSetting;
 
@@ -24,7 +24,7 @@ package com.potmo.tdm.visuals.unit
 		private var _owningPlayer:Player;
 		private var _homeBuilding:BuildingBase;
 
-		protected var targetedByUnits:Vector.<IUnit> = new Vector.<IUnit>();
+		protected var targetedByUnits:Vector.<Unit> = new Vector.<Unit>();
 
 		private var _velx:Number = 0;
 		private var _vely:Number = 0;
@@ -39,7 +39,7 @@ package com.potmo.tdm.visuals.unit
 		private var _oldX:Number;
 		private var _oldY:Number;
 		private var _positionIsDirty:Boolean;
-		private var _targetUnit:IUnit;
+		private var _targetUnit:Unit;
 		private var _spawned:Boolean;
 
 

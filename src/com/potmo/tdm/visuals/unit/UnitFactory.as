@@ -7,7 +7,7 @@ package com.potmo.tdm.visuals.unit
 	public final class UnitFactory
 	{
 
-		private var knightPool:Vector.<IUnit> = new Vector.<IUnit>();
+		private var knightPool:Vector.<Unit> = new Vector.<Unit>();
 
 		//private var archerPool:Vector.<UnitBase> = new Vector.<UnitBase>();
 		private var _spriteAtlas:SpriteAtlas;
@@ -21,10 +21,10 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function getUnit( type:UnitType, player:Player, gameLogics:GameLogics ):IUnit
+		public function getUnit( type:UnitType, player:Player, gameLogics:GameLogics ):Unit
 		{
-			var unit:IUnit;
-			var pool:Vector.<IUnit> = getPool( type );
+			var unit:Unit;
+			var pool:Vector.<Unit> = getPool( type );
 
 			unit = getUnitFromPool( pool, type );
 			unit.setOwningPlayer( player );
@@ -34,14 +34,14 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		public function returnUnit( unit:IUnit, gameLogics:GameLogics ):void
+		public function returnUnit( unit:Unit, gameLogics:GameLogics ):void
 		{
 			unit.reset( gameLogics );
 			getPool( unit.getType() ).push( unit );
 		}
 
 
-		private function getPool( type:UnitType ):Vector.<IUnit>
+		private function getPool( type:UnitType ):Vector.<Unit>
 		{
 			switch ( type )
 			{
@@ -55,7 +55,7 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		private function getUnitFromPool( pool:Vector.<IUnit>, type:UnitType ):IUnit
+		private function getUnitFromPool( pool:Vector.<Unit>, type:UnitType ):Unit
 		{
 			if ( pool.length == 0 )
 			{
@@ -65,9 +65,9 @@ package com.potmo.tdm.visuals.unit
 		}
 
 
-		private function populatePool( pool:Vector.<IUnit>, type:UnitType, units:uint ):void
+		private function populatePool( pool:Vector.<Unit>, type:UnitType, units:uint ):void
 		{
-			var unit:IUnit;
+			var unit:Unit;
 			var clazz:Class = type.getClass();
 
 			while ( units > 0 )

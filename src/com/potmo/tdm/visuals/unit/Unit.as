@@ -8,7 +8,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 
-	public interface IUnit extends ZSortableRenderable
+	public interface Unit extends ZSortableRenderable
 	{
 		function init( gameLogics:GameLogics ):void;
 		function reset( gameLogics:GameLogics ):void;

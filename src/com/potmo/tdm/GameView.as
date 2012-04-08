@@ -10,7 +10,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.map.MapItem;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.projectile.Projectile;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
@@ -99,14 +99,14 @@ package com.potmo.tdm
 		}
 
 
-		public function addUnit( unit:IUnit ):void
+		public function addUnit( unit:Unit ):void
 		{
 			_inbetweenItems.addChild( unit );
 
 		}
 
 
-		public function removeUnit( unit:IUnit ):void
+		public function removeUnit( unit:Unit ):void
 		{
 			_inbetweenItems.removeChild( unit );
 

@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 
 	public class UnitStateBase

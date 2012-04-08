@@ -2,7 +2,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitManager;
 	import com.potmo.util.math.StrictMath;
 
@@ -14,17 +14,17 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 		}
 
 
-		public function getUnitCollisionForce( gameLogics:GameLogics, unit:IUnit ):Force
+		public function getUnitCollisionForce( gameLogics:GameLogics, unit:Unit ):Force
 		{
 			//TODO: This should use QuadTree instead
 			var unitManager:UnitManager = gameLogics.getUnitManager();
-			var units:Vector.<IUnit> = unitManager.getUnitsIntersectingCircle( unit.getX(), unit.getY(), unit.getRadius() );
+			var units:Vector.<Unit> = unitManager.getUnitsIntersectingCircle( unit.getX(), unit.getY(), unit.getRadius() );
 
 			return calculateForce( unit, units );
 		}
 
 
-		private function calculateForce( unit:IUnit, units:Vector.<IUnit> ):Force
+		private function calculateForce( unit:Unit, units:Vector.<Unit> ):Force
 		{
 
 			//TODO: Units should be stored in a QuadTree (com.potmo.util.containers.quadtree.QuadTree) for faster access and calculation
@@ -50,7 +50,7 @@ package com.potmo.tdm.visuals.map.tilemap.forcefieldmap.unit
 
 			for ( var i:int = 0; i < length; i++ )
 			{
-				var otherUnit:IUnit = units[ i ]
+				var otherUnit:Unit = units[ i ]
 
 				// do not check against myself
 				if ( unit == otherUnit )

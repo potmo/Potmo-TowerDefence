@@ -135,7 +135,7 @@ package com.potmo.tdm
 
 			_gameView = new GameView( _camera );
 			_orderManager = new OrderManager();
-			_map = new MapBase( _spriteAtlas, "map0", assetLoader.getMapWalkmap(), assetLoader.getLeftRightMap(), assetLoader.getRightLeftMap() );
+			_map = new MapBase( _spriteAtlas, "map0", assetLoader.getMapWalkmap(), assetLoader.getDijsktraMap() );
 			_unitStateFactory = new UnitStateFactory();
 			_unitFactory = new UnitFactory( _spriteAtlas );
 			_buildingFactory = new BuildingFactory( _spriteAtlas );

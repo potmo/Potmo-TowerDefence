@@ -1,11 +1,11 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
-	public interface ChargingUnit extends IUnit
+	public interface ChargingUnit extends Unit
 	{
-		function handleChargeStateFinished( state:ChargeState, enemy:IUnit, gameLogics:GameLogics ):void;
+		function handleChargeStateFinished( state:ChargeState, enemy:Unit, gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

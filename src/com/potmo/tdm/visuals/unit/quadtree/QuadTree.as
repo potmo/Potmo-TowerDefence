@@ -1,6 +1,6 @@
 package com.potmo.tdm.visuals.unit.quadtree
 {
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
 	import flash.display.BitmapData;
 
@@ -19,26 +19,26 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function insert( unit:IUnit ):void
+		public function insert( unit:Unit ):void
 		{
 			root.insert( unit );
 		}
 
 
-		public function remove( unit:IUnit ):void
+		public function remove( unit:Unit ):void
 		{
 			root.remove( unit );
 			unit.setPositionAsClean();
 		}
 
 
-		public function retriveFromPosition( x:Number, y:Number ):Vector.<IUnit>
+		public function retriveFromPosition( x:Number, y:Number ):Vector.<Unit>
 		{
 			return root.retrieveFromPosition( x, y );
 		}
 
 
-		public function retriveFromRect( x:Number, y:Number, width:Number, height:Number ):Vector.<IUnit>
+		public function retriveFromRect( x:Number, y:Number, width:Number, height:Number ):Vector.<Unit>
 		{
 			return root.retrieveFromRect( x, y, width, height );
 		}
@@ -51,7 +51,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 		}
 
 
-		public function cleanPosition( unit:IUnit ):void
+		public function cleanPosition( unit:Unit ):void
 		{
 			// we should remove from the old node and then update new to old and then add
 			var removed:Boolean = root.remove( unit );

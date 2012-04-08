@@ -11,7 +11,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.hud.variant.DeployFlagHud;
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.tdm.visuals.map.MapBase;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitFactory;
 	import com.potmo.tdm.visuals.unit.UnitManager;
 	import com.potmo.tdm.visuals.unit.projectile.Projectile;
@@ -128,7 +128,7 @@ package com.potmo.tdm
 			var hitY:int = projectile.getTargetY();
 			var damage:int = projectile.getDamage();
 
-			var unit:IUnit = _unitManager.getClosestUnitToPointWithinRange( hitX, hitY, hitRadius );
+			var unit:Unit = _unitManager.getClosestUnitToPointWithinRange( hitX, hitY, hitRadius );
 
 			if ( unit )
 			{

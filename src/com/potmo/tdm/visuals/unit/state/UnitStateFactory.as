@@ -1,7 +1,7 @@
 package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
@@ -110,7 +110,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getFootAttackState( oldState:UnitState, unit:FootAttackingUnit, enemy:IUnit, gameLogics:GameLogics ):FootAttackState
+		public function getFootAttackState( oldState:UnitState, unit:FootAttackingUnit, enemy:Unit, gameLogics:GameLogics ):FootAttackState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
@@ -121,7 +121,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getFootDefendState( oldState:UnitState, unit:FootDefendingUnit, enemy:IUnit, gameLogics:GameLogics ):FootDefendState
+		public function getFootDefendState( oldState:UnitState, unit:FootDefendingUnit, enemy:Unit, gameLogics:GameLogics ):FootDefendState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );

@@ -2,7 +2,7 @@ package com.potmo.tdm.visuals.unit.variant
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
@@ -91,7 +91,7 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleGuardStateFinished( state:GuardState, enemy:IUnit, gameLogics:GameLogics ):void
+		public function handleGuardStateFinished( state:GuardState, enemy:Unit, gameLogics:GameLogics ):void
 		{
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
@@ -112,7 +112,7 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleChargeStateFinished( state:ChargeState, enemy:IUnit, gameLogics:GameLogics ):void
+		public function handleChargeStateFinished( state:ChargeState, enemy:Unit, gameLogics:GameLogics ):void
 		{
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();

@@ -8,9 +8,12 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.PathFindingPath;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraColorToDirectionConverter;
 	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraMap;
+	import com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.DijkstraSerializer;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.display.BitmapData;
+	import flash.utils.ByteArray;
 
 	public class DijkstraPrecalculatedMap implements IPathfindingMap, IForceFieldMap
 	{
@@ -136,6 +139,9 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 
 			_data = new Vector.<Vector.<DijkstraPrecalculatedMapTile>>( _width, true );
 
+			var pixels:Vector.<uint> = image.getVector( image.rect );
+			var imageWidth:int = image.width;
+
 			for ( var x:int = 0; x < _width; x++ )
 			{
 				_data[ x ] = new Vector.<DijkstraPrecalculatedMapTile>( _height, true );
@@ -145,7 +151,7 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 					var tile:DijkstraPrecalculatedMapTile = new DijkstraPrecalculatedMapTile( x, y );
 					_data[ x ][ y ] = tile;
 
-					var color:uint = image.getPixel32( x, y );
+					var color:uint = pixels[ y * imageWidth + x ];
 					var force:Force = DijkstraColorToDirectionConverter.getForceFromColor( color );
 					var walkable:Boolean = DijkstraColorToDirectionConverter.isWalkable( color );
 
@@ -166,8 +172,45 @@ package com.potmo.tdm.visuals.map.tilemap.pathfinding.dijkstra.precalculated
 		}
 
 
-		public function setupFromDijkstraMap( map:DijkstraMap ):void
+		public function setupFromByteArray( bytes:ByteArray ):void
 		{
+
+			Logger.info( "setupFromByteArray()" );
+			var byte:uint;
+			_width = bytes.readInt();
+			_height = bytes.readInt();
+
+			Logger.info( "map width height : " + _width + "x" + _height );
+
+			var serializer:DijkstraSerializer = new DijkstraSerializer();
+
+			var xDir:int;
+			var yDir:int;
+			var walkable:Boolean;
+			var tile:DijkstraPrecalculatedMapTile;
+
+			_data = new Vector.<Vector.<DijkstraPrecalculatedMapTile>>( _width, true );
+
+			for ( var x:int = 0; x < _width; x++ )
+			{
+				_data[ x ] = new Vector.<DijkstraPrecalculatedMapTile>( _height, true );
+
+				for ( var y:int = 0; y < _height; y++ )
+				{
+					byte = bytes.readByte();
+					xDir = serializer.getXFromByte( byte );
+					yDir = serializer.getYFromByte( byte );
+					walkable = serializer.getWalkableFromByte( byte );
+
+					tile = new DijkstraPrecalculatedMapTile( x, y );
+
+					tile.setType( walkable ? MapTileType.DEFAULT_WALKABLE_TILE : MapTileType.DEFAULT_UNWALKABLE_TILE );
+					tile.setDirection( xDir, yDir );
+
+					_data[ x ][ y ] = tile;
+
+				}
+			}
 
 		}
 

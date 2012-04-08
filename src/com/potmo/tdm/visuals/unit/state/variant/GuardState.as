@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
 	public class GuardState extends UnitStateBase implements UnitState
 	{
@@ -34,7 +34,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit.setX( _unit.getX() + _unit.getVelX() );
 			_unit.setY( _unit.getY() + _unit.getVelY() );
 
-			var enemy:IUnit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit );
+			var enemy:Unit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit );
 
 			if ( enemy )
 			{

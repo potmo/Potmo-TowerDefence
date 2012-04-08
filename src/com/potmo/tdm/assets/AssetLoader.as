@@ -5,6 +5,7 @@ package com.potmo.tdm.assets
 
 	import flash.display.BitmapData;
 	import flash.events.ErrorEvent;
+	import flash.utils.ByteArray;
 
 	public class AssetLoader
 	{
@@ -20,9 +21,9 @@ package com.potmo.tdm.assets
 		}
 
 
-		private function queue( url:String, name:String ):void
+		private function queue( url:String, name:String, type:String ):void
 		{
-			_bulkLoader.add( url, { id:name } );
+			_bulkLoader.add( url, { id:name, type:type } );
 		}
 
 
@@ -56,6 +57,12 @@ package com.potmo.tdm.assets
 		}
 
 
+		public function getByteBlob( id:String ):ByteArray
+		{
+			return _bulkLoader.getBinary( id, true );
+		}
+
+
 		private function onError( event:ErrorEvent ):void
 		{
 			if ( _failCallback != null )
@@ -76,13 +83,15 @@ package com.potmo.tdm.assets
 
 		private function addItemsToLoad():void
 		{
-			queue( "assets/atlas.xml", "atlasxml" );
-			queue( "assets/atlas.png", "atlaspng" );
-			queue( "assets/maps/map0_atlas.xml", "map0xml" );
-			queue( "assets/maps/map0_atlas.png", "map0png" );
-			queue( "assets/maps/map0_walkmap.png", "map0walkmap" );
-			queue( "assets/maps/map0_lr_dijkstra.png", "map0lrdijkstra" );
-			queue( "assets/maps/map0_rl_dijkstra.png", "map0rldijkstra" );
+			queue( "assets/atlas.xml", "atlasxml", BulkLoader.TYPE_XML );
+			queue( "assets/atlas.png", "atlaspng", BulkLoader.TYPE_IMAGE );
+			queue( "assets/maps/map0_atlas.xml", "map0xml", BulkLoader.TYPE_XML );
+			queue( "assets/maps/map0_atlas.png", "map0png", BulkLoader.TYPE_IMAGE );
+			queue( "assets/maps/map0_walkmap.png", "map0walkmap", BulkLoader.TYPE_IMAGE );
+			/*	queue( "assets/maps/map0_lr_dijkstra.png", "map0lrdijkstra" );
+			   queue( "assets/maps/map0_rl_dijkstra.png", "map0rldijkstra" );*/
+
+			queue( "assets/maps/map0_dijkstra.map", "map0dijkstra", BulkLoader.TYPE_BINARY );
 		}
 
 
@@ -146,27 +155,38 @@ package com.potmo.tdm.assets
 		}
 
 
-		public function getLeftRightMap():BitmapData
+		public function getDijsktraMap():ByteArray
 		{
-			var bitmap:BitmapData = getBitmapData( "map0lrdijkstra" );
+			var bytes:ByteArray = getByteBlob( "map0dijkstra" );
 
-			if ( !bitmap )
+			if ( !bytes )
 			{
-				throw new Error( "map0lrdijkstra not readable" );
+				throw new Error( "map0dijkstra not readable" );
 			}
-			return bitmap;
+			return bytes;
 		}
 
+	/*	public function getLeftRightMap():BitmapData
+	   {
+	   var bitmap:BitmapData = getBitmapData( "map0lrdijkstra" );
 
-		public function getRightLeftMap():BitmapData
-		{
-			var bitmap:BitmapData = getBitmapData( "map0rldijkstra" );
+	   if ( !bitmap )
+	   {
+	   throw new Error( "map0lrdijkstra not readable" );
+	   }
+	   return bitmap;
+	   }
 
-			if ( !bitmap )
-			{
-				throw new Error( "map0rldijkstra not readable" );
-			}
-			return bitmap;
-		}
+
+	   public function getRightLeftMap():BitmapData
+	   {
+	   var bitmap:BitmapData = getBitmapData( "map0rldijkstra" );
+
+	   if ( !bitmap )
+	   {
+	   throw new Error( "map0rldijkstra not readable" );
+	   }
+	   return bitmap;
+	   }*/
 	}
 }

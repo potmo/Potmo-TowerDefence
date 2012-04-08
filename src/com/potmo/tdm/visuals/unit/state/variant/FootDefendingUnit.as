@@ -1,9 +1,9 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
-	import com.potmo.tdm.visuals.unit.IUnit;
+	import com.potmo.tdm.visuals.unit.Unit;
 
-	public interface FootDefendingUnit extends IUnit
+	public interface FootDefendingUnit extends Unit
 	{
 		function handleFootDefendStateFinished( state:FootDefendState, gameLogics:GameLogics ):void;
 
