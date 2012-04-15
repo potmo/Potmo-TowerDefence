@@ -24,7 +24,7 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function Camp( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), 50, 60 );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 
 		}
 

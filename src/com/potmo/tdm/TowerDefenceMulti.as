@@ -3,7 +3,7 @@ package com.potmo.tdm
 	import com.potmo.p2d.atlas.P2DTextureAtlas;
 	import com.potmo.p2d.atlas.animation.P2DSpriteAtlas;
 	import com.potmo.p2d.atlas.parser.AtlasParser;
-	import com.potmo.p2d.atlas.parser.Cocos2DParser;
+	import com.potmo.p2d.atlas.parser.P2DAtlasParser;
 	import com.potmo.p2d.renderer.P2DCamera;
 	import com.potmo.p2d.renderer.P2DRenderer;
 	import com.potmo.tdm.assets.AssetLoader;
@@ -124,12 +124,12 @@ package com.potmo.tdm
 
 			var viewPort:Rectangle = new Rectangle( 0, 0, 960, 640 );
 
-			var parser:AtlasParser = new Cocos2DParser();
+			var parser:AtlasParser = new P2DAtlasParser();
 			_textureAtlas = new P2DTextureAtlas();
-			_textureAtlas.addTexture( assetLoader.getAtlasDescriptor(), assetLoader.getAtlasImage(), parser );
 			_textureAtlas.addTexture( assetLoader.getMapDescriptor(), assetLoader.getMapImage(), parser );
+			_textureAtlas.addTexture( assetLoader.getAtlasDescriptor(), assetLoader.getAtlasImage(), parser );
 
-			_spriteAtlas = new P2DSpriteAtlas( _textureAtlas.getFrameNames(), _textureAtlas.getFrameSizes() );
+			_spriteAtlas = new P2DSpriteAtlas( _textureAtlas.getSequenceFrames(), _textureAtlas.getFrameNames(), _textureAtlas.getFrameLabels(), _textureAtlas.getSpriteSizes() );
 			_camera = new P2DCamera();
 			_renderer = new P2DRenderer( viewPort, 0, _textureAtlas, _camera );
 

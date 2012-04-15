@@ -14,7 +14,7 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function Archery( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), 50, 75 );
+			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 		}
 
 
