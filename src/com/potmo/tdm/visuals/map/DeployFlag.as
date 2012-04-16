@@ -12,5 +12,12 @@ package com.potmo.tdm.visuals.map
 		{
 			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 		}
+
+
+		public function setAlpha( alpha:Number ):void
+		{
+			alphaMultiplyer = alpha;
+
+		}
 	}
 }

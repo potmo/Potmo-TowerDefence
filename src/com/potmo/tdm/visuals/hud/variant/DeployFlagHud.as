@@ -10,18 +10,24 @@ package com.potmo.tdm.visuals.hud.variant
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
+	import com.potmo.util.math.StrictMath;
 
 	import flash.geom.Point;
 
 	public class DeployFlagHud extends HudBase
 	{
+		private static const AFFIRM_BUTTON_SEQUENCE:String = "affirmbutton";
+		private static const CENCEL_BUTTON_SEQUENCE:String = "cancelbutton";
+
 		private var _flag:DeployFlag;
 		private var _building:BuildingBase;
 
 		private var _affirmButton:BasicRenderItem;
 		private var _cancelButton:BasicRenderItem;
-		private static const AFFIRM_BUTTON_SEQUENCE:String = "affirmbutton";
-		private static const CENCEL_BUTTON_SEQUENCE:String = "cancelbutton";
+		private var _lastOkX:int;
+		private var _lastOkY:int;
+		private var _maxDistanceFromBuilding:Number;
+		private var _dragging:Boolean;
 
 
 		public function DeployFlagHud( spriteAtlas:SpriteAtlas )
@@ -48,24 +54,101 @@ package com.potmo.tdm.visuals.hud.variant
 		override public function update( gameLogics:GameLogics ):void
 		{
 			Logger.log( "updating" );
+			var okToDrop:Boolean;
 
-			//TODO: Make the flag restrict to not be too far from building
+			//
+			//
+			//
+			//
+			//
+			// TODO: CLEAN UP THIS INTO FUNCTIONS
+			//
+			//
+			//
+			//
+			//
+			//
 			if ( MouseManager.isDown )
 			{
-				if ( _affirmButton.containsPoint( MouseManager.pos.x, MouseManager.pos.y ) )
-				{
-					return;
-				}
-
-				if ( _cancelButton.containsPoint( MouseManager.pos.x, MouseManager.pos.y ) )
-				{
-					return;
-				}
+				_dragging = true;
 
 				var mapPoint:Point = gameLogics.getGameView().convertScreenPositionToMapPosition( MouseManager.pos );
-				this._flag.setX( mapPoint.x );
-				this._flag.setY( mapPoint.y );
+
+				if ( _affirmButton.containsPoint( mapPoint.x, mapPoint.y ) )
+				{
+					return;
+				}
+
+				if ( _cancelButton.containsPoint( mapPoint.x, mapPoint.y ) )
+				{
+					return;
+				}
+
+				// restrict flag to be within max distance
+				var buildingPosX:Number = _building.getX();
+				var buildingPosY:Number = _building.getY();
+
+				var dist:Number = StrictMath.distSquared( buildingPosX, buildingPosY, mapPoint.x, mapPoint.y );
+
+				if ( dist > _maxDistanceFromBuilding * _maxDistanceFromBuilding )
+				{
+					// scale vector to point to be max dist
+					var dx:Number = mapPoint.x - buildingPosX;
+					var dy:Number = mapPoint.y - buildingPosY;
+
+					dist = StrictMath.sqrt( dist );
+					// we expect dist to be not zero
+					dx /= dist;
+					dy /= dist;
+
+					dx *= _maxDistanceFromBuilding;
+					dy *= _maxDistanceFromBuilding;
+
+					this._flag.setX( buildingPosX + dx );
+					this._flag.setY( buildingPosY + dy );
+				}
+				else
+				{
+					this._flag.setX( mapPoint.x );
+					this._flag.setY( mapPoint.y );
+				}
+
+				okToDrop = isOkToDropFlagAtPos( _flag.getX(), _flag.getY(), gameLogics );
+
+				if ( okToDrop )
+				{
+					_flag.setAlpha( 1.0 );
+				}
+				else
+				{
+					_flag.setAlpha( 0.5 );
+				}
 			}
+			else if ( !MouseManager.isDown && _dragging )
+			{
+				// check if it is ok to put it here
+
+				okToDrop = isOkToDropFlagAtPos( _flag.getX(), _flag.getY(), gameLogics );
+
+				if ( okToDrop )
+				{
+					_lastOkX = _flag.getX();
+					_lastOkY = _flag.getY();
+				}
+				else
+				{
+					// put back to position
+					_flag.setX( _lastOkX );
+					_flag.setY( _lastOkY );
+					_flag.setAlpha( 1.0 );
+				}
+			}
+		}
+
+
+		private function isOkToDropFlagAtPos( x:Number, y:Number, gameLogics:GameLogics ):Boolean
+		{
+			return gameLogics.getMap().isPositionWalkable( x, y, _building.getOwningPlayer().getDefaultMovingDirection() );
 		}
 
 
@@ -102,8 +185,14 @@ package com.potmo.tdm.visuals.hud.variant
 			gameView.startIgnoreMapInteraction();
 			gameView.addMapItem( _flag );
 
+			_lastOkX = _building.getDeployFlagX();
+			_lastOkY = _building.getDeployFlagY();
+			_maxDistanceFromBuilding = _building.getDeployFlagMaxDistanceFromBuilding();
+
 			_flag.setX( _building.getDeployFlagX() );
 			_flag.setY( _building.getDeployFlagY() );
+
+			_flag.setAlpha( 1 );
 
 		}
 
@@ -113,6 +202,7 @@ package com.potmo.tdm.visuals.hud.variant
 
 			gameLogics.getGameView().stopIgnoreMapInteraction();
 			gameLogics.getGameView().removeMapItem( _flag );
+
 		}
 
 
@@ -121,6 +211,10 @@ package com.potmo.tdm.visuals.hud.variant
 			super.clear();
 
 			_building = null;
+			_lastOkX = 0;
+			_lastOkY = 0;
+			_maxDistanceFromBuilding = 0;
+			_dragging = false;
 		}
 
 	}

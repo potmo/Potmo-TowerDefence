@@ -36,11 +36,12 @@ package com.potmo.tdm.display
 
 		public function containsPoint( x:Number, y:Number ):Boolean
 		{
+			var regpoint:Point = graphicsSequence.getRegpointOfFrame( currentFrame );
 			var frameSize:Point = graphicsSequence.getSizeOfFrame( currentFrame );
 
-			if ( x > this.x && x < this.x + frameSize.x )
+			if ( x > this.x - regpoint.x && x < this.x - regpoint.x + frameSize.x )
 			{
-				if ( y > this.y && y < this.y + frameSize.y )
+				if ( y > this.y - regpoint.y && y < this.y - regpoint.y + frameSize.y )
 				{
 					return true;
 				}

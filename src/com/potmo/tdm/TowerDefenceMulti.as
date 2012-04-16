@@ -129,7 +129,7 @@ package com.potmo.tdm
 			_textureAtlas.addTexture( assetLoader.getMapDescriptor(), assetLoader.getMapImage(), parser );
 			_textureAtlas.addTexture( assetLoader.getAtlasDescriptor(), assetLoader.getAtlasImage(), parser );
 
-			_spriteAtlas = new P2DSpriteAtlas( _textureAtlas.getSequenceFrames(), _textureAtlas.getFrameNames(), _textureAtlas.getFrameLabels(), _textureAtlas.getSpriteSizes() );
+			_spriteAtlas = new P2DSpriteAtlas( _textureAtlas.getSequenceFrames(), _textureAtlas.getFrameNames(), _textureAtlas.getFrameLabels(), _textureAtlas.getSpriteSizes(), _textureAtlas.getRegpoints() );
 			_camera = new P2DCamera();
 			_renderer = new P2DRenderer( viewPort, 0, _textureAtlas, _camera );
 

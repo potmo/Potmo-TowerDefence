@@ -21,22 +21,22 @@ package com.potmo.tdm.visuals.map
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.CompressionAlgorithm;
+	import com.potmo.tdm.visuals.map.tilemap.MapTile;
 
 	public class MapBase extends BasicRenderItem
 	{
 
-		protected var mapImageAnalyzer:MapImageAnalyzer;
-		protected var unitCollisionForceCalculator:UnitCollisionForceCalculator;
-		protected var tileMapRepresentation:TileMap;
+		private var _mapImageAnalyzer:MapImageAnalyzer;
+		private var _unitCollisionForceCalculator:UnitCollisionForceCalculator;
 
-		protected var player0EndPoint:Point;
-		protected var player1EndPoint:Point;
-		protected var player0BuildingPositions:Vector.<Point>;
-		protected var player1BuildingPositions:Vector.<Point>;
-		protected var leftRightPathfinderForceFieldMap:DijkstraPrecalculatedMap;
-		protected var rightLeftPathfinderForceFieldMap:DijkstraPrecalculatedMap;
-		protected var tileWidth:Number;
-		protected var tileHeight:Number;
+		private var _player0EndPoint:Point;
+		private var _player1EndPoint:Point;
+		private var _player0BuildingPositions:Vector.<Point>;
+		private var _player1BuildingPositions:Vector.<Point>;
+		private var _leftRightPathfinderForceFieldMap:DijkstraPrecalculatedMap;
+		private var _rightLeftPathfinderForceFieldMap:DijkstraPrecalculatedMap;
+		private var _tileWidth:Number;
+		private var _tileHeight:Number;
 		private var _mapName:String;
 
 		private var _mapWidth:int;
@@ -55,27 +55,27 @@ package com.potmo.tdm.visuals.map
 
 			this._mapName = spriteName;
 			// setup a device to analyze an image and get data from it
-			mapImageAnalyzer = new MapImageAnalyzer();
+			_mapImageAnalyzer = new MapImageAnalyzer();
 
 			var visualMapSize:Point = _graphicsSequence.getSizeOfFrame( _graphicsSequence.getNthFrame( 0 ) );
 			this._mapWidth = visualMapSize.x;
 			this._mapHeight = visualMapSize.y;
 
 			// calculate the scale between tile and visual map
-			tileWidth = _mapWidth / mapDataImage.width;
-			tileHeight = _mapHeight / mapDataImage.height;
+			_tileWidth = _mapWidth / mapDataImage.width;
+			_tileHeight = _mapHeight / mapDataImage.height;
 
 			// configure endpoints
-			this.setEndPoints( mapDataImage, tileWidth );
+			this.setEndPoints( mapDataImage, _tileWidth );
 
 			// configure buildingpositions
-			this.setBuildingPositions( mapDataImage, tileWidth );
+			this.setBuildingPositions( mapDataImage, _tileWidth );
 
 			// create a object that can calculate the forces on a unit
-			unitCollisionForceCalculator = new UnitCollisionForceCalculator();
+			_unitCollisionForceCalculator = new UnitCollisionForceCalculator();
 
 			// create a representation of the map in tiles
-			tileMapRepresentation = mapImageAnalyzer.createMap( mapDataImage, tileWidth, tileHeight );
+			//_tileMapRepresentation = _mapImageAnalyzer.createMap( mapDataImage, _tileWidth, _tileHeight );
 
 			// create a map containing information on shortest path from
 			// all point in the map to the final point
@@ -84,35 +84,35 @@ package com.potmo.tdm.visuals.map
 			dijkstraMap.uncompress( CompressionAlgorithm.DEFLATE );
 			Logger.info( "Byte available: " + dijkstraMap.bytesAvailable );
 
-			leftRightPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
+			_leftRightPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
 			var leftRightData:ByteArray = new ByteArray();
 			dijkstraMap.readBytes( leftRightData, 0, dijkstraMap.bytesAvailable / 2 ); // read first half
 			Logger.info( "leftRight data available: " + leftRightData.bytesAvailable );
-			leftRightPathfinderForceFieldMap.setupFromByteArray( leftRightData );
+			_leftRightPathfinderForceFieldMap.setupFromByteArray( leftRightData );
 
-			rightLeftPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
+			_rightLeftPathfinderForceFieldMap = new DijkstraPrecalculatedMap();
 			var rightLeftData:ByteArray = new ByteArray();
 			dijkstraMap.readBytes( rightLeftData ); // read the rest
 			Logger.info( "rightLeft data available: " + rightLeftData.bytesAvailable );
-			rightLeftPathfinderForceFieldMap.setupFromByteArray( rightLeftData );
+			_rightLeftPathfinderForceFieldMap.setupFromByteArray( rightLeftData );
 
 		}
 
 
 		protected function setEndPoints( mapDataImage:BitmapData, scale:Number ):void
 		{
-			var endpoints:Vector.<Point> = mapImageAnalyzer.getEndPoints( mapDataImage, scale );
-			player0EndPoint = endpoints[ 0 ];
-			player1EndPoint = endpoints[ 1 ];
+			var endpoints:Vector.<Point> = _mapImageAnalyzer.getEndPoints( mapDataImage, scale );
+			_player0EndPoint = endpoints[ 0 ];
+			_player1EndPoint = endpoints[ 1 ];
 
 		}
 
 
 		protected function setBuildingPositions( mapDataImage:BitmapData, scale:Number ):void
 		{
-			var buildingPositions:Vector.<Vector.<Point>> = mapImageAnalyzer.getBuildingPositions( mapDataImage, scale );
-			player0BuildingPositions = buildingPositions[ 0 ];
-			player1BuildingPositions = buildingPositions[ 1 ];
+			var buildingPositions:Vector.<Vector.<Point>> = _mapImageAnalyzer.getBuildingPositions( mapDataImage, scale );
+			_player0BuildingPositions = buildingPositions[ 0 ];
+			_player1BuildingPositions = buildingPositions[ 1 ];
 		}
 
 
@@ -136,7 +136,7 @@ package com.potmo.tdm.visuals.map
 		 */
 		public function getPlayer0BuildingPositions():Vector.<Point>
 		{
-			return player0BuildingPositions;
+			return _player0BuildingPositions;
 		}
 
 
@@ -145,13 +145,13 @@ package com.potmo.tdm.visuals.map
 		 */
 		public function getPlayer1BuildingPositions():Vector.<Point>
 		{
-			return player1BuildingPositions;
+			return _player1BuildingPositions;
 		}
 
 
 		public function getUnitCollisionForce( gameLogics:GameLogics, unit:Unit ):Force
 		{
-			return unitCollisionForceCalculator.getUnitCollisionForce( gameLogics, unit );
+			return _unitCollisionForceCalculator.getUnitCollisionForce( gameLogics, unit );
 		}
 
 
@@ -164,15 +164,15 @@ package com.potmo.tdm.visuals.map
 
 			if ( movingDirection == MapMovingDirection.RIGHT )
 			{
-				map = leftRightPathfinderForceFieldMap;
+				map = _leftRightPathfinderForceFieldMap;
 
 			}
 			else
 			{
-				map = rightLeftPathfinderForceFieldMap;
+				map = _rightLeftPathfinderForceFieldMap;
 			}
 
-			return map.getPathForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+			return map.getPathForce( unit.getX() / _tileWidth, unit.getY() / _tileHeight );
 		}
 
 
@@ -186,24 +186,37 @@ package com.potmo.tdm.visuals.map
 
 			if ( movingDirection == MapMovingDirection.RIGHT )
 			{
-				map = leftRightPathfinderForceFieldMap;
+				map = _leftRightPathfinderForceFieldMap;
 
 			}
 			else
 			{
-				map = rightLeftPathfinderForceFieldMap;
+				map = _rightLeftPathfinderForceFieldMap;
 			}
 
-			return map.getUnwalkableAreaForce( unit.getX() / tileWidth, unit.getY() / tileHeight );
+			return map.getUnwalkableAreaForce( unit.getX() / _tileWidth, unit.getY() / _tileHeight );
 		}
 
 
-		/**
-		 * Get the tile map representation of the map
-		 */
-		public function getTileMapRepresentation():TileMap
+		public function isPositionWalkable( x:Number, y:Number, movingDirection:MapMovingDirection ):Boolean
 		{
-			return tileMapRepresentation;
+			// scale to tile scale
+			x /= _tileWidth;
+			y /= _tileHeight;
+
+			//check tile type
+			var map:DijkstraPrecalculatedMap;
+
+			if ( movingDirection == MapMovingDirection.RIGHT )
+			{
+				map = _leftRightPathfinderForceFieldMap;
+			}
+			else
+			{
+				map = _rightLeftPathfinderForceFieldMap;
+			}
+			return map.getNodeAt( x, y ).getType().isWalkable();
+
 		}
 
 
@@ -215,14 +228,20 @@ package com.potmo.tdm.visuals.map
 
 		public function getPlayer0EndPoint():Point
 		{
-			return player0EndPoint;
+			return _player0EndPoint;
 		}
 
 
 		public function getPlayer1EndPoint():Point
 		{
-			return player1EndPoint;
+			return _player1EndPoint;
 		}
 
+
+		public static function isPositionWalkable( x:Number, y:Number ):Boolean
+		{
+			// TODO Auto Generated method stub
+			return false;
+		}
 	}
 }

@@ -10,7 +10,9 @@ package com.potmo.tdm.visuals.building
 
 	public class BuildingBase extends BasicRenderItem implements ZSortableRenderable
 	{
+		//TODO: Do not hardcode this
 		protected static const MAX_UNITS:uint = 3;
+		protected static const MAX_DISTANCE_TO_DEPLOYFLAG:Number = 100;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;
@@ -177,5 +179,10 @@ package com.potmo.tdm.visuals.building
 			return y;
 		}
 
+
+		public function getDeployFlagMaxDistanceFromBuilding():Number
+		{
+			return MAX_DISTANCE_TO_DEPLOYFLAG;
+		}
 	}
 }

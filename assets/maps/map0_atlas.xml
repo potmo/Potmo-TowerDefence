@@ -17,7 +17,7 @@
       <offsetx>0</offsetx>
       <offsety>0</offsety>
       <spritewidth>2048</spritewidth>
-      <spriteheight>2048</spriteheight>
+      <spriteheight>640</spriteheight>
       <isalias>false</isalias>
     </frame>
   </frames>
