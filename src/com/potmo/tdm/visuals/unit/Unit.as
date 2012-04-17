@@ -37,6 +37,10 @@ package com.potmo.tdm.visuals.unit
 		   function startBeingTargetedByUnit( other:IUnit ):void;
 		   function stopBeingTargetedByUnit( other:IUnit ):void;*/
 
+		function targetedByEnemy():void;
+		function untargetedByEnemy():void;
+		function getNumberOfTargetingEnemies():int;
+
 		function getSettings():UnitSetting;
 
 		function getOldX():Number;

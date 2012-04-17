@@ -12,7 +12,7 @@ package com.potmo.tdm.visuals.building
 	{
 		//TODO: Do not hardcode this
 		protected static const MAX_UNITS:uint = 3;
-		protected static const MAX_DISTANCE_TO_DEPLOYFLAG:Number = 100;
+		protected static const MAX_DISTANCE_TO_DEPLOYFLAG:Number = 200;
 
 		private var uniqueId:uint;
 		private var type:BuildingType;

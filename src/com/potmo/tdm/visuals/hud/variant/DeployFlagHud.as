@@ -56,18 +56,6 @@ package com.potmo.tdm.visuals.hud.variant
 			Logger.log( "updating" );
 			var okToDrop:Boolean;
 
-			//
-			//
-			//
-			//
-			//
-			// TODO: CLEAN UP THIS INTO FUNCTIONS
-			//
-			//
-			//
-			//
-			//
-			//
 			if ( MouseManager.isDown )
 			{
 				_dragging = true;
@@ -84,45 +72,11 @@ package com.potmo.tdm.visuals.hud.variant
 					return;
 				}
 
-				// restrict flag to be within max distance
-				var buildingPosX:Number = _building.getX();
-				var buildingPosY:Number = _building.getY();
+				_flag.setX( mapPoint.x );
+				_flag.setY( mapPoint.y );
 
-				var dist:Number = StrictMath.distSquared( buildingPosX, buildingPosY, mapPoint.x, mapPoint.y );
+				restrictFlagPositionToWithingMaxDistanceFromBuilding();
 
-				if ( dist > _maxDistanceFromBuilding * _maxDistanceFromBuilding )
-				{
-					// scale vector to point to be max dist
-					var dx:Number = mapPoint.x - buildingPosX;
-					var dy:Number = mapPoint.y - buildingPosY;
-
-					dist = StrictMath.sqrt( dist );
-					// we expect dist to be not zero
-					dx /= dist;
-					dy /= dist;
-
-					dx *= _maxDistanceFromBuilding;
-					dy *= _maxDistanceFromBuilding;
-
-					this._flag.setX( buildingPosX + dx );
-					this._flag.setY( buildingPosY + dy );
-				}
-				else
-				{
-					this._flag.setX( mapPoint.x );
-					this._flag.setY( mapPoint.y );
-				}
-
-				okToDrop = isOkToDropFlagAtPos( _flag.getX(), _flag.getY(), gameLogics );
-
-				if ( okToDrop )
-				{
-					_flag.setAlpha( 1.0 );
-				}
-				else
-				{
-					_flag.setAlpha( 0.5 );
-				}
 			}
 			else if ( !MouseManager.isDown && _dragging )
 			{
@@ -140,8 +94,59 @@ package com.potmo.tdm.visuals.hud.variant
 					// put back to position
 					_flag.setX( _lastOkX );
 					_flag.setY( _lastOkY );
-					_flag.setAlpha( 1.0 );
 				}
+			}
+
+			setAlphaOnFlagIfOkToDrop( gameLogics );
+		}
+
+
+		private function restrictFlagPositionToWithingMaxDistanceFromBuilding():void
+		{
+			// restrict flag to be within max distance
+			var buildingPosX:Number = _building.getX();
+			var buildingPosY:Number = _building.getY();
+			var flagPosX:Number = _flag.getX();
+			var flagPosY:Number = _flag.getY();
+
+			var dist:Number = StrictMath.distSquared( buildingPosX, buildingPosY, flagPosX, flagPosY );
+
+			if ( dist > _maxDistanceFromBuilding * _maxDistanceFromBuilding )
+			{
+				// scale vector to point to be max dist
+				var dx:Number = flagPosX - buildingPosX;
+				var dy:Number = flagPosY - buildingPosY;
+
+				dist = StrictMath.sqrt( dist );
+				// we expect dist to be not zero
+				dx /= dist;
+				dy /= dist;
+
+				dx *= _maxDistanceFromBuilding;
+				dy *= _maxDistanceFromBuilding;
+
+				this._flag.setX( buildingPosX + dx );
+				this._flag.setY( buildingPosY + dy );
+			}
+			else
+			{
+				// do not have to do anything. Already at a good position
+			}
+
+		}
+
+
+		private function setAlphaOnFlagIfOkToDrop( gameLogics:GameLogics ):void
+		{
+			var okToDrop:Boolean = isOkToDropFlagAtPos( _flag.getX(), _flag.getY(), gameLogics );
+
+			if ( okToDrop )
+			{
+				_flag.setAlpha( 1.0 );
+			}
+			else
+			{
+				_flag.setAlpha( 0.5 );
 			}
 		}
 

@@ -41,6 +41,7 @@ package com.potmo.tdm.visuals.unit
 		private var _positionIsDirty:Boolean;
 		private var _targetUnit:Unit;
 		private var _spawned:Boolean;
+		private var _numberOfTargetingEnemies:int;
 
 
 		public function UnitBase( graphicSequence:SpriteAtlasSequence, type:UnitType, settings:UnitSetting )
@@ -363,6 +364,24 @@ package com.potmo.tdm.visuals.unit
 		final public function isDead():Boolean
 		{
 			return !_spawned || getHealth() <= 0;
+		}
+
+
+		public function targetedByEnemy():void
+		{
+			_numberOfTargetingEnemies++;
+		}
+
+
+		public function untargetedByEnemy():void
+		{
+			_numberOfTargetingEnemies--;
+		}
+
+
+		public function getNumberOfTargetingEnemies():int
+		{
+			return _numberOfTargetingEnemies;
 		}
 
 

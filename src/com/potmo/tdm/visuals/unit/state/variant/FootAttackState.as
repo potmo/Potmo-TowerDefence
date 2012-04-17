@@ -28,7 +28,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			this._unit = unit;
 			this._enemy = enemy;
 
-			//_enemy.startBeingTargetedByUnit( _unit );
+			this._enemy.targetedByEnemy();
 
 			_hitDelay = unit.getSettings().hitDelay;
 		}
@@ -36,7 +36,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function exit( gameLogics:GameLogics ):void
 		{
-			//_enemy.stopBeingTargetedByUnit( _unit );
+			this._enemy.untargetedByEnemy();
 		}
 
 

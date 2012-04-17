@@ -28,7 +28,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			this._unit = unit;
 			this._enemy = enemy;
 
-			//_enemy.startBeingTargetedByUnit( _unit );
+			_enemy.targetedByEnemy();
 
 			_hitDelay = unit.getSettings().hitDelay;
 		}
@@ -36,7 +36,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function exit( gameLogics:GameLogics ):void
 		{
-			//_enemy.stopBeingTargetedByUnit( _unit );
+			_enemy.untargetedByEnemy();
 		}
 
 
@@ -66,11 +66,20 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( isEnemyTooFarAwayToTarget() || isEnemyDead() )
 			{
-				Logger.log( "Stop attacking unit" );
-				stopDefend( gameLogics );
 
-					//TODO: Maybe the unit should look for other units close by before
-					// exiting
+				var newEnemy:Unit = gameLogics.getUnitManager().getClosestEnemyUnitPossibleToAttack( _unit );
+
+				if ( newEnemy )
+				{
+					Logger.log( "Start attacking new unit" );
+					this.exit( gameLogics );
+					this.enter( _unit, newEnemy, gameLogics );
+				}
+				else
+				{
+					Logger.log( "Stop attacking unit" );
+					stopDefend( gameLogics );
+				}
 
 			}
 

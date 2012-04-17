@@ -203,15 +203,14 @@ package com.potmo.tdm.visuals.unit
 			// get all the close by units
 			var unitsToSearch:Vector.<Unit>;
 			unitsToSearch = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
-			//unitsToSearch = _units;
 
 			//square inRange
 			var squaredRange:Number = range * range;
 
 			// okay firstly we want to target a unit that is not already targeted by another unit
 			// if we can not find that we will target the first best
-			var bestUntargeted:Unit;
-			var bestUntargetedDistSquared:int = int.MAX_VALUE;
+			var bestTarget:Unit;
+			var bestTargetDistSquared:int = int.MAX_VALUE;
 
 			var squaredDist:Number;
 			var unitsCount:int = unitsToSearch.length;
@@ -233,6 +232,12 @@ package com.potmo.tdm.visuals.unit
 					continue;
 				}
 
+				// check if already targeted by too many
+				if ( other.getNumberOfTargetingEnemies() >= MAX_NUMBER_OF_TARGETING_UNITS )
+				{
+					continue;
+				}
+
 				// check for owner
 				if ( other.getOwningPlayer().getColor() == unit.getOwningPlayer().getColor() )
 				{
@@ -246,19 +251,14 @@ package com.potmo.tdm.visuals.unit
 				{
 					continue;
 				}
-				/*
-				   // check if it is in range
-				   if ( squaredDist < bestUntargetedDistSquared )
-				   {*/
-				bestUntargeted = other;
-				bestUntargetedDistSquared = squaredDist;
-				/*}*/
+				bestTarget = other;
+				bestTargetDistSquared = squaredDist;
 
 			}
 
-			if ( bestUntargeted )
+			if ( bestTarget )
 			{
-				return bestUntargeted;
+				return bestTarget;
 			}
 			else
 			{

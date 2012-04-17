@@ -74,10 +74,9 @@ package com.potmo.tdm
 		public function update():void
 		{
 
-			var building:BuildingBase;
-
 			_buildingManager.update( this );
 
+			//TODO: Build a projectile manager
 			var length:int = _projectiles.length;
 
 			for ( var i:int = length - 1; i >= 0; i-- )
