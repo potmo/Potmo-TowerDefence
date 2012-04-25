@@ -15,9 +15,11 @@ package com.potmo.tdm.visuals.hud.variant
 
 		private var _campButton:BasicRenderItem;
 		private var _archeryButton:BasicRenderItem;
+		private var _minersHutButton:BasicRenderItem;
 
 		private static const CAMP_BUTTON_SEQUENCE:String = "campbutton";
 		private static const ARCHERY_BUTTON_SEQUENCE:String = "archerybutton";
+		private static const MINERSHUT_BUTTON_SEQUENCE:String = "archerybutton"; // TODO: Use miners hut hud button instead of archery
 
 
 		public function ConstructionSiteHud( spriteAtlas:SpriteAtlas )
@@ -33,9 +35,11 @@ package com.potmo.tdm.visuals.hud.variant
 		{
 			_campButton = new BasicRenderItem( spriteAtlas.getSequenceByName( CAMP_BUTTON_SEQUENCE ) );
 			_archeryButton = new BasicRenderItem( spriteAtlas.getSequenceByName( ARCHERY_BUTTON_SEQUENCE ) );
+			_minersHutButton = new BasicRenderItem( spriteAtlas.getSequenceByName( MINERSHUT_BUTTON_SEQUENCE ) );
 
 			addButtonLast( _campButton );
 			addButtonLast( _archeryButton );
+			addButtonLast( _minersHutButton );
 		}
 
 
@@ -54,6 +58,11 @@ package com.potmo.tdm.visuals.hud.variant
 				orderManager.requestConstructBuilding( _constructionSite, BuildingType.ARCHERY );
 				gameLogics.getHudManager().hideHud();
 				return true;
+			}
+
+			if ( _minersHutButton.containsPoint( x, y ) )
+			{
+				orderManager.requestConstructBuilding( _constructionSite, BuildingType.MINERS_HUT );
 			}
 
 			gameLogics.getHudManager().hideHud();

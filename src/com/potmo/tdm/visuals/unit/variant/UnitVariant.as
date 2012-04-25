@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.unit.variant
 	 */
 	public interface UnitVariant
 	{
+		function init( gameLogics:GameLogics ):void;
 		function handleBeingKilled( gameLogics:GameLogics ):void;
 		function handleBeingHurt( damage:int, gameLogics:GameLogics ):void;
 		function handleBeingHealed( aid:int, gameLogics:GameLogics ):void;

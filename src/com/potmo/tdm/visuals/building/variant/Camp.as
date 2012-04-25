@@ -29,7 +29,7 @@ package com.potmo.tdm.visuals.building.variant
 		}
 
 
-		public override function handleClick( x:int, y:int, gameLogics:GameLogics ):void
+		override public function handleClick( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			Logger.log( "Camp was clicked" );
 

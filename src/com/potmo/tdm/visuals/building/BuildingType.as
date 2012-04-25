@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.visuals.building.variant.Archery;
 	import com.potmo.tdm.visuals.building.variant.Camp;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
+	import com.potmo.tdm.visuals.building.variant.MinersHut;
 
 	public class BuildingType
 	{
@@ -18,6 +19,9 @@ package com.potmo.tdm.visuals.building
 
 		// Builings making archers with arrows and alike
 		public static const ARCHERY:BuildingType = new BuildingType( "ARCHERY", Archery );
+
+		// Building that collect money
+		public static const MINERS_HUT:BuildingType = new BuildingType( "MINERS_HUT", MinersHut );
 
 		private var name:String;
 		private var clazz:Class;

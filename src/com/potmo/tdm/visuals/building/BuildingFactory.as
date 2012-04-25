@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.visuals.building.variant.Archery;
 	import com.potmo.tdm.visuals.building.variant.Camp;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
+	import com.potmo.tdm.visuals.building.variant.MinersHut;
 
 	public final class BuildingFactory
 	{
@@ -30,12 +31,19 @@ package com.potmo.tdm.visuals.building
 				case BuildingType.CONSTRUCTION_SITE:
 					building = new ConstructionSite( _spriteAtlas );
 					break;
+
 				case BuildingType.CAMP:
 					building = new Camp( _spriteAtlas );
 					break;
+
 				case BuildingType.ARCHERY:
 					building = new Archery( _spriteAtlas );
 					break;
+
+				case BuildingType.MINERS_HUT:
+					building = new MinersHut( _spriteAtlas );
+					break;
+
 				default:
 					throw new Error( "Not possible to create building of type: " + type );
 			}

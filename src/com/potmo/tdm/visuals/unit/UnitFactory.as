@@ -8,6 +8,7 @@ package com.potmo.tdm.visuals.unit
 	{
 
 		private var knightPool:Vector.<Unit> = new Vector.<Unit>();
+		private var minerPool:Vector.<Unit> = new Vector.<Unit>();
 
 		//private var archerPool:Vector.<UnitBase> = new Vector.<UnitBase>();
 		private var _spriteAtlas:SpriteAtlas;
@@ -17,6 +18,7 @@ package com.potmo.tdm.visuals.unit
 		{
 			this._spriteAtlas = spriteAtlas;
 			populatePool( knightPool, UnitType.KNIGHT, 10 );
+			populatePool( minerPool, UnitType.MINER, 10 );
 			//populatePool( archerPool, UnitType.ARCHER, 10 );
 		}
 
@@ -49,6 +51,8 @@ package com.potmo.tdm.visuals.unit
 					return knightPool;
 				//case UnitType.ARCHER:
 				//	return archerPool;
+				case UnitType.MINER:
+					return minerPool;
 				default:
 					throw new Error( "Not possible to find pool of type: " + type );
 			}

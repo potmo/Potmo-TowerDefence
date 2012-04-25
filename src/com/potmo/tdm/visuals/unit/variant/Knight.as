@@ -51,6 +51,7 @@ package com.potmo.tdm.visuals.unit.variant
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
 			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 
+			//TODO: Should do some kind of nice animation before removing the unit
 			gameLogics.getUnitManager().removeUnit( this, gameLogics );
 
 		}
