@@ -1,32 +1,16 @@
 <atlas>
   <metadata>
-    <date>2012-3-15 21:43:2:479</date>
+    <date>2012-4-6 21:55:47:918</date>
     <padding>1</padding>
   </metadata>
   <frames>
-    <frame>
-      <name>minershut</name>
-      <number>0</number>
-      <label/>
-      <regpointx>51</regpointx>
-      <regpointy>75</regpointy>
-      <texturex>0</texturex>
-      <texturey>0</texturey>
-      <texturewidth>103</texturewidth>
-      <textureheight>86</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>0</offsety>
-      <spritewidth>101</spritewidth>
-      <spriteheight>84</spriteheight>
-      <isalias>false</isalias>
-    </frame>
     <frame>
       <name>archery</name>
       <number>0</number>
       <label/>
       <regpointx>51</regpointx>
       <regpointy>76</regpointy>
-      <texturex>103</texturex>
+      <texturex>0</texturex>
       <texturey>0</texturey>
       <texturewidth>103</texturewidth>
       <textureheight>86</textureheight>
@@ -37,7 +21,23 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>castle</name>
+      <name>minershut</name>
+      <number>0</number>
+      <label/>
+      <regpointx>51</regpointx>
+      <regpointy>75</regpointy>
+      <texturex>103</texturex>
+      <texturey>0</texturey>
+      <texturewidth>103</texturewidth>
+      <textureheight>86</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>0</offsety>
+      <spritewidth>101</spritewidth>
+      <spriteheight>84</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>camp</name>
       <number>0</number>
       <label/>
       <regpointx>51</regpointx>
@@ -69,7 +69,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>keep</name>
+      <name>castle</name>
       <number>0</number>
       <label/>
       <regpointx>51</regpointx>
@@ -85,7 +85,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>citadell</name>
+      <name>keep</name>
       <number>0</number>
       <label/>
       <regpointx>51</regpointx>
@@ -101,7 +101,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>camp</name>
+      <name>citadell</name>
       <number>0</number>
       <label/>
       <regpointx>51</regpointx>
@@ -133,12 +133,28 @@
       <isalias>false</isalias>
     </frame>
     <frame>
+      <name>mine</name>
+      <number>0</number>
+      <label/>
+      <regpointx>51</regpointx>
+      <regpointy>36</regpointy>
+      <texturex>824</texturex>
+      <texturey>0</texturey>
+      <texturewidth>103</texturewidth>
+      <textureheight>47</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>0</offsety>
+      <spritewidth>101</spritewidth>
+      <spriteheight>46</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
       <name>demolishbutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
       <regpointy>1</regpointy>
-      <texturex>824</texturex>
+      <texturex>927</texturex>
       <texturey>0</texturey>
       <texturewidth>63</texturewidth>
       <textureheight>63</textureheight>
@@ -149,7 +165,23 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>archerybutton</name>
+      <name>cancelbutton</name>
+      <number>0</number>
+      <label/>
+      <regpointx>1</regpointx>
+      <regpointy>1</regpointy>
+      <texturex>824</texturex>
+      <texturey>47</texturey>
+      <texturewidth>63</texturewidth>
+      <textureheight>63</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>0</offsety>
+      <spritewidth>61</spritewidth>
+      <spriteheight>61</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>attackbutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -165,7 +197,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>campbutton</name>
+      <name>deployareabutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -181,7 +213,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>affirmbutton</name>
+      <name>archerybutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -197,7 +229,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>cancelbutton</name>
+      <name>campbutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -213,7 +245,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>attackbutton</name>
+      <name>minershutbutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -229,7 +261,7 @@
       <isalias>false</isalias>
     </frame>
     <frame>
-      <name>deployareabutton</name>
+      <name>affirmbutton</name>
       <number>0</number>
       <label/>
       <regpointx>1</regpointx>
@@ -266,8 +298,8 @@
       <label>DAMAGE</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>784</texturex>
-      <texturey>58</texturey>
+      <texturex>887</texturex>
+      <texturey>47</texturey>
       <texturewidth>22</texturewidth>
       <textureheight>20</textureheight>
       <offsetx>4</offsetx>
@@ -278,28 +310,12 @@
     </frame>
     <frame>
       <name>knight</name>
-      <number>6</number>
-      <label/>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>806</texturex>
-      <texturey>58</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>24</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>3</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>false</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
       <number>7</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>784</texturex>
-      <texturey>78</texturey>
+      <texturex>909</texturex>
+      <texturey>47</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>24</textureheight>
       <offsetx>0</offsetx>
@@ -310,12 +326,28 @@
     </frame>
     <frame>
       <name>knight</name>
+      <number>6</number>
+      <label/>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>887</texturex>
+      <texturey>67</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>24</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>3</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
       <number>4</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>189</texturex>
-      <texturey>86</texturey>
+      <texturex>784</texturex>
+      <texturey>58</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>24</textureheight>
       <offsetx>0</offsetx>
@@ -330,8 +362,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>189</texturex>
-      <texturey>110</texturey>
+      <texturex>801</texturex>
+      <texturey>58</texturey>
       <texturewidth>16</texturewidth>
       <textureheight>25</textureheight>
       <offsetx>1</offsetx>
@@ -342,44 +374,12 @@
     </frame>
     <frame>
       <name>knight</name>
-      <number>2</number>
-      <label/>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>388</texturex>
-      <texturey>65</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>23</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>8</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>false</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
-      <number>3</number>
-      <label/>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>405</texturex>
-      <texturey>65</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>23</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>6</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>false</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
       <number>9</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>422</texturex>
-      <texturey>65</texturey>
+      <texturex>784</texturex>
+      <texturey>82</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>23</textureheight>
       <offsetx>0</offsetx>
@@ -390,12 +390,28 @@
     </frame>
     <frame>
       <name>knight</name>
+      <number>2</number>
+      <label/>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>801</texturex>
+      <texturey>83</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>23</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>8</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
       <number>10</number>
       <label>GOTO_WALK</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>439</texturex>
-      <texturey>65</texturey>
+      <texturex>784</texturex>
+      <texturey>105</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>23</textureheight>
       <offsetx>0</offsetx>
@@ -406,28 +422,12 @@
     </frame>
     <frame>
       <name>knight</name>
-      <number>14</number>
-      <label/>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>456</texturex>
-      <texturey>65</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>23</textureheight>
-      <offsetx>4</offsetx>
-      <offsety>12</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
       <number>16</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>456</texturex>
-      <texturey>65</texturey>
+      <texturex>801</texturex>
+      <texturey>106</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>23</textureheight>
       <offsetx>4</offsetx>
@@ -442,8 +442,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>473</texturex>
-      <texturey>65</texturey>
+      <texturex>189</texturex>
+      <texturey>86</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>23</textureheight>
       <offsetx>0</offsetx>
@@ -454,11 +454,43 @@
     </frame>
     <frame>
       <name>knight</name>
+      <number>3</number>
+      <label/>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>189</texturex>
+      <texturey>109</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>23</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>6</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
+      <number>14</number>
+      <label/>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>801</texturex>
+      <texturey>106</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>23</textureheight>
+      <offsetx>4</offsetx>
+      <offsety>12</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
       <number>17</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>490</texturex>
+      <texturex>388</texturex>
       <texturey>65</texturey>
       <texturewidth>15</texturewidth>
       <textureheight>25</textureheight>
@@ -474,7 +506,7 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>490</texturex>
+      <texturex>388</texturex>
       <texturey>65</texturey>
       <texturewidth>15</texturewidth>
       <textureheight>25</textureheight>
@@ -490,8 +522,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>388</texturex>
-      <texturey>88</texturey>
+      <texturex>403</texturex>
+      <texturey>65</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>22</textureheight>
       <offsetx>0</offsetx>
@@ -506,8 +538,8 @@
       <label>WALK</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>388</texturex>
-      <texturey>88</texturey>
+      <texturex>403</texturex>
+      <texturey>65</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>22</textureheight>
       <offsetx>0</offsetx>
@@ -522,8 +554,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>405</texturex>
-      <texturey>88</texturey>
+      <texturex>420</texturex>
+      <texturey>65</texturey>
       <texturewidth>15</texturewidth>
       <textureheight>24</textureheight>
       <offsetx>2</offsetx>
@@ -538,8 +570,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>388</texturex>
-      <texturey>110</texturey>
+      <texturex>403</texturex>
+      <texturey>87</texturey>
       <texturewidth>15</texturewidth>
       <textureheight>24</textureheight>
       <offsetx>2</offsetx>
@@ -554,8 +586,8 @@
       <label>GOTO_APPROACH_FIGHT</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>21</textureheight>
       <offsetx>0</offsetx>
@@ -570,72 +602,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>21</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>14</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
-      <number>31</number>
-      <label>DIE</label>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>21</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>14</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>false</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
-      <number>19</number>
-      <label>APPROACH_FIGHT</label>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>21</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>14</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
-      <number>18</number>
-      <label>GOTO_LOOP_WAIT</label>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
-      <texturewidth>17</texturewidth>
-      <textureheight>21</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>14</offsety>
-      <spritewidth>25</spritewidth>
-      <spriteheight>35</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>knight</name>
-      <number>12</number>
-      <label>FIGHT</label>
-      <regpointx>10</regpointx>
-      <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>21</textureheight>
       <offsetx>0</offsetx>
@@ -650,8 +618,8 @@
       <label>LOOP_WAIT</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>332</texturex>
-      <texturey>122</texturey>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>21</textureheight>
       <offsetx>0</offsetx>
@@ -662,16 +630,64 @@
     </frame>
     <frame>
       <name>knight</name>
-      <number>20</number>
-      <label/>
+      <number>18</number>
+      <label>GOTO_LOOP_WAIT</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>349</texturex>
-      <texturey>122</texturey>
-      <texturewidth>16</texturewidth>
-      <textureheight>22</textureheight>
-      <offsetx>1</offsetx>
-      <offsety>11</offsety>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>21</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>14</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
+      <number>12</number>
+      <label>FIGHT</label>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>21</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>14</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
+      <number>19</number>
+      <label>APPROACH_FIGHT</label>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>21</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>14</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
+      <number>31</number>
+      <label>DIE</label>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>435</texturex>
+      <texturey>65</texturey>
+      <texturewidth>17</texturewidth>
+      <textureheight>21</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>14</offsety>
       <spritewidth>25</spritewidth>
       <spriteheight>35</spriteheight>
       <isalias>false</isalias>
@@ -682,8 +698,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>365</texturex>
-      <texturey>122</texturey>
+      <texturex>452</texturex>
+      <texturey>65</texturey>
       <texturewidth>16</texturewidth>
       <textureheight>22</textureheight>
       <offsetx>1</offsetx>
@@ -694,16 +710,16 @@
     </frame>
     <frame>
       <name>knight</name>
-      <number>24</number>
+      <number>20</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>420</texturex>
-      <texturey>88</texturey>
-      <texturewidth>14</texturewidth>
-      <textureheight>25</textureheight>
-      <offsetx>4</offsetx>
-      <offsety>0</offsety>
+      <texturex>435</texturex>
+      <texturey>86</texturey>
+      <texturewidth>16</texturewidth>
+      <textureheight>22</textureheight>
+      <offsetx>1</offsetx>
+      <offsety>11</offsety>
       <spritewidth>25</spritewidth>
       <spriteheight>35</spriteheight>
       <isalias>false</isalias>
@@ -714,8 +730,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>403</texturex>
-      <texturey>112</texturey>
+      <texturex>388</texturex>
+      <texturey>90</texturey>
       <texturewidth>14</texturewidth>
       <textureheight>25</textureheight>
       <offsetx>3</offsetx>
@@ -730,8 +746,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>403</texturex>
-      <texturey>112</texturey>
+      <texturex>388</texturex>
+      <texturey>90</texturey>
       <texturewidth>14</texturewidth>
       <textureheight>25</textureheight>
       <offsetx>3</offsetx>
@@ -742,12 +758,28 @@
     </frame>
     <frame>
       <name>knight</name>
+      <number>24</number>
+      <label/>
+      <regpointx>10</regpointx>
+      <regpointy>34</regpointy>
+      <texturex>418</texturex>
+      <texturey>89</texturey>
+      <texturewidth>14</texturewidth>
+      <textureheight>25</textureheight>
+      <offsetx>4</offsetx>
+      <offsety>0</offsety>
+      <spritewidth>25</spritewidth>
+      <spriteheight>35</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>knight</name>
       <number>32</number>
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>434</texturex>
-      <texturey>88</texturey>
+      <texturex>332</texturex>
+      <texturey>122</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>20</textureheight>
       <offsetx>0</offsetx>
@@ -762,8 +794,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>387</texturex>
-      <texturey>134</texturey>
+      <texturex>402</texturex>
+      <texturey>111</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>25</textureheight>
       <offsetx>4</offsetx>
@@ -778,8 +810,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>451</texturex>
-      <texturey>88</texturey>
+      <texturex>388</texturex>
+      <texturey>115</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>25</textureheight>
       <offsetx>4</offsetx>
@@ -794,8 +826,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>434</texturex>
-      <texturey>108</texturey>
+      <texturex>349</texturex>
+      <texturey>122</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>17</textureheight>
       <offsetx>0</offsetx>
@@ -810,8 +842,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>464</texturex>
-      <texturey>88</texturey>
+      <texturex>366</texturex>
+      <texturey>122</texturey>
       <texturewidth>18</texturewidth>
       <textureheight>16</textureheight>
       <offsetx>0</offsetx>
@@ -826,8 +858,8 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>205</texturex>
-      <texturey>128</texturey>
+      <texturex>366</texturex>
+      <texturey>138</texturey>
       <texturewidth>18</texturewidth>
       <textureheight>14</textureheight>
       <offsetx>0</offsetx>
@@ -838,60 +870,12 @@
     </frame>
     <frame>
       <name>archer</name>
-      <number>3</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>417</texturex>
-      <texturey>113</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>5</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>9</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>223</texturex>
-      <texturey>128</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>2</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>5</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>223</texturex>
-      <texturey>128</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>2</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
       <number>11</number>
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>417</texturex>
-      <texturey>113</texturey>
+      <texturex>349</texturex>
+      <texturey>139</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>19</textureheight>
       <offsetx>0</offsetx>
@@ -902,12 +886,44 @@
     </frame>
     <frame>
       <name>archer</name>
-      <number>13</number>
+      <number>9</number>
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
       <texturex>189</texturex>
-      <texturey>135</texturey>
+      <texturey>132</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>2</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>6</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>349</texturex>
+      <texturey>139</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>1</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>13</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>206</texturex>
+      <texturey>128</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>19</textureheight>
       <offsetx>0</offsetx>
@@ -922,8 +938,24 @@
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>189</texturex>
-      <texturey>135</texturey>
+      <texturex>206</texturex>
+      <texturey>128</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>7</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>1</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>206</texturex>
+      <texturey>128</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>19</textureheight>
       <offsetx>0</offsetx>
@@ -938,60 +970,12 @@
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>417</texturex>
-      <texturey>113</texturey>
+      <texturex>349</texturex>
+      <texturey>139</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>19</textureheight>
       <offsetx>0</offsetx>
       <offsety>1</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>6</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>417</texturex>
-      <texturey>113</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>1</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>12</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>223</texturex>
-      <texturey>128</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>6</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>false</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>1</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>189</texturex>
-      <texturey>135</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>19</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>7</offsety>
       <spritewidth>11</spritewidth>
       <spriteheight>26</spriteheight>
       <isalias>true</isalias>
@@ -1002,8 +986,8 @@
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>223</texturex>
-      <texturey>128</texturey>
+      <texturex>189</texturex>
+      <texturey>132</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>19</textureheight>
       <offsetx>0</offsetx>
@@ -1014,12 +998,76 @@
     </frame>
     <frame>
       <name>archer</name>
+      <number>3</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>349</texturex>
+      <texturey>139</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>5</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>12</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>189</texturex>
+      <texturey>132</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>6</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>false</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>5</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>189</texturex>
+      <texturey>132</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>19</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>2</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
+      <number>4</number>
+      <label/>
+      <regpointx>6</regpointx>
+      <regpointy>25</regpointy>
+      <texturex>219</texturex>
+      <texturey>128</texturey>
+      <texturewidth>13</texturewidth>
+      <textureheight>18</textureheight>
+      <offsetx>0</offsetx>
+      <offsety>4</offsety>
+      <spritewidth>11</spritewidth>
+      <spriteheight>26</spriteheight>
+      <isalias>true</isalias>
+    </frame>
+    <frame>
+      <name>archer</name>
       <number>14</number>
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>202</texturex>
-      <texturey>142</texturey>
+      <texturex>219</texturex>
+      <texturey>128</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>18</textureheight>
       <offsetx>0</offsetx>
@@ -1034,8 +1082,8 @@
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>202</texturex>
-      <texturey>142</texturey>
+      <texturex>219</texturex>
+      <texturey>128</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>18</textureheight>
       <offsetx>0</offsetx>
@@ -1050,24 +1098,8 @@
       <label/>
       <regpointx>6</regpointx>
       <regpointy>25</regpointy>
-      <texturex>202</texturex>
-      <texturey>142</texturey>
-      <texturewidth>13</texturewidth>
-      <textureheight>18</textureheight>
-      <offsetx>0</offsetx>
-      <offsety>4</offsety>
-      <spritewidth>11</spritewidth>
-      <spriteheight>26</spriteheight>
-      <isalias>true</isalias>
-    </frame>
-    <frame>
-      <name>archer</name>
-      <number>4</number>
-      <label/>
-      <regpointx>6</regpointx>
-      <regpointy>25</regpointy>
-      <texturex>202</texturex>
-      <texturey>142</texturey>
+      <texturex>219</texturex>
+      <texturey>128</texturey>
       <texturewidth>13</texturewidth>
       <textureheight>18</textureheight>
       <offsetx>0</offsetx>
@@ -1082,7 +1114,7 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>236</texturex>
+      <texturex>232</texturex>
       <texturey>128</texturey>
       <texturewidth>18</texturewidth>
       <textureheight>12</textureheight>
@@ -1098,7 +1130,7 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>254</texturex>
+      <texturex>250</texturex>
       <texturey>128</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>10</textureheight>
@@ -1114,7 +1146,7 @@
       <label/>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>271</texturex>
+      <texturex>267</texturex>
       <texturey>128</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>8</textureheight>
@@ -1130,7 +1162,7 @@
       <label>DEAD</label>
       <regpointx>10</regpointx>
       <regpointy>34</regpointy>
-      <texturex>288</texturex>
+      <texturex>284</texturex>
       <texturey>128</texturey>
       <texturewidth>17</texturewidth>
       <textureheight>6</textureheight>
@@ -1146,8 +1178,8 @@
       <label/>
       <regpointx>3</regpointx>
       <regpointy>11</regpointy>
-      <texturex>381</texturex>
-      <texturey>122</texturey>
+      <texturex>817</texturex>
+      <texturey>58</texturey>
       <texturewidth>6</texturewidth>
       <textureheight>13</textureheight>
       <offsetx>0</offsetx>

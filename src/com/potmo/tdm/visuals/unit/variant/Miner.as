@@ -11,13 +11,15 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MoveToMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.util.logger.Logger;
 
-	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit
+	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit
 	{
 		private static const SEQUENCE_NAME:String = "knight";
 		private static const SETTINGS:MinerSetting = new MinerSetting();
@@ -90,12 +92,20 @@ package com.potmo.tdm.visuals.unit.variant
 		public function handleNoneStateFinished( state:NoneState, gameLogics:GameLogics ):void
 		{
 			// do nothing it always happens
+
 		}
 
 
 		public function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void
 		{
-			//TODO: Start walk towards gold
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getFindClosestMineState( currentState, this, gameLogics );
+		}
+
+
+		public function handleMovingToMineStateFinished( state:MoveToMineState, gameLogics:GameLogics ):void
+		{
+			//TODO: This parameters should take a found mine as well
 		}
 	}
 }

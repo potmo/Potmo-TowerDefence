@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.building.variant
 	public class MinersHut extends BuildingBase
 	{
 		//TODO: Miners hut should have its own graphics
-		private static const SEQUENCE_NAME:String = "archery";
+		private static const SEQUENCE_NAME:String = "minershut";
 		private static const UNIT_DEPLOY_DELAY:int = 60;
 
 		private var _unitDeployCountdown:int = UNIT_DEPLOY_DELAY;

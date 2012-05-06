@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.visuals.building.variant.Archery;
 	import com.potmo.tdm.visuals.building.variant.Camp;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
+	import com.potmo.tdm.visuals.building.variant.Mine;
 	import com.potmo.tdm.visuals.building.variant.MinersHut;
 
 	public final class BuildingFactory
@@ -42,6 +43,10 @@ package com.potmo.tdm.visuals.building
 
 				case BuildingType.MINERS_HUT:
 					building = new MinersHut( _spriteAtlas );
+					break;
+
+				case BuildingType.MINE:
+					building = new Mine( _spriteAtlas );
 					break;
 
 				default:

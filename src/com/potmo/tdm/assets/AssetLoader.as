@@ -3,6 +3,8 @@ package com.potmo.tdm.assets
 	import br.com.stimuli.loading.BulkLoader;
 	import br.com.stimuli.loading.BulkProgressEvent;
 
+	import com.potmo.util.logger.Logger;
+
 	import flash.display.BitmapData;
 	import flash.events.ErrorEvent;
 	import flash.utils.ByteArray;
@@ -23,6 +25,7 @@ package com.potmo.tdm.assets
 
 		private function queue( url:String, name:String, type:String ):void
 		{
+			Logger.info( "Loading: " + name + " - " + url );
 			_bulkLoader.add( url, { id:name, type:type } );
 		}
 

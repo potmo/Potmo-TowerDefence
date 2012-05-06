@@ -25,6 +25,7 @@ package com.potmo.tdm
 		//TODO: Add the real players
 		private var _playerRed:Player = new Player( 0, "RedPlayer", PlayerColor.RED, true );
 		private var _playerBlue:Player = new Player( 1, "BluePlayer", PlayerColor.BLUE, false );
+		private var _playerNeutral:Player = new Player( 2, "NeutralPlayer", PlayerColor.NEUTRAL, false );
 
 		private var _projectiles:Vector.<Projectile> = new Vector.<Projectile>();
 
@@ -67,6 +68,7 @@ package com.potmo.tdm
 			_gameView.addMap( _map );
 
 			_buildingManager.createDefaultConstructionSites( _playerRed, _playerBlue, this );
+			_buildingManager.createDefaultMines( _playerNeutral, this );
 
 		}
 

@@ -3,7 +3,9 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.variant.Mine;
 	import com.potmo.tdm.visuals.map.MapBase;
+	import com.potmo.util.math.StrictMath;
 
 	import flash.geom.Point;
 
@@ -128,10 +130,33 @@ package com.potmo.tdm.visuals.building
 		}
 
 
+		public function createDefaultMines( playerNeutral:Player, gameLogics:GameLogics ):void
+		{
+			var gameView:GameView = gameLogics.getGameView();
+			var map:MapBase = gameLogics.getMap();
+
+			var buildingSpots:Vector.<Point> = new Vector.<Point>();
+
+			var spot:Point;
+			var building:BuildingBase;
+
+			buildingSpots = map.getMinePositions();
+
+			for each ( spot in buildingSpots )
+			{
+				building = _buildingFactory.getBuilding( BuildingType.MINE, playerNeutral );
+				building.setX( spot.x );
+				building.setY( spot.y );
+				_buildings.push( building );
+				gameView.addBuilding( building );
+			}
+		}
+
+
 		/**
 		 * Get the building under (map)position or return null
 		 */
-		public function getBuildingUnderPosition( x:int, y:int ):BuildingBase
+		public function getBuildingUnderPosition( x:Number, y:Number ):BuildingBase
 		{
 
 			var length:int = _buildings.length;
@@ -146,5 +171,36 @@ package com.potmo.tdm.visuals.building
 
 			return null;
 		}
+
+
+		/**
+		 * Get closest mine under map position or return null
+		 */
+		public function getClosestMine( x:Number, y:Number ):Mine
+		{
+
+			var length:int = _buildings.length;
+			var closest:Mine = null;
+			var closestDist:Number = Number.MAX_VALUE;
+
+			for ( var i:int = 0; i < length; i++ )
+			{
+				var building:BuildingBase = _buildings[ i ];
+
+				if ( building.getType() == BuildingType.MINE )
+				{
+					var dist:Number = StrictMath.distSquared( building.getX(), building.getY(), x, y );
+
+					if ( dist < closestDist )
+					{
+						closestDist = dist;
+						closest = building as Mine;
+					}
+				}
+			}
+
+			return closest;
+		}
+
 	}
 }

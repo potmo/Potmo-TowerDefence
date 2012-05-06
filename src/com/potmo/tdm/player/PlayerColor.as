@@ -5,6 +5,7 @@ package com.potmo.tdm.player
 	{
 		public static const RED:PlayerColor = new PlayerColor( "RED", 0 );
 		public static const BLUE:PlayerColor = new PlayerColor( "BLUE", 1 );
+		public static const NEUTRAL:PlayerColor = new PlayerColor( "NEUTRAL", 2 );
 		private var name:String;
 		private var id:uint;
 

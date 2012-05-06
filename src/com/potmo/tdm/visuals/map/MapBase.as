@@ -6,6 +6,7 @@ package com.potmo.tdm.visuals.map
 	import com.potmo.p2d.renderer.Renderer;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.BasicRenderItem;
+	import com.potmo.tdm.visuals.map.tilemap.MapTile;
 	import com.potmo.tdm.visuals.map.tilemap.TileMap;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.IForceFieldMap;
@@ -21,7 +22,6 @@ package com.potmo.tdm.visuals.map
 	import flash.geom.Rectangle;
 	import flash.utils.ByteArray;
 	import flash.utils.CompressionAlgorithm;
-	import com.potmo.tdm.visuals.map.tilemap.MapTile;
 
 	public class MapBase extends BasicRenderItem
 	{
@@ -29,6 +29,7 @@ package com.potmo.tdm.visuals.map
 		private var _mapImageAnalyzer:MapImageAnalyzer;
 		private var _unitCollisionForceCalculator:UnitCollisionForceCalculator;
 
+		private var _minePositions:Vector.<Point>;
 		private var _player0EndPoint:Point;
 		private var _player1EndPoint:Point;
 		private var _player0BuildingPositions:Vector.<Point>;
@@ -70,6 +71,9 @@ package com.potmo.tdm.visuals.map
 
 			// configure buildingpositions
 			this.setBuildingPositions( mapDataImage, _tileWidth );
+
+			// configure mine positons
+			this.setMinePositons( mapDataImage, _tileWidth );
 
 			// create a object that can calculate the forces on a unit
 			_unitCollisionForceCalculator = new UnitCollisionForceCalculator();
@@ -116,6 +120,12 @@ package com.potmo.tdm.visuals.map
 		}
 
 
+		protected function setMinePositons( mapDataImage:BitmapData, scale:Number ):void
+		{
+			_minePositions = _mapImageAnalyzer.getMinePositions( mapDataImage, scale );
+		}
+
+
 		/**
 		 * Get the size of the map
 		 */
@@ -128,6 +138,12 @@ package com.potmo.tdm.visuals.map
 		public function getMapHeight():uint
 		{
 			return this._mapHeight;
+		}
+
+
+		public function getMinePositions():Vector.<Point>
+		{
+			return _minePositions;
 		}
 
 
@@ -237,11 +253,5 @@ package com.potmo.tdm.visuals.map
 			return _player1EndPoint;
 		}
 
-
-		public static function isPositionWalkable( x:Number, y:Number ):Boolean
-		{
-			// TODO Auto Generated method stub
-			return false;
-		}
 	}
 }

@@ -1,4 +1,3 @@
-
 package com.potmo.tdm.visuals.map.util
 {
 	import com.potmo.tdm.visuals.map.tilemap.MapTileType;
@@ -11,7 +10,8 @@ package com.potmo.tdm.visuals.map.util
 	{
 
 		private static const END_POINT_COLOR:uint = 0xFFFF0000;
-		private static const BUILDING_POSITION_COLOR:uint = 0xFFFF00FF;
+		private static const CONSTRUCTION_SITE_POSITION_COLOR:uint = 0xFFFF00FF;
+		private static const MINE_POSITION_COLOR:uint = 0xFF0000FF;
 		private static const WALKABLE_COLOR_0:uint = 0xFF00FF00;
 		private static const WALKABLE_COLOR_1:uint = END_POINT_COLOR;
 
@@ -86,7 +86,7 @@ package com.potmo.tdm.visuals.map.util
 		 */
 		public function getBuildingPositions( referenceMapImage:BitmapData, mapScale:Number ):Vector.<Vector.<Point>>
 		{
-			var preoutput:Vector.<Point> = getPlusShapePositionsScaled( referenceMapImage, mapScale, BUILDING_POSITION_COLOR );
+			var preoutput:Vector.<Point> = getPlusShapePositionsScaled( referenceMapImage, mapScale, CONSTRUCTION_SITE_POSITION_COLOR );
 			preoutput.sort( leftToRightComparator );
 
 			if ( preoutput.length % 2 != 0 )
@@ -98,6 +98,14 @@ package com.potmo.tdm.visuals.map.util
 			var output:Vector.<Vector.<Point>> = new Vector.<Vector.<Point>>();
 			output.push( preoutput.splice( 0, preoutput.length / 2 ) ); // remove the first half and add it to output
 			output.push( preoutput ); // add the rest
+			return output;
+		}
+
+
+		public function getMinePositions( referenceMapImage:BitmapData, mapScale:Number ):Vector.<Point>
+		{
+			var output:Vector.<Point> = getPlusShapePositionsScaled( referenceMapImage, mapScale, MINE_POSITION_COLOR );
+			output.sort( leftToRightComparator );
 			return output;
 		}
 

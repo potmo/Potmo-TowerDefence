@@ -19,7 +19,7 @@ package com.potmo.tdm.visuals.hud.variant
 
 		private static const CAMP_BUTTON_SEQUENCE:String = "campbutton";
 		private static const ARCHERY_BUTTON_SEQUENCE:String = "archerybutton";
-		private static const MINERSHUT_BUTTON_SEQUENCE:String = "archerybutton"; // TODO: Use miners hut hud button instead of archery
+		private static const MINERSHUT_BUTTON_SEQUENCE:String = "minershutbutton"; // TODO: Use miners hut hud button instead of archery
 
 
 		public function ConstructionSiteHud( spriteAtlas:SpriteAtlas )

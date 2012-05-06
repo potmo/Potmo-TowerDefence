@@ -2,7 +2,6 @@ package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.unit.Unit;
-	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
@@ -13,6 +12,8 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MoveToMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
@@ -128,6 +129,17 @@ package com.potmo.tdm.visuals.unit.state
 
 			var newState:FootDefendState = new FootDefendState();
 			newState.enter( unit, enemy, gameLogics );
+			return newState;
+		}
+
+
+		public function getFindClosestMineState( oldState:UnitState, unit:MovingToMineUnit, gameLogics:GameLogics ):UnitState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:MoveToMineState = new MoveToMineState();
+			newState.enter( unit, gameLogics );
 			return newState;
 		}
 	}
