@@ -3,15 +3,13 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
-	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.variant.Camp;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
 	import com.potmo.tdm.visuals.hud.variant.CampHud;
 	import com.potmo.tdm.visuals.hud.variant.ConstructionSiteHud;
 	import com.potmo.tdm.visuals.hud.variant.DeployFlagHud;
-	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.util.logger.Logger;
-	import com.potmo.util.math.StrictMath;
 
 	public class HudManager
 	{
@@ -59,7 +57,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		public function showDeployFlagHud( building:BuildingBase ):void
+		public function showDeployFlagHud( building:Building ):void
 		{
 			Logger.log( "showDeployFlagHud" );
 

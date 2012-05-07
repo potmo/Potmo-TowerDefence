@@ -2,9 +2,12 @@ package com.potmo.tdm.visuals.building.variant
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.building.BuildingFactory;
+	import com.potmo.tdm.visuals.building.BuildingType;
 
-	public class Archery extends BuildingBase
+	public class Archery extends BuildingBase implements Building
 	{
 
 		private static const UNIT_DEPLOY_DELAY:uint = 30;
@@ -14,11 +17,18 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function Archery( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
+			super( BuildingType.ARCHERY, spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 		}
 
 
-		override public function update( gameLogics:GameLogics ):void
+		public function getUpgrade( buildingFactory:BuildingFactory ):Building
+		{
+			//TODO: Implement upgrade of building
+			return null;
+		}
+
+
+		public function update( gameLogics:GameLogics ):void
 		{
 
 			if ( units.length != MAX_UNITS )
@@ -31,6 +41,26 @@ package com.potmo.tdm.visuals.building.variant
 						//gameLogics.getUnitManager().addUnit( UnitType.ARCHER, this );
 				}
 			}
+		}
+
+
+		public function init( gameLogics:GameLogics ):void
+		{
+		}
+
+
+		public function reset( gameLogics:GameLogics ):void
+		{
+		}
+
+
+		public function handleClick( x:int, y:int, gameLogics:GameLogics ):void
+		{
+		}
+
+
+		public function handleClickOutside( x:int, y:int, gameLogics:GameLogics ):void
+		{
 		}
 	}
 }

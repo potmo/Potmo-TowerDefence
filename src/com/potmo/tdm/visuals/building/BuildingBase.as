@@ -14,45 +14,47 @@ package com.potmo.tdm.visuals.building
 		protected static const MAX_UNITS:uint = 3;
 		protected static const MAX_DISTANCE_TO_DEPLOYFLAG:Number = 200;
 
-		private var uniqueId:uint;
-		private var type:BuildingType;
-		private var buildingId:uint;
+		private var _uniqueId:uint;
+		private var _type:BuildingType;
+		private var _buildingId:uint;
 		protected var owningPlayer:Player;
 		//		protected var deployPerimiter:int = 100; // the length from the center it is possible to place the deployment flag
 		protected var _deployFlagX:int;
 		protected var _deployFlagY:int;
 
 		protected var units:Vector.<Unit> = new Vector.<Unit>();
+		private var _constructionSiteId:ConstructionSiteId;
 
 
-		public function BuildingBase( graphicsSequence:SpriteAtlasSequence )
+		public function BuildingBase( type:BuildingType, graphicsSequence:SpriteAtlasSequence )
 		{
 			super( graphicsSequence );
+			this._type = type;
 
 		}
 
 
-		public function setUniqueId( id:uint ):void
+		public function setConstructionSiteId( id:ConstructionSiteId ):void
 		{
-			this.uniqueId = id;
+			this._constructionSiteId = id;
 		}
 
 
-		public function getUniqueId():uint
+		public function getConstructionSiteId():ConstructionSiteId
 		{
-			return this.uniqueId;
+			return this._constructionSiteId;
 		}
 
 
 		public function setType( type:BuildingType ):void
 		{
-			this.type = type;
+			this._type = type;
 		}
 
 
 		public function getType():BuildingType
 		{
-			return type;
+			return _type;
 		}
 
 
@@ -77,7 +79,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function setDeployFlag( x:int, y:int, gameLogics:GameLogics ):void
+		public function setDeployFlag( x:Number, y:Number, gameLogics:GameLogics ):void
 		{
 			_deployFlagX = x;
 			_deployFlagY = y;
@@ -132,25 +134,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function handleClick( x:int, y:int, logics:GameLogics ):void
-		{
-			// override
-		}
-
-
-		public function handleClickOutside( x:int, y:int, logics:GameLogics ):void
-		{
-			// override
-		}
-
-
-		public function update( gameLogics:GameLogics ):void
-		{
-			// override
-		}
-
-
-		public function isUnderPosition( x:int, y:int ):Boolean
+		public function isUnderPosition( x:Number, y:Number ):Boolean
 		{
 			return this.containsPoint( x, y );
 		}
@@ -158,17 +142,17 @@ package com.potmo.tdm.visuals.building
 
 		public function getId():uint
 		{
-			return buildingId;
+			return _buildingId;
 		}
 
 
-		public function getDeployFlagX():int
+		public function getDeployFlagX():Number
 		{
 			return _deployFlagX;
 		}
 
 
-		public function getDeployFlagY():int
+		public function getDeployFlagY():Number
 		{
 			return _deployFlagY;
 		}

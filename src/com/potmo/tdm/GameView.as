@@ -6,6 +6,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.display.ZSortableRenderContainer;
 	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.map.MapBase;
@@ -113,14 +114,14 @@ package com.potmo.tdm
 		}
 
 
-		public function addBuilding( building:BuildingBase ):void
+		public function addBuilding( building:Building ):void
 		{
 			_inbetweenItems.addChild( building );
 
 		}
 
 
-		public function removeBuilding( building:BuildingBase ):void
+		public function removeBuilding( building:Building ):void
 		{
 			_inbetweenItems.removeChild( building );
 

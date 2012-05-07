@@ -6,10 +6,10 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 
 	public class MoveToMineState extends UnitStateBase implements UnitState
 	{
-		private var _mine:Mine;
 		private var _unit:MovingToMineUnit;
 
 
@@ -24,17 +24,16 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit = unit;
 
 			//find the best mine to move to
-			var closestMine:Mine = gameLogics.getBuildingManager().getClosestMine( _unit.getX(), _unit.getY() );
+			var direction:MapMovingDirection = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
-			if ( !closestMine )
+			if ( !direction )
 			{
 				//TODO: Exit this state somehow
 				return;
 			}
 
-			_mine = closestMine;
+			//TODO: Move in that direction
 
-			//TODO: Find if should go forward on path or backward
 		}
 
 
@@ -70,7 +69,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function clear():void
 		{
-			_mine = null;
 			_unit = null;
 		}
 	}

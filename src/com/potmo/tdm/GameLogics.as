@@ -4,6 +4,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.player.PlayerColor;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.building.BuildingFactory;
 	import com.potmo.tdm.visuals.building.BuildingManager;
@@ -67,8 +68,7 @@ package com.potmo.tdm
 
 			_gameView.addMap( _map );
 
-			_buildingManager.createDefaultConstructionSites( _playerRed, _playerBlue, this );
-			_buildingManager.createDefaultMines( _playerNeutral, this );
+			_buildingManager.createDefaultBuildings( _playerRed, _playerBlue, _playerNeutral, this );
 
 		}
 
@@ -98,7 +98,7 @@ package com.potmo.tdm
 		{
 
 			// check if a building was clicked
-			var clickedBuilding:BuildingBase = _buildingManager.getBuildingUnderPosition( x, y );
+			var clickedBuilding:Building = _buildingManager.getBuildingUnderPosition( x, y );
 
 			//send to the clicked building that it was clicked if any
 			//TODO: Comment this in if you dont want to be able to alter other players buildings
@@ -148,12 +148,6 @@ package com.potmo.tdm
 			_projectiles.splice( index, 1 );
 			_gameView.removeProjectile( projectile );
 			_projectileFactory.returnProjectile( projectile );
-		}
-
-
-		public function setDeployFlag( x:int, y:int, building:BuildingBase ):void
-		{
-			building.setDeployFlag( x, y, this );
 		}
 
 

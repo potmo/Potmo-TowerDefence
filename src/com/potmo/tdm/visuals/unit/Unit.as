@@ -4,6 +4,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
@@ -21,8 +22,8 @@ package com.potmo.tdm.visuals.unit
 		function deploy( x:int, y:int, gameLogics:GameLogics ):void;
 		function moveToFlag( gameLogics:GameLogics ):void;
 
-		function getHomeBuilding():BuildingBase;
-		function setHomeBuilding( building:BuildingBase ):void;
+		function getHomeBuilding():Building;
+		function setHomeBuilding( building:Building ):void;
 		function getOwningPlayer():Player;
 		function setOwningPlayer( player:Player ):void;
 		function getType():UnitType;

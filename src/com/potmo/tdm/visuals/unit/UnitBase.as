@@ -1,17 +1,12 @@
 package com.potmo.tdm.visuals.unit
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
-	import com.potmo.p2d.renderer.Renderer;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.player.Player;
-	import com.potmo.tdm.player.PlayerColor;
-	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
-	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
-	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
-	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
@@ -22,7 +17,7 @@ package com.potmo.tdm.visuals.unit
 		protected var currentState:UnitState;
 		private var _type:UnitType;
 		private var _owningPlayer:Player;
-		private var _homeBuilding:BuildingBase;
+		private var _homeBuilding:Building;
 
 		protected var targetedByUnits:Vector.<Unit> = new Vector.<Unit>();
 
@@ -207,20 +202,20 @@ package com.potmo.tdm.visuals.unit
 
 		final public function moveToFlag( gameLogics:GameLogics ):void
 		{
-			var homeBuilding:BuildingBase = this.getHomeBuilding();
+			var homeBuilding:Building = this.getHomeBuilding();
 			var deployFlagX:int = homeBuilding.getDeployFlagX();
 			var deployFlagY:int = homeBuilding.getDeployFlagY();
 			handleBeeingCommandedToMoveToPosition( deployFlagX, deployFlagY, gameLogics );
 		}
 
 
-		final public function setHomeBuilding( building:BuildingBase ):void
+		final public function setHomeBuilding( building:Building ):void
 		{
 			this._homeBuilding = building;
 		}
 
 
-		final public function getHomeBuilding():BuildingBase
+		final public function getHomeBuilding():Building
 		{
 			return _homeBuilding;
 		}

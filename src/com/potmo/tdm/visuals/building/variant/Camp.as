@@ -2,8 +2,10 @@ package com.potmo.tdm.visuals.building.variant
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.hud.variant.CampHud;
+	import com.potmo.tdm.visuals.building.BuildingFactory;
+	import com.potmo.tdm.visuals.building.BuildingType;
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.util.logger.Logger;
 
@@ -14,7 +16,7 @@ package com.potmo.tdm.visuals.building.variant
 	 * Castle
 	 * Citadel
 	 */
-	public class Camp extends BuildingBase
+	public class Camp extends BuildingBase implements Building
 	{
 
 		private static const UNIT_DEPLOY_DELAY:uint = 15;
@@ -24,12 +26,19 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function Camp( spriteAtlas:SpriteAtlas )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
+			super( BuildingType.CAMP, spriteAtlas.getSequenceByName( SEQUENCE_NAME ) );
 
 		}
 
 
-		override public function handleClick( x:int, y:int, gameLogics:GameLogics ):void
+		public function getUpgrade( buildingFactory:BuildingFactory ):Building
+		{
+			//TODO: Implement upgrade of building
+			return null;
+		}
+
+
+		public function handleClick( x:int, y:int, gameLogics:GameLogics ):void
 		{
 			Logger.log( "Camp was clicked" );
 
@@ -37,7 +46,12 @@ package com.potmo.tdm.visuals.building.variant
 		}
 
 
-		override public function update( gameLogics:GameLogics ):void
+		public function handleClickOutside( x:int, y:int, gameLogics:GameLogics ):void
+		{
+		}
+
+
+		public function update( gameLogics:GameLogics ):void
 		{
 
 			if ( units.length != MAX_UNITS )
@@ -48,9 +62,33 @@ package com.potmo.tdm.visuals.building.variant
 				{
 					Logger.log( "Deploy Knight" );
 					_unitDeployCountdown = UNIT_DEPLOY_DELAY;
-					gameLogics.getUnitManager().addUnit( UnitType.KNIGHT, this, gameLogics );
+					deployNewUnit( gameLogics );
 				}
 			}
 		}
+
+
+		private function deployNewUnit( gameLogics:GameLogics ):void
+		{
+			gameLogics.getUnitManager().addUnit( UnitType.KNIGHT, this, gameLogics );
+
+		}
+
+
+		public function init( gameLogics:GameLogics ):void
+		{
+			// create all units right up first
+			for ( var i:int = 0; i < MAX_UNITS; i++ )
+			{
+				deployNewUnit( gameLogics );
+			}
+		}
+
+
+		public function reset( gameLogics:GameLogics ):void
+		{
+			//TODO: Clean up here
+		}
+
 	}
 }

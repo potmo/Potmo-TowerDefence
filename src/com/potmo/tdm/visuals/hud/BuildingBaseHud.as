@@ -4,12 +4,12 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.player.OrderManager;
-	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.building.Building;
 
 	public class BuildingBaseHud extends HudBase
 	{
 
-		private var _building:BuildingBase;
+		private var _building:Building;
 		private var _demolishButton:BasicRenderItem;
 		private var _deployFlagButton:BasicRenderItem;
 		private var _attackButton:BasicRenderItem;
@@ -26,7 +26,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		public function setBuilding( building:BuildingBase ):void
+		public function setBuilding( building:Building ):void
 		{
 			this._building = building;
 		}
@@ -53,7 +53,7 @@ package com.potmo.tdm.visuals.hud
 		{
 			if ( _demolishButton.containsPoint( x, y ) )
 			{
-				orderManager.requestDemolishHouse( _building );
+				orderManager.requestDemolishBuilding( _building );
 				gameLogics.getHudManager().hideHud();
 				return true;
 			}
@@ -69,7 +69,7 @@ package com.potmo.tdm.visuals.hud
 			{
 				// when removing the hud this hud will be cleared and the building will be null
 				// so save it first
-				var building:BuildingBase = _building;
+				var building:Building = _building;
 				gameLogics.getHudManager().hideHud();
 				gameLogics.getHudManager().showDeployFlagHud( building );
 				return true;

@@ -3,16 +3,20 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.minefinder.MineFinder;
+	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
 	import com.potmo.tdm.visuals.building.variant.Mine;
 	import com.potmo.tdm.visuals.map.MapBase;
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.geom.Point;
 
 	public class BuildingManager
 	{
-		private var _buildings:Vector.<BuildingBase> = new Vector.<BuildingBase>();
+		private var _buildings:Vector.<Building> = new Vector.<Building>();
 		private var _buildingFactory:BuildingFactory;
+		private var _mineFinder:MineFinder;
 
 
 		public function BuildingManager( buildingFactory:BuildingFactory )
@@ -38,12 +42,11 @@ package com.potmo.tdm.visuals.building
 		 * This is typically done when transforming a constructionsite to a tower
 		 * or when demolishing a tower making it a construction site
 		 */
-		public function swapBuildingType( building:BuildingBase, type:BuildingType, gameLogics:GameLogics ):BuildingBase
+		public function swapBuilding( building:Building, newBuilding:Building, gameLogics:GameLogics ):Building
 		{
 			var map:MapBase = gameLogics.getMap();
 
 			var owner:Player = building.getOwningPlayer();
-			var newBuilding:BuildingBase = _buildingFactory.getBuilding( type, owner );
 
 			var index:int = _buildings.indexOf( building );
 
@@ -62,40 +65,53 @@ package com.potmo.tdm.visuals.building
 			_buildings.push( newBuilding );
 			gameView.addBuilding( newBuilding );
 
-			newBuilding.setX( building.getX() );
-			newBuilding.setY( building.getY() );
-
 			//TODO: Initial deploy flag position should be calculated better than this 
 			newBuilding.setDeployFlag( newBuilding.getX(), newBuilding.getY() + 10, gameLogics );
 
-			_buildingFactory.returnBuilding( building );
+			_buildingFactory.returnBuilding( building, gameLogics );
 
 			return newBuilding;
 		}
 
 
-		public function upgradeBuilding( building:BuildingBase, gameLogics:GameLogics ):void
+		public function buildBuildingOfTypeOnConstructionSite( type:BuildingType, constructionSite:ConstructionSite, gameLogics:GameLogics ):void
 		{
-			var currentType:BuildingType = building.getType();
-			var upgradeType:BuildingType = BuildingType.getUpgrade( currentType );
+
+			var newBuilding:Building = constructionSite.buildBuildingOfType( type, _buildingFactory, gameLogics );
+			swapBuilding( constructionSite, newBuilding, gameLogics );
+		}
+
+
+		public function upgradeBuilding( building:Building, gameLogics:GameLogics ):void
+		{
 
 			//TODO: Upgrade all the units as well when updgrading building
-			swapBuildingType( building, upgradeType, gameLogics );
+			var newBuilding:Building = building.getUpgrade( _buildingFactory );
+
+			if ( !newBuilding )
+			{
+				throw new Error( "Building: " + building + " can not be upgraded" );
+			}
+			swapBuilding( building, newBuilding, gameLogics );
 
 		}
 
 
-		public function demolishBuilding( building:BuildingBase, gameLogics:GameLogics ):void
+		public function demolishBuilding( building:Building, gameLogics:GameLogics ):void
 		{
 			// make all the units attack first
 			building.killAllUnits( gameLogics );
 
+			var constructionSite:ConstructionSite = _buildingFactory.getConstructionSite( building.getOwningPlayer(), building.getX(), building.getY(), building.getConstructionSiteId(), gameLogics );
 			// swap the building to a contruction site again
-			swapBuildingType( building, BuildingType.CONSTRUCTION_SITE, gameLogics );
+			swapBuilding( building, constructionSite, gameLogics );
 		}
 
 
-		public function createDefaultConstructionSites( playerRed:Player, playerBlue:Player, gameLogics:GameLogics ):void
+		/**
+		 * @return the last used positionId
+		 */
+		private function createDefaultConstructionSites( playerRed:Player, playerBlue:Player, gameLogics:GameLogics ):Vector.<ConstructionSite>
 		{
 			var gameView:GameView = gameLogics.getGameView();
 			var map:MapBase = gameLogics.getMap();
@@ -103,60 +119,80 @@ package com.potmo.tdm.visuals.building
 			var buildingSpots:Vector.<Point> = new Vector.<Point>();
 
 			var spot:Point;
-			var building:BuildingBase;
+			var building:Building;
+			var positionId:ConstructionSiteId = new ConstructionSiteId( 0 );
+
+			var constructionSites:Vector.<ConstructionSite> = new Vector.<ConstructionSite>();
 
 			buildingSpots = map.getPlayer0BuildingPositions();
 
 			for each ( spot in buildingSpots )
 			{
-				building = _buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerRed );
-				building.setX( spot.x );
-				building.setY( spot.y );
+				building = _buildingFactory.getConstructionSite( playerRed, spot.x, spot.y, positionId, gameLogics );
+				positionId = positionId.getNext();
 				_buildings.push( building );
 				gameView.addBuilding( building );
+				constructionSites.push( building );
 			}
 
 			buildingSpots = map.getPlayer1BuildingPositions();
 
 			for each ( spot in buildingSpots )
 			{
-				building = _buildingFactory.getBuilding( BuildingType.CONSTRUCTION_SITE, playerBlue );
-				building.setX( spot.x );
-				building.setY( spot.y );
+				building = _buildingFactory.getConstructionSite( playerBlue, spot.x, spot.y, positionId, gameLogics );
+				positionId = positionId.getNext();
 				_buildings.push( building );
 				gameView.addBuilding( building );
+				constructionSites.push( building );
 			}
 
+			return constructionSites;
 		}
 
 
-		public function createDefaultMines( playerNeutral:Player, gameLogics:GameLogics ):void
+		private function createDefaultMines( constutionSites:Vector.<ConstructionSite>, playerNeutral:Player, gameLogics:GameLogics ):Vector.<Mine>
 		{
 			var gameView:GameView = gameLogics.getGameView();
 			var map:MapBase = gameLogics.getMap();
 
-			var buildingSpots:Vector.<Point> = new Vector.<Point>();
+			var minePositions:Vector.<Point> = new Vector.<Point>();
 
 			var spot:Point;
-			var building:BuildingBase;
+			var building:Building;
 
-			buildingSpots = map.getMinePositions();
+			// get positions for the mines
+			minePositions = map.getMinePositions();
 
-			for each ( spot in buildingSpots )
+			var mines:Vector.<Mine> = new Vector.<Mine>();
+
+			// create mines
+			for each ( spot in minePositions )
 			{
-				building = _buildingFactory.getBuilding( BuildingType.MINE, playerNeutral );
-				building.setX( spot.x );
-				building.setY( spot.y );
+				var positionId:ConstructionSiteId = new ConstructionSiteId( uint.MAX_VALUE );
+				building = _buildingFactory.getMine( playerNeutral, spot.x, spot.y, positionId, gameLogics );
 				_buildings.push( building );
 				gameView.addBuilding( building );
+				mines.push( building );
 			}
+
+			return mines;
+		}
+
+
+		/**
+		 * Only call this function when there is only constructionsites built
+		 */
+		private function setupMineFinder( constructionSites:Vector.<ConstructionSite>, mines:Vector.<Mine>, map:MapBase ):void
+		{
+			// Only call this function when there is only constructionsites built
+			_mineFinder = new MineFinder( constructionSites, mines, map );
 		}
 
 
 		/**
 		 * Get the building under (map)position or return null
 		 */
-		public function getBuildingUnderPosition( x:Number, y:Number ):BuildingBase
+		public function getBuildingUnderPosition( x:Number, y:Number ):Building
 		{
 
 			var length:int = _buildings.length;
@@ -176,31 +212,27 @@ package com.potmo.tdm.visuals.building
 		/**
 		 * Get closest mine under map position or return null
 		 */
-		public function getClosestMine( x:Number, y:Number ):Mine
+		public function getDirectionToClosestMine( building:Building ):MapMovingDirection
 		{
 
-			var length:int = _buildings.length;
-			var closest:Mine = null;
-			var closestDist:Number = Number.MAX_VALUE;
-
-			for ( var i:int = 0; i < length; i++ )
-			{
-				var building:BuildingBase = _buildings[ i ];
-
-				if ( building.getType() == BuildingType.MINE )
-				{
-					var dist:Number = StrictMath.distSquared( building.getX(), building.getY(), x, y );
-
-					if ( dist < closestDist )
-					{
-						closestDist = dist;
-						closest = building as Mine;
-					}
-				}
-			}
-
-			return closest;
+			return _mineFinder.getDirectionToClosestMine( building );
 		}
 
+
+		public function setDeployFlag( x:Number, y:Number, building:Building, gameLogics:GameLogics ):void
+		{
+			building.setDeployFlag( x, y, gameLogics );
+
+		}
+
+
+		public function createDefaultBuildings( playerRed:Player, playerBlue:Player, playerNeutral:Player, gameLogics:GameLogics ):void
+		{
+			var constructionSites:Vector.<ConstructionSite> = createDefaultConstructionSites( playerRed, playerBlue, gameLogics );
+			var mines:Vector.<Mine> = createDefaultMines( constructionSites, playerNeutral, gameLogics );
+
+			setupMineFinder( constructionSites, mines, gameLogics.getMap() );
+
+		}
 	}
 }

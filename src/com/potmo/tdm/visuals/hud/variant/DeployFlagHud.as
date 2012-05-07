@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.hud.variant
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.player.OrderManager;
-	import com.potmo.tdm.visuals.building.BuildingBase;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.hud.HudBase;
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.util.input.MouseManager;
@@ -20,7 +20,7 @@ package com.potmo.tdm.visuals.hud.variant
 		private static const CENCEL_BUTTON_SEQUENCE:String = "cancelbutton";
 
 		private var _flag:DeployFlag;
-		private var _building:BuildingBase;
+		private var _building:Building;
 
 		private var _affirmButton:BasicRenderItem;
 		private var _cancelButton:BasicRenderItem;
@@ -183,7 +183,7 @@ package com.potmo.tdm.visuals.hud.variant
 		}
 
 
-		public function setup( building:BuildingBase, gameView:GameView ):void
+		public function setup( building:Building, gameView:GameView ):void
 		{
 			_building = building;
 
