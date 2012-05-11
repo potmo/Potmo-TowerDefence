@@ -26,6 +26,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit = unit;
 
 			//find the best mine to move to
+			// TODO: Return best mine as well so we dont have to calculate distance to all mines
 			_movingDirection = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
 			if ( !_movingDirection )
@@ -41,6 +42,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 			//TODO: Check if unit is close enought to mine so we can get off path and enter mine
+
+			//TODO: Check if mine still has gold. Otherwise select a new mine
 
 			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _movingDirection );
 

@@ -45,6 +45,7 @@ package com.potmo.tdm.visuals.building.minefinder
 			var left:MineFinderEntry = new MineFinderEntry( MapMovingDirection.LEFT );
 			var right:MineFinderEntry = new MineFinderEntry( MapMovingDirection.RIGHT );
 
+			//TODO: It would probably be possible to just do one pass with path calculation and get all the mines directly. That would save performance
 			// emulate for left
 			left.calculateSteps( constructionSite, mine, map );
 			right.calculateSteps( constructionSite, mine, map );
