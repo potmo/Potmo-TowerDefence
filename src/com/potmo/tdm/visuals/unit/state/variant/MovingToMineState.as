@@ -2,18 +2,20 @@ package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.building.variant.Mine;
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
-	import com.potmo.tdm.visuals.map.MapMovingDirection;
+	import com.potmo.util.logger.Logger;
 
-	public class MoveToMineState extends UnitStateBase implements UnitState
+	public class MovingToMineState extends UnitStateBase implements UnitState
 	{
 		private var _unit:MovingToMineUnit;
+		private var _movingDirection:MapMovingDirection;
 
 
-		final public function MoveToMineState()
+		final public function MovingToMineState()
 		{
 			super( UnitStateEnum.MOVING_TO_MINE );
 		}
@@ -24,15 +26,14 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit = unit;
 
 			//find the best mine to move to
-			var direction:MapMovingDirection = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
+			_movingDirection = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
-			if ( !direction )
+			if ( !_movingDirection )
 			{
 				//TODO: Exit this state somehow
+				Logger.error( "No direction to move in. No mines" );
 				return;
 			}
-
-			//TODO: Move in that direction
 
 		}
 
@@ -41,7 +42,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		{
 			//TODO: Check if unit is close enought to mine so we can get off path and enter mine
 
-			var mapForce:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _movingDirection );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
@@ -70,6 +71,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function clear():void
 		{
 			_unit = null;
+			_movingDirection = null;
 		}
 	}
 }

@@ -130,7 +130,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		private function avoidCollisions( gameLogics:GameLogics ):void
 		{
 			var unwalkableAreaForce:Force;
-			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			unwalkableAreaForce = gameLogics.getMap().getMapUnwalkableAreaForce( _unit.getX(), _unit.getY(), _unit.getOwningPlayer().getDefaultMovingDirection() );
 			unwalkableAreaForce.scale( 5.0 );
 
 			// calculate forces from other units that pushes the unit

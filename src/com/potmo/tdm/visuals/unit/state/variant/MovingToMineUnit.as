@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface MovingToMineUnit extends Unit
 	{
-		function handleMovingToMineStateFinished( state:MoveToMineState, gameLogics:GameLogics ):void;
+		function handleMovingToMineStateFinished( state:MovingToMineState, gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

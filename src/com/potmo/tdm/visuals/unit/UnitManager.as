@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
@@ -95,11 +96,11 @@ package com.potmo.tdm.visuals.unit
 		public function removeUnit( unit:Unit, gameLogics:GameLogics ):void
 		{
 
-			var homeBuilding:BuildingBase = unit.getHomeBuilding();
+			var homeBuilding:Building = unit.getHomeBuilding();
 
 			if ( homeBuilding )
 			{
-				homeBuilding.onUnitRemoved( unit );
+				homeBuilding.handleUnitRemoved( unit );
 			}
 
 			var index:int = _units.indexOf( unit );

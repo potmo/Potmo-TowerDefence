@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.unit.Unit;
 
 	public interface Building extends ZSortableRenderable
 	{
@@ -37,6 +38,7 @@ package com.potmo.tdm.visuals.building
 		function getDeployFlagMaxDistanceFromBuilding():Number;
 		function getDeployFlagX():Number;
 		function getDeployFlagY():Number;
+		function handleUnitRemoved( unit:Unit ):void;
 
 		function getUpgrade( buildingFactory:BuildingFactory ):Building;
 	}

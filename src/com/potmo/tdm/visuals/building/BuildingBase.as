@@ -73,7 +73,7 @@ package com.potmo.tdm.visuals.building
 		public function deployUnit( unit:Unit, gameLogics:GameLogics ):void
 		{
 			units.push( unit );
-			unit.setHomeBuilding( this );
+			unit.setHomeBuilding( this as Building );
 			unit.deploy( x, y, gameLogics );
 			unit.moveToFlag( gameLogics );
 		}
@@ -121,7 +121,7 @@ package com.potmo.tdm.visuals.building
 		}
 
 
-		public function onUnitRemoved( unit:Unit ):void
+		public function handleUnitRemoved( unit:Unit ):void
 		{
 			var index:int = units.indexOf( unit );
 

@@ -11,7 +11,7 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.MoveToMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
@@ -103,7 +103,7 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleMovingToMineStateFinished( state:MoveToMineState, gameLogics:GameLogics ):void
+		public function handleMovingToMineStateFinished( state:MovingToMineState, gameLogics:GameLogics ):void
 		{
 			//TODO: This parameters should take a found mine as well
 		}

@@ -12,7 +12,7 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.MoveToMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
@@ -138,7 +138,7 @@ package com.potmo.tdm.visuals.unit.state
 			oldState.exit( gameLogics );
 			returnState( oldState );
 
-			var newState:MoveToMineState = new MoveToMineState();
+			var newState:MovingToMineState = new MovingToMineState();
 			newState.enter( unit, gameLogics );
 			return newState;
 		}

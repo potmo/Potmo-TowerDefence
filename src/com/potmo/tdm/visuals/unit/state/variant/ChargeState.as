@@ -28,7 +28,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 
-			var mapForce:Force = gameLogics.getMap().getMapPathForce( gameLogics, _unit, _unit.getOwningPlayer().getDefaultMovingDirection() );
+			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _unit.getOwningPlayer().getDefaultMovingDirection() );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
