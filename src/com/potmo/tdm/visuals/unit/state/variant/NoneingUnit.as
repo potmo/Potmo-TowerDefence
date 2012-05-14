@@ -5,6 +5,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface NoneingUnit extends Unit
 	{
-		function handleNoneStateFinished( state:NoneState, gameLogics:GameLogics ):void;
+		function handleNoneStateFinished( gameLogics:GameLogics ):void;
 	}
 }

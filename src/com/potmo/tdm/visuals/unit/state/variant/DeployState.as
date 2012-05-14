@@ -43,7 +43,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 
-			_unit.handleDeployStateFinished( this, gameLogics );
+			_unit.handleDeployStateFinished( gameLogics );
 
 		}
 

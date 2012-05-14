@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface DeployingUnit extends Unit
 	{
-		function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void;
+		function handleDeployStateFinished( gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface MovingToPositionUnit extends Unit
 	{
-		function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void;
+		function handleMovingToPositionStateFinished( gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

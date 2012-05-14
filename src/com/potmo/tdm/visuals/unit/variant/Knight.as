@@ -92,54 +92,54 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleGuardStateFinished( state:GuardState, enemy:Unit, gameLogics:GameLogics ):void
+		public function handleGuardStateFinished( enemy:Unit, gameLogics:GameLogics ):void
 		{
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getFootDefendState( state, this, enemy, gameLogics );
+			currentState = unitStateFactory.getFootDefendState( currentState, this, enemy, gameLogics );
 		}
 
 
-		public function handleNoneStateFinished( state:NoneState, gameLogics:GameLogics ):void
+		public function handleNoneStateFinished( gameLogics:GameLogics ):void
 		{
 			// do nothing it always does
 		}
 
 
-		public function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void
+		public function handleDeployStateFinished( gameLogics:GameLogics ):void
 		{
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
 			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 		}
 
 
-		public function handleChargeStateFinished( state:ChargeState, enemy:Unit, gameLogics:GameLogics ):void
+		public function handleChargeStateFinished( enemy:Unit, gameLogics:GameLogics ):void
 		{
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getFootAttackState( state, this, enemy, gameLogics );
+			currentState = unitStateFactory.getFootAttackState( currentState, this, enemy, gameLogics );
 
 		}
 
 
-		public function handleFootAttackStateFinished( state:FootAttackState, gameLogics:GameLogics ):void
+		public function handleFootAttackStateFinished( gameLogics:GameLogics ):void
 		{
 			// okay back on the road again
 			charge( gameLogics );
 		}
 
 
-		public function handleFootDefendStateFinished( state:FootDefendState, gameLogics:GameLogics ):void
+		public function handleFootDefendStateFinished( gameLogics:GameLogics ):void
 		{
 			// okay back to the flag again
 			moveToFlag( gameLogics );
 		}
 
 
-		public function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void
+		public function handleMovingToPositionStateFinished( gameLogics:GameLogics ):void
 		{
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getGuardState( state, this, gameLogics );
+			currentState = unitStateFactory.getGuardState( currentState, this, gameLogics );
 		}
 
 	}

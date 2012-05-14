@@ -45,7 +45,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			if ( distanceToFlag <= 2 )
 			{
 				// we are close enough so we can end this
-				_unit.handleMovingToPositionStateFinished( this, gameLogics );
+				_unit.handleMovingToPositionStateFinished( gameLogics );
 				return;
 			}
 

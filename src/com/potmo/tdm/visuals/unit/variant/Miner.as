@@ -1,25 +1,22 @@
 package com.potmo.tdm.visuals.unit.variant
 {
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
-	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.building.variant.Mine;
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitType;
 	import com.potmo.tdm.visuals.unit.settings.MinerSetting;
-	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
-	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.util.logger.Logger;
 
-	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit
+	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit, EnteringMineUnit
 	{
 		private static const SEQUENCE_NAME:String = "knight";
 		private static const SETTINGS:MinerSetting = new MinerSetting();
@@ -83,29 +80,40 @@ package com.potmo.tdm.visuals.unit.variant
 		}
 
 
-		public function handleDeployStateFinished( state:DeployState, gameLogics:GameLogics ):void
+		public function handleDeployStateFinished( gameLogics:GameLogics ):void
 		{
 			// do nothing. We will probably be told to do something else soon
 		}
 
 
-		public function handleNoneStateFinished( state:NoneState, gameLogics:GameLogics ):void
+		public function handleNoneStateFinished( gameLogics:GameLogics ):void
 		{
 			// do nothing it always happens
 
 		}
 
 
-		public function handleMovingToPositionStateFinished( state:MovingToPositionState, gameLogics:GameLogics ):void
+		public function handleMovingToPositionStateFinished( gameLogics:GameLogics ):void
 		{
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getFindClosestMineState( currentState, this, gameLogics );
+			currentState = unitStateFactory.getMoveToMineState( currentState, this, gameLogics );
 		}
 
 
-		public function handleMovingToMineStateFinished( state:MovingToMineState, gameLogics:GameLogics ):void
+		public function handleMovingToMineStateFinished( pointOnTrailX:Number, pointOnTrailY:Number, movingDirection:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
 		{
-			//TODO: This parameters should take a found mine as well
+			//enter the mine
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getEnterMineState( currentState, this, pointOnTrailX, pointOnTrailY, movingDirection, mine, gameLogics );
 		}
+
+
+		public function handleMovingToMineStateFinishedSinceThereIsNotMines( gameLogics:GameLogics ):void
+		{
+			Logger.info( "Can not find any mines to mine" );
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
+		}
+
 	}
 }

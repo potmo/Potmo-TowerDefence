@@ -3,6 +3,7 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.GameView;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.minefinder.MineDirections;
 	import com.potmo.tdm.visuals.building.minefinder.MineFinder;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
 	import com.potmo.tdm.visuals.building.variant.Mine;
@@ -212,7 +213,7 @@ package com.potmo.tdm.visuals.building
 		/**
 		 * Get closest mine under map position or return null
 		 */
-		public function getDirectionToClosestMine( building:Building ):MapMovingDirection
+		public function getDirectionToClosestMine( building:Building ):MineDirections
 		{
 
 			return _mineFinder.getDirectionToClosestMine( building );

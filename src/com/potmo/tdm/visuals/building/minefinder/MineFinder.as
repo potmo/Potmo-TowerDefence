@@ -14,36 +14,36 @@ package com.potmo.tdm.visuals.building.minefinder
 	{
 
 		private static const MINE_CLOSE_DISTANCE:int = 200;
-		private var entries:Vector.<Vector.<MineFinderEntry>>;
+		private var entries:Vector.<Vector.<MineDirections>>;
 
 
 		public function MineFinder( constructionSites:Vector.<ConstructionSite>, mines:Vector.<Mine>, map:MapBase )
 		{
 
-			entries = new Vector.<Vector.<MineFinderEntry>>( constructionSites.length, true );
+			entries = new Vector.<Vector.<MineDirections>>( constructionSites.length, true );
 
 			// calculate the direction from each construction site to each mine
 			// then sort the list in ascending order with closest first.
 			for each ( var constructionSite:ConstructionSite in constructionSites )
 			{
 				var constructionSiteId:int = constructionSite.getConstructionSiteId().getId();
-				entries[ constructionSiteId ] = new Vector.<MineFinderEntry>();
+				entries[ constructionSiteId ] = new Vector.<MineDirections>();
 
 				for each ( var mine:Mine in mines )
 				{
-					var entry:MineFinderEntry = calculateBestDirectionFromConstructionSiteToMine( constructionSite, mine, map );
+					var entry:MineDirections = calculateBestDirectionFromConstructionSiteToMine( constructionSite, mine, map );
 					entries[ constructionSiteId ].push( entry );
 				}
 
-				entries[ constructionSiteId ].sort( MineFinderEntry.closestDistanceComparator );
+				entries[ constructionSiteId ].sort( MineDirections.closestDistanceComparator );
 			}
 		}
 
 
-		private function calculateBestDirectionFromConstructionSiteToMine( constructionSite:ConstructionSite, mine:Mine, map:MapBase ):MineFinderEntry
+		private function calculateBestDirectionFromConstructionSiteToMine( constructionSite:ConstructionSite, mine:Mine, map:MapBase ):MineDirections
 		{
-			var left:MineFinderEntry = new MineFinderEntry( MapMovingDirection.LEFT );
-			var right:MineFinderEntry = new MineFinderEntry( MapMovingDirection.RIGHT );
+			var left:MineDirections = new MineDirections( MapMovingDirection.LEFT );
+			var right:MineDirections = new MineDirections( MapMovingDirection.RIGHT );
 
 			//TODO: It would probably be possible to just do one pass with path calculation and get all the mines directly. That would save performance
 			// emulate for left
@@ -62,9 +62,9 @@ package com.potmo.tdm.visuals.building.minefinder
 		}
 
 
-		public function getDirectionToClosestMine( building:Building ):MapMovingDirection
+		public function getDirectionToClosestMine( building:Building ):MineDirections
 		{
-			var closestEntries:Vector.<MineFinderEntry> = entries[ building.getConstructionSiteId().getId() ];
+			var closestEntries:Vector.<MineDirections> = entries[ building.getConstructionSiteId().getId() ];
 
 			if ( closestEntries.length == 0 )
 			{
@@ -73,7 +73,7 @@ package com.potmo.tdm.visuals.building.minefinder
 				return null;
 			}
 
-			return closestEntries[ 0 ].getDirection();
+			return closestEntries[ 0 ];
 
 		}
 

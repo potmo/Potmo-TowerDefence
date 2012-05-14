@@ -38,7 +38,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( enemy )
 			{
-				_unit.handleGuardStateFinished( this, enemy, gameLogics );
+				_unit.handleGuardStateFinished( enemy, gameLogics );
 			}
 		}
 

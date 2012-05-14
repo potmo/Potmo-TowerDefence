@@ -1,6 +1,7 @@
 package com.potmo.tdm.visuals.unit.state.variant
 {
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.building.minefinder.MineDirections;
 	import com.potmo.tdm.visuals.building.variant.Mine;
 	import com.potmo.tdm.visuals.map.MapMovingDirection;
 	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
@@ -8,11 +9,14 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
 	import com.potmo.util.logger.Logger;
+	import com.potmo.util.math.StrictMath;
 
 	public class MovingToMineState extends UnitStateBase implements UnitState
 	{
+
+		private static const MAX_DISTANCE_TO_MINE:Number = StrictMath.sqr( 150 );
 		private var _unit:MovingToMineUnit;
-		private var _movingDirection:MapMovingDirection;
+		private var _directions:MineDirections;
 
 
 		final public function MovingToMineState()
@@ -27,12 +31,12 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			//find the best mine to move to
 			// TODO: Return best mine as well so we dont have to calculate distance to all mines
-			_movingDirection = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
+			_directions = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
-			if ( !_movingDirection )
+			if ( !_directions )
 			{
-				//TODO: Exit this state somehow
-				Logger.error( "No direction to move in. No mines" );
+
+				handleNoMinesToMine( gameLogics );
 				return;
 			}
 
@@ -41,11 +45,19 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function visit( gameLogics:GameLogics ):void
 		{
-			//TODO: Check if unit is close enought to mine so we can get off path and enter mine
+
+			var distanceToMine:Number = StrictMath.distSquared( _unit.getX(), _unit.getY(), _directions.getX(), _directions.getY() );
+
+			if ( distanceToMine <= MAX_DISTANCE_TO_MINE )
+			{
+				//exit the state. We are close enough
+				handleMovedCloseEnoughToMine( _unit.getX(), _unit.getY(), _directions.getDirection(), _directions.getMine(), gameLogics );
+				return;
+			}
 
 			//TODO: Check if mine still has gold. Otherwise select a new mine
 
-			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _movingDirection );
+			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _directions.getDirection() );
 
 			// calculate forces from other units that pushes the unit
 			var unitCollisionForce:Force;
@@ -65,6 +77,18 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
+		private function handleMovedCloseEnoughToMine( pointOnTrailX:Number, pointOnTrailY:Number, movingDirection:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
+		{
+			_unit.handleMovingToMineStateFinished( pointOnTrailX, pointOnTrailY, movingDirection, mine, gameLogics );
+		}
+
+
+		private function handleNoMinesToMine( gameLogics:GameLogics ):void
+		{
+			_unit.handleMovingToMineStateFinishedSinceThereIsNotMines( gameLogics );
+		}
+
+
 		public function exit( gameLogics:GameLogics ):void
 		{
 
@@ -74,7 +98,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function clear():void
 		{
 			_unit = null;
-			_movingDirection = null;
+			_directions = null;
 		}
 	}
 }

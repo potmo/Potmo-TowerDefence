@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface GuardingUnit extends Unit
 	{
-		function handleGuardStateFinished( state:GuardState, enemy:Unit, gameLogics:GameLogics ):void;
+		function handleGuardStateFinished( enemy:Unit, gameLogics:GameLogics ):void;
 		function setFrameFromName( name:String ):void;
 		function getVelX():Number;
 		function getVelY():Number;

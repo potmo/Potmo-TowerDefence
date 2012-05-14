@@ -1,11 +1,15 @@
 package com.potmo.tdm.visuals.unit.state
 {
 	import com.potmo.tdm.GameLogics;
+	import com.potmo.tdm.visuals.building.variant.Mine;
+	import com.potmo.tdm.visuals.map.MapMovingDirection;
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineState;
+	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendState;
@@ -18,6 +22,7 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
+	import com.potmo.tdm.visuals.unit.variant.Miner;
 
 	public class UnitStateFactory
 	{
@@ -133,13 +138,24 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getFindClosestMineState( oldState:UnitState, unit:MovingToMineUnit, gameLogics:GameLogics ):UnitState
+		public function getMoveToMineState( oldState:UnitState, unit:MovingToMineUnit, gameLogics:GameLogics ):MovingToMineState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
 
 			var newState:MovingToMineState = new MovingToMineState();
 			newState.enter( unit, gameLogics );
+			return newState;
+		}
+
+
+		public function getEnterMineState( oldState:UnitState, unit:EnteringMineUnit, pointOnTrailX:Number, pointOnTrailY:Number, movingDirection:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):EnteringMineState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:EnteringMineState = new EnteringMineState();
+			newState.enter( unit, pointOnTrailX, pointOnTrailY, movingDirection, mine, gameLogics );
 			return newState;
 		}
 	}

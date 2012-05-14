@@ -61,7 +61,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( enemy )
 			{
-				_unit.handleChargeStateFinished( this, enemy, gameLogics );
+				_unit.handleChargeStateFinished( enemy, gameLogics );
 			}
 		}
 

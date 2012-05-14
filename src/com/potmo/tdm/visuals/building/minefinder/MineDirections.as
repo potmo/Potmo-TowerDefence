@@ -9,24 +9,29 @@ package com.potmo.tdm.visuals.building.minefinder
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	internal class MineFinderEntry
+	public class MineDirections
 	{
 
 		private static const CLOSEST_DIST_FROM_ENDPOINT:Number = 50;
 
-		private var _steps:int;
+		private var _x:Number = 0;
+		private var _y:Number = 0;
+		private var _steps:int = 0;
 		private var _direction:MapMovingDirection;
+		private var _mine:Mine;
 
 
-		public function MineFinderEntry( direction:MapMovingDirection )
+		public function MineDirections( direction:MapMovingDirection )
 		{
 			_direction = direction;
-			_steps = 0;
 		}
 
 
 		internal function calculateSteps( constructionSite:ConstructionSite, mine:Mine, map:MapBase ):void
 		{
+
+			_mine = mine;
+
 			// start at construction site
 			var constructionSiteX:Number = constructionSite.getX();
 			var constructionSiteY:Number = constructionSite.getY();
@@ -77,6 +82,8 @@ package com.potmo.tdm.visuals.building.minefinder
 				{
 					bestDistance = distToMine;
 					_steps = i;
+					_x = x;
+					_y = y;
 				}
 
 			}
@@ -87,7 +94,7 @@ package com.potmo.tdm.visuals.building.minefinder
 		}
 
 
-		internal static function closestDistanceComparator( a:MineFinderEntry, b:MineFinderEntry ):int
+		internal static function closestDistanceComparator( a:MineDirections, b:MineDirections ):int
 		{
 			var d:int = b._steps - a._steps;
 
@@ -102,16 +109,33 @@ package com.potmo.tdm.visuals.building.minefinder
 		}
 
 
-		internal function getSteps():int
+		public function getSteps():int
 		{
 			return _steps;
 		}
 
 
-		internal function getDirection():MapMovingDirection
+		public function getDirection():MapMovingDirection
 		{
 			return _direction;
 		}
 
+
+		public function getX():Number
+		{
+			return _x;
+		}
+
+
+		public function getY():Number
+		{
+			return _y;
+		}
+
+
+		public function getMine():Mine
+		{
+			return _mine;
+		}
 	}
 }

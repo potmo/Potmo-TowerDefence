@@ -193,7 +193,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		private function stopDefend( gameLogics:GameLogics ):void
 		{
-			_unit.handleFootDefendStateFinished( this, gameLogics );
+			_unit.handleFootDefendStateFinished( gameLogics );
 		}
 
 

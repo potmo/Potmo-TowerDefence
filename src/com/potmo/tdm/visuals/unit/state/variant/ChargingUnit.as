@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface ChargingUnit extends Unit
 	{
-		function handleChargeStateFinished( state:ChargeState, enemy:Unit, gameLogics:GameLogics ):void;
+		function handleChargeStateFinished( enemy:Unit, gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

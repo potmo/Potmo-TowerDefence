@@ -5,7 +5,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 	public interface FootAttackingUnit extends Unit
 	{
-		function handleFootAttackStateFinished( state:FootAttackState, gameLogics:GameLogics ):void;
+		function handleFootAttackStateFinished( gameLogics:GameLogics ):void;
 
 		function getVelX():Number;
 		function getVelY():Number;

@@ -18,6 +18,7 @@ package com.potmo.tdm.visuals.unit.state
 		public static var DYING:UnitStateEnum = new UnitStateEnum( "DYING" ); // When a unit is dead but animating to the end
 
 		public static const MOVING_TO_MINE:UnitStateEnum = new UnitStateEnum( "MOVING_TO_MINE" ); // Moving to the closest mine
+		public static const ENTERING_MINE:UnitStateEnum = new UnitStateEnum( "ENTERING_MINE" ); // Entering a closeby mine
 
 		private var name:String;
 
