@@ -19,6 +19,7 @@ package com.potmo.tdm.visuals.unit.state
 
 		public static const MOVING_TO_MINE:UnitStateEnum = new UnitStateEnum( "MOVING_TO_MINE" ); // Moving to the closest mine
 		public static const ENTERING_MINE:UnitStateEnum = new UnitStateEnum( "ENTERING_MINE" ); // Entering a closeby mine
+		public static const MINING:UnitStateEnum = new UnitStateEnum( "MINING" ); // when in a mine mining
 
 		private var name:String;
 

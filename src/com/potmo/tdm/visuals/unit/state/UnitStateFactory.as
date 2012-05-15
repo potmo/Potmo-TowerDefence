@@ -16,13 +16,14 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MiningState;
+	import com.potmo.tdm.visuals.unit.state.variant.MiningUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
-	import com.potmo.tdm.visuals.unit.variant.Miner;
 
 	public class UnitStateFactory
 	{
@@ -157,6 +158,18 @@ package com.potmo.tdm.visuals.unit.state
 			var newState:EnteringMineState = new EnteringMineState();
 			newState.enter( unit, pointOnTrailX, pointOnTrailY, movingDirection, mine, gameLogics );
 			return newState;
+		}
+
+
+		public function getMiningState( oldState:UnitState, unit:MiningUnit, trailX:Number, trailY:Number, direction:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):MiningState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:MiningState = new MiningState();
+			newState.enter( unit, trailX, trailY, direction, mine, gameLogics );
+			return newState;
+
 		}
 	}
 }

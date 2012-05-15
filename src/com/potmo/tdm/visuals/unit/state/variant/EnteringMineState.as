@@ -48,7 +48,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			if ( dist <= _mine.getRadius() )
 			{
-				// TODO: We have reached the mine. Now enter
+				enterMine( gameLogics );
 				return;
 			}
 
@@ -74,7 +74,12 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_unit.setX( _unit.getX() + _unit.getVelX() );
 			_unit.setY( _unit.getY() + _unit.getVelY() );
 
-			Logger.log( "vel: " + _unit.getVelX() + ", " + _unit.getVelY() );
+		}
+
+
+		private function enterMine( gameLogics:GameLogics ):void
+		{
+			_unit.handleEnteringMineStateFinished( _trailX, _trailY, _direction, _mine, gameLogics );
 
 		}
 

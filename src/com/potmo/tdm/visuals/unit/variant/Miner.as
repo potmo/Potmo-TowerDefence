@@ -11,12 +11,13 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MiningUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.util.logger.Logger;
 
-	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit, EnteringMineUnit
+	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit, EnteringMineUnit, MiningUnit
 	{
 		private static const SEQUENCE_NAME:String = "knight";
 		private static const SETTINGS:MinerSetting = new MinerSetting();
@@ -111,6 +112,23 @@ package com.potmo.tdm.visuals.unit.variant
 		public function handleMovingToMineStateFinishedSinceThereIsNotMines( gameLogics:GameLogics ):void
 		{
 			Logger.info( "Can not find any mines to mine" );
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
+		}
+
+
+		public function handleEnteringMineStateFinished( trailX:Number, trailY:Number, direction:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
+		{
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getMiningState( currentState, this, trailX, trailY, direction, mine, gameLogics );
+		}
+
+
+		public function handleMiningStateFinished( pickedUp:int, trailX:Number, trailY:Number, direction:MapMovingDirection, gameLogics:GameLogics ):void
+		{
+			//TODO: exit mine to return to trail
+			Logger.info( "Return to trail now after picking up: " + pickedUp );
+
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
 			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
 		}

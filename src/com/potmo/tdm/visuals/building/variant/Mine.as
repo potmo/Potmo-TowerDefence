@@ -6,11 +6,13 @@ package com.potmo.tdm.visuals.building.variant
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.building.BuildingFactory;
 	import com.potmo.tdm.visuals.building.BuildingType;
+	import com.potmo.util.math.StrictMath;
 
 	public class Mine extends BuildingBase implements Building
 	{
 
 		private static const SEQUENCE_NAME:String = "mine";
+		private var _resources:int;
 
 
 		public function Mine( spriteAtlas:SpriteAtlas )
@@ -39,11 +41,13 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function init( gameLogics:GameLogics ):void
 		{
+			_resources = 5000;
 		}
 
 
 		public function reset( gameLogics:GameLogics ):void
 		{
+			_resources = 0;
 		}
 
 
@@ -54,6 +58,17 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function handleClickOutside( x:int, y:int, gameLogics:GameLogics ):void
 		{
+		}
+
+
+		public function extract( amount:int, gameLogics:GameLogics ):int
+		{
+			var pickedUp:int = StrictMath.min( amount, _resources );
+			_resources -= pickedUp;
+
+			//TODO: Call building manager when mine is exhausted
+
+			return pickedUp;
 		}
 	}
 }

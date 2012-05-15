@@ -88,5 +88,17 @@ package com.potmo.tdm.display
 			this.y = value;
 		}
 
+
+		public function setAlpha( value:Number ):void
+		{
+			alphaMultiplyer = value;
+		}
+
+
+		public function getAlpha():Number
+		{
+			return alphaMultiplyer;
+		}
+
 	}
 }
