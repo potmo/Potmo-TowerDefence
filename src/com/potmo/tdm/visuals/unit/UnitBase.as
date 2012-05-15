@@ -281,7 +281,6 @@ package com.potmo.tdm.visuals.unit
 		{
 			if ( this.x != value )
 			{
-				_oldX = this.x;
 				_positionIsDirty = true;
 				this.x = value;
 			}
@@ -292,7 +291,6 @@ package com.potmo.tdm.visuals.unit
 		{
 			if ( this.y != value )
 			{
-				_oldY = this.y;
 				_positionIsDirty = true;
 				this.y = value;
 			}

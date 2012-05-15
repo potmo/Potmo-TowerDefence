@@ -14,7 +14,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	public class MovingToMineState extends UnitStateBase implements UnitState
 	{
 
-		private static const MAX_DISTANCE_TO_MINE:Number = StrictMath.sqr( 150 );
+		private static const MAX_DISTANCE_TO_MINE:Number = StrictMath.sqr( 60 );
 		private var _unit:MovingToMineUnit;
 		private var _directions:MineDirections;
 

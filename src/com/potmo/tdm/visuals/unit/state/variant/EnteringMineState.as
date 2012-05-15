@@ -3,9 +3,12 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.visuals.building.variant.Mine;
 	import com.potmo.tdm.visuals.map.MapMovingDirection;
+	import com.potmo.tdm.visuals.map.tilemap.forcefieldmap.Force;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 	import com.potmo.tdm.visuals.unit.state.UnitStateBase;
 	import com.potmo.tdm.visuals.unit.state.UnitStateEnum;
+	import com.potmo.util.logger.Logger;
+	import com.potmo.util.math.StrictMath;
 
 	public class EnteringMineState extends UnitStateBase implements UnitState
 	{
@@ -25,6 +28,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function enter( unit:EnteringMineUnit, trailX:Number, trailY:Number, direction:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
+
+			// just remember this until we exit the mine and should go back to the trail again
 			_trailX = trailX;
 			_trailY = trailY;
 			_direction = direction;
@@ -34,6 +39,43 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		public function visit( gameLogics:GameLogics ):void
 		{
+			// get direction
+			var dirX:Number = _mine.getX() - _unit.getX();
+			var dirY:Number = _mine.getY() - _unit.getY();
+
+			// normalize
+			var dist:Number = StrictMath.get2DLength( dirX, dirY );
+
+			if ( dist <= _mine.getRadius() )
+			{
+				// TODO: We have reached the mine. Now enter
+				return;
+			}
+
+			// normalize
+			dirX /= dist;
+			dirY /= dist;
+
+			// calculate forces from other units that pushes the unit
+			var movingForce:Force;
+			movingForce = gameLogics.getMap().getUnitCollisionForce( gameLogics, _unit );
+			movingForce.scale( 2.0 );
+
+			movingForce.addComponents( dirX, dirY );
+
+			//scale so we do not walk faster than we can
+			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			movingForce.normalize();
+			movingForce.scale( movingSpeed );
+
+			_unit.setVelX( _unit.getVelX() * 0.4 + movingForce.x );
+			_unit.setVelY( _unit.getVelY() * 0.4 + movingForce.y );
+
+			_unit.setX( _unit.getX() + _unit.getVelX() );
+			_unit.setY( _unit.getY() + _unit.getVelY() );
+
+			Logger.log( "vel: " + _unit.getVelX() + ", " + _unit.getVelY() );
+
 		}
 
 

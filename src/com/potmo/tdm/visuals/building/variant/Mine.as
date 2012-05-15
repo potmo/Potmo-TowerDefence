@@ -25,6 +25,12 @@ package com.potmo.tdm.visuals.building.variant
 		}
 
 
+		public function getRadius():Number
+		{
+			return 40;
+		}
+
+
 		public function update( gameLogics:GameLogics ):void
 		{
 			// we don't have to do anything while there are no miners inside

@@ -33,6 +33,7 @@ package com.potmo.tdm.visuals.building.minefinder
 				{
 					var entry:MineDirections = calculateBestDirectionFromConstructionSiteToMine( constructionSite, mine, map );
 					entries[ constructionSiteId ].push( entry );
+
 				}
 
 				entries[ constructionSiteId ].sort( MineDirections.closestDistanceComparator );
@@ -50,14 +51,24 @@ package com.potmo.tdm.visuals.building.minefinder
 			left.calculateSteps( constructionSite, mine, map );
 			right.calculateSteps( constructionSite, mine, map );
 
-			if ( left.getSteps() < right.getSteps() )
+			var best:MineDirections;
+
+			if ( left.getDistanceFromTrailToMine() == right.getDistanceFromTrailToMine() )
 			{
-				return left;
+				Logger.error( "None if the directions found any mine" );
+			}
+			else if ( left.getDistanceFromTrailToMine() < right.getDistanceFromTrailToMine() )
+			{
+				best = left;
 			}
 			else
 			{
-				return right;
+				best = right;
 			}
+
+			Logger.info( "site: " + constructionSite.getConstructionSiteId().getId() + " point on path: " + best.getX() + ", " + best.getY() + " mine: " + best.getMine().getX() + ", " + best.getMine().getY() + " dir: " + best.getDirection() );
+
+			return best;
 
 		}
 

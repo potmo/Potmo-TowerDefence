@@ -12,13 +12,15 @@ package com.potmo.tdm.visuals.building.minefinder
 	public class MineDirections
 	{
 
-		private static const CLOSEST_DIST_FROM_ENDPOINT:Number = 50;
+		private static const CLOSEST_DIST_FROM_ENDPOINT:Number = StrictMath.sqr( 30 );
+		private static const MIN_DIST_TO_ACCESS_MINE:Number = StrictMath.sqr( 200 );
 
 		private var _x:Number = 0;
 		private var _y:Number = 0;
 		private var _steps:int = 0;
 		private var _direction:MapMovingDirection;
 		private var _mine:Mine;
+		private var _bestDistance:Number;
 
 
 		public function MineDirections( direction:MapMovingDirection )
@@ -51,20 +53,26 @@ package com.potmo.tdm.visuals.building.minefinder
 			var mapForce:Force;
 			var areaForce:Force;
 
-			var bestDistance:Number = Number.MAX_VALUE;
+			_bestDistance = Number.MAX_VALUE;
+			_steps = int.MAX_VALUE;
 
 			// step while far enough from endpoint
 			for ( var i:int = 0; i < 10000; i++ )
 			{
 
-				if ( StrictMath.distSquared( x, y, endpointAX, endpointAY ) <= CLOSEST_DIST_FROM_ENDPOINT )
+				var reachedEnd1:Boolean = StrictMath.distSquared( x, y, endpointAX, endpointAY ) <= CLOSEST_DIST_FROM_ENDPOINT;
+				var reachedEnd2:Boolean = StrictMath.distSquared( x, y, endpointBX, endpointBY ) <= CLOSEST_DIST_FROM_ENDPOINT;
+
+				if ( reachedEnd1 || reachedEnd2 )
 				{
-					Logger.log( "Close to p0 endpoint" );
-					return;
-				}
-				else if ( StrictMath.distSquared( x, y, endpointBX, endpointBY ) <= CLOSEST_DIST_FROM_ENDPOINT )
-				{
-					Logger.log( "Close to p1 endpoint" );
+					if ( _steps == int.MAX_VALUE )
+					{
+						Logger.error( "Did not find any mine at all" );
+					}
+					else
+					{
+						Logger.info( "Found mine after: " + _steps );
+					}
 					return;
 				}
 
@@ -72,15 +80,16 @@ package com.potmo.tdm.visuals.building.minefinder
 				areaForce = map.getMapUnwalkableAreaForce( x, y, _direction );
 
 				mapForce.add( areaForce );
+				mapForce.normalize();
 
-				x += mapForce.x * 10;
-				y += mapForce.y * 10;
+				x += mapForce.x * 15;
+				y += mapForce.y * 15;
 
 				var distToMine:Number = StrictMath.distSquared( x, y, mineX, mineY );
 
-				if ( distToMine < bestDistance )
+				if ( ( distToMine < _bestDistance ) && ( distToMine <= MIN_DIST_TO_ACCESS_MINE ) )
 				{
-					bestDistance = distToMine;
+					_bestDistance = distToMine;
 					_steps = i;
 					_x = x;
 					_y = y;
@@ -88,7 +97,7 @@ package com.potmo.tdm.visuals.building.minefinder
 
 			}
 
-			Logger.info( "Iterated too many times" );
+			Logger.error( "Iterated too many times" );
 			return;
 
 		}
@@ -96,7 +105,7 @@ package com.potmo.tdm.visuals.building.minefinder
 
 		internal static function closestDistanceComparator( a:MineDirections, b:MineDirections ):int
 		{
-			var d:int = b._steps - a._steps;
+			var d:int = a._steps - b._steps;
 
 			if ( d == 0 )
 			{
@@ -112,6 +121,12 @@ package com.potmo.tdm.visuals.building.minefinder
 		public function getSteps():int
 		{
 			return _steps;
+		}
+
+
+		public function getDistanceFromTrailToMine():Number
+		{
+			return _bestDistance;
 		}
 
 
