@@ -10,14 +10,12 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.settings.MinerSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MiningUnit;
-	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
 	import com.potmo.util.logger.Logger;
 
-	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MovingToMineUnit, EnteringMineUnit, MiningUnit
+	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MiningUnit
 	{
 		private static const SEQUENCE_NAME:String = "knight";
 		private static const SETTINGS:MinerSetting = new MinerSetting();
@@ -126,11 +124,35 @@ package com.potmo.tdm.visuals.unit.variant
 
 		public function handleMiningStateFinished( pickedUp:int, trailX:Number, trailY:Number, direction:MapMovingDirection, gameLogics:GameLogics ):void
 		{
-			//TODO: exit mine to return to trail
-			Logger.info( "Return to trail now after picking up: " + pickedUp );
 
 			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
-			currentState = unitStateFactory.getNoneState( currentState, this, gameLogics );
+			currentState = unitStateFactory.getLeavingMineState( currentState, this, trailX, trailY, pickedUp, direction, gameLogics );
+		}
+
+
+		public function handleLeavingMineStateFinished( direction:MapMovingDirection, pickedUp:int, gameLogics:GameLogics ):void
+		{
+
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getMovingBackFromMineState( currentState, this, direction, pickedUp, gameLogics );
+
+		}
+
+
+		public function handleMovingBackFromHomeStateFinished( pickedUp:int, gameLogics:GameLogics ):void
+		{
+
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getEnteringHomeState( currentState, this, pickedUp, gameLogics );
+
+		}
+
+
+		public function handleEnteringHomeStateFinished( gameLogics:GameLogics ):void
+		{
+
+			var unitStateFactory:UnitStateFactory = gameLogics.getUnitManager().getUnitStateFactory();
+			currentState = unitStateFactory.getMoveToMineState( currentState, this, gameLogics );
 		}
 
 	}

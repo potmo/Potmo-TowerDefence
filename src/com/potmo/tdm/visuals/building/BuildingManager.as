@@ -220,6 +220,12 @@ package com.potmo.tdm.visuals.building
 		}
 
 
+		public function handleMinesResourcesExhausted( mine:Mine ):void
+		{
+			_mineFinder.handleClosedMine( mine );
+		}
+
+
 		public function setDeployFlag( x:Number, y:Number, building:Building, gameLogics:GameLogics ):void
 		{
 			building.setDeployFlag( x, y, gameLogics );
@@ -235,5 +241,6 @@ package com.potmo.tdm.visuals.building
 			setupMineFinder( constructionSites, mines, gameLogics.getMap() );
 
 		}
+
 	}
 }

@@ -29,6 +29,8 @@ package com.potmo.tdm.visuals.building
 		function setX( x:Number ):void;
 		function setY( y:Number ):void;
 
+		function getRadius():Number;
+
 		function isUnderPosition( x:Number, y:Number ):Boolean;
 
 		//TODO: Theese should be moved to a UnitHoldingBuilding

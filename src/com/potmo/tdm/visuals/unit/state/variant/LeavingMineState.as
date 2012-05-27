@@ -10,22 +10,22 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	public class EnteringMineState extends UnitStateBase implements UnitState
+	public class LeavingMineState extends UnitStateBase implements UnitState
 	{
 		private var _unit:MiningUnit;
 		private var _trailX:Number;
 		private var _trailY:Number;
 		private var _direction:MapMovingDirection;
-		private var _mine:Mine;
+		private var _pickedUp:int;
 
 
-		final public function EnteringMineState()
+		final public function LeavingMineState()
 		{
 			super( UnitStateEnum.ENTERING_MINE );
 		}
 
 
-		public function enter( unit:MiningUnit, trailX:Number, trailY:Number, direction:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
+		public function enter( unit:MiningUnit, trailX:Number, trailY:Number, direction:MapMovingDirection, pickedUp:int, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
 
@@ -33,20 +33,20 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_trailX = trailX;
 			_trailY = trailY;
 			_direction = direction;
-			_mine = mine;
+			_pickedUp = pickedUp;
 		}
 
 
 		public function visit( gameLogics:GameLogics ):void
 		{
 			// get direction
-			var dirX:Number = _mine.getX() - _unit.getX();
-			var dirY:Number = _mine.getY() - _unit.getY();
+			var dirX:Number = _trailX - _unit.getX();
+			var dirY:Number = _trailY - _unit.getY();
 
 			// normalize
 			var dist:Number = StrictMath.get2DLength( dirX, dirY );
 
-			if ( dist <= _mine.getRadius() )
+			if ( dist <= 30 ) // do not hardcode number where unit is on track again
 			{
 				enterMine( gameLogics );
 				return;
@@ -79,7 +79,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 		private function enterMine( gameLogics:GameLogics ):void
 		{
-			_unit.handleEnteringMineStateFinished( _trailX, _trailY, _direction, _mine, gameLogics );
+			_unit.handleLeavingMineStateFinished( _direction, _pickedUp, gameLogics );
 
 		}
 
@@ -95,7 +95,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			_trailX = 0;
 			_trailY = 0;
 			_direction = null;
-			_mine = null;
+			_pickedUp = 0;
 		}
 	}
 }

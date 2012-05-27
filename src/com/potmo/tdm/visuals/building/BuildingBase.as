@@ -8,6 +8,8 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 
+	import flash.geom.Point;
+
 	public class BuildingBase extends BasicRenderItem implements ZSortableRenderable
 	{
 		//TODO: Do not hardcode this
@@ -67,6 +69,13 @@ package com.potmo.tdm.visuals.building
 		public function getOwningPlayer():Player
 		{
 			return owningPlayer;
+		}
+
+
+		public function getRadius():Number
+		{
+			var size:Point = graphicsSequence.getSizeOfFrame( currentFrame );
+			return size.y / 2;
 		}
 
 

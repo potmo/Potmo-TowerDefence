@@ -10,7 +10,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
-	public class EnteringMineState extends UnitStateBase implements UnitState
+	public class EnteringHomeState extends UnitStateBase implements UnitState
 	{
 		private var _unit:MiningUnit;
 		private var _trailX:Number;
@@ -18,37 +18,37 @@ package com.potmo.tdm.visuals.unit.state.variant
 		private var _direction:MapMovingDirection;
 		private var _mine:Mine;
 
+		private var _pickedUp:int;
 
-		final public function EnteringMineState()
+
+		final public function EnteringHomeState()
 		{
 			super( UnitStateEnum.ENTERING_MINE );
 		}
 
 
-		public function enter( unit:MiningUnit, trailX:Number, trailY:Number, direction:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):void
+		public function enter( unit:MiningUnit, pickedUp:int, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
-
-			// just remember this until we exit the mine and should go back to the trail again
-			_trailX = trailX;
-			_trailY = trailY;
-			_direction = direction;
-			_mine = mine;
+			_pickedUp = pickedUp;
 		}
 
 
 		public function visit( gameLogics:GameLogics ):void
 		{
 			// get direction
-			var dirX:Number = _mine.getX() - _unit.getX();
-			var dirY:Number = _mine.getY() - _unit.getY();
+			var dirX:Number = _unit.getHomeBuilding().getX() - _unit.getX();
+			var dirY:Number = _unit.getHomeBuilding().getY() - _unit.getY();
 
 			// normalize
 			var dist:Number = StrictMath.get2DLength( dirX, dirY );
 
-			if ( dist <= _mine.getRadius() )
+			if ( dist <= _unit.getHomeBuilding().getRadius() )
 			{
-				enterMine( gameLogics );
+
+				//TODO: Leave everything picked up and cash in 
+
+				_unit.handleEnteringHomeStateFinished( gameLogics );
 				return;
 			}
 
@@ -77,13 +77,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		private function enterMine( gameLogics:GameLogics ):void
-		{
-			_unit.handleEnteringMineStateFinished( _trailX, _trailY, _direction, _mine, gameLogics );
-
-		}
-
-
 		public function exit( gameLogics:GameLogics ):void
 		{
 		}
@@ -92,10 +85,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function clear():void
 		{
 			_unit = null;
-			_trailX = 0;
-			_trailY = 0;
-			_direction = null;
-			_mine = null;
+			_pickedUp = 0;
 		}
 	}
 }

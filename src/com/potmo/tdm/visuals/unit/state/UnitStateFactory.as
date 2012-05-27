@@ -8,18 +8,19 @@ package com.potmo.tdm.visuals.unit.state
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployState;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.EnteringHomeState;
 	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineState;
-	import com.potmo.tdm.visuals.unit.state.variant.EnteringMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackState;
 	import com.potmo.tdm.visuals.unit.state.variant.FootAttackingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendState;
 	import com.potmo.tdm.visuals.unit.state.variant.FootDefendingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardState;
 	import com.potmo.tdm.visuals.unit.state.variant.GuardingUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.LeavingMineState;
 	import com.potmo.tdm.visuals.unit.state.variant.MiningState;
 	import com.potmo.tdm.visuals.unit.state.variant.MiningUnit;
+	import com.potmo.tdm.visuals.unit.state.variant.MovingBackFromMineState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineState;
-	import com.potmo.tdm.visuals.unit.state.variant.MovingToMineUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionState;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
@@ -139,7 +140,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getMoveToMineState( oldState:UnitState, unit:MovingToMineUnit, gameLogics:GameLogics ):MovingToMineState
+		public function getMoveToMineState( oldState:UnitState, unit:MiningUnit, gameLogics:GameLogics ):MovingToMineState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
@@ -150,7 +151,7 @@ package com.potmo.tdm.visuals.unit.state
 		}
 
 
-		public function getEnterMineState( oldState:UnitState, unit:EnteringMineUnit, pointOnTrailX:Number, pointOnTrailY:Number, movingDirection:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):EnteringMineState
+		public function getEnterMineState( oldState:UnitState, unit:MiningUnit, pointOnTrailX:Number, pointOnTrailY:Number, movingDirection:MapMovingDirection, mine:Mine, gameLogics:GameLogics ):EnteringMineState
 		{
 			oldState.exit( gameLogics );
 			returnState( oldState );
@@ -171,5 +172,39 @@ package com.potmo.tdm.visuals.unit.state
 			return newState;
 
 		}
+
+
+		public function getLeavingMineState( oldState:UnitState, unit:MiningUnit, trailX:Number, trailY:Number, pickedUp:int, direction:MapMovingDirection, gameLogics:GameLogics ):LeavingMineState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:LeavingMineState = new LeavingMineState();
+			newState.enter( unit, trailX, trailY, direction, pickedUp, gameLogics );
+			return newState;
+		}
+
+
+		public function getMovingBackFromMineState( oldState:UnitState, unit:MiningUnit, direction:MapMovingDirection, pickedUp:int, gameLogics:GameLogics ):MovingBackFromMineState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:MovingBackFromMineState = new MovingBackFromMineState();
+			newState.enter( unit, direction, pickedUp, gameLogics );
+			return newState;
+		}
+
+
+		public function getEnteringHomeState( oldState:UnitState, unit:MiningUnit, pickedUp:int, gameLogics:GameLogics ):EnteringHomeState
+		{
+			oldState.exit( gameLogics );
+			returnState( oldState );
+
+			var newState:EnteringHomeState = new EnteringHomeState();
+			newState.enter( unit, pickedUp, gameLogics );
+			return newState;
+		}
+
 	}
 }

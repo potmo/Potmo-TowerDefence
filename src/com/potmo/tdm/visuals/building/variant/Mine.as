@@ -8,6 +8,8 @@ package com.potmo.tdm.visuals.building.variant
 	import com.potmo.tdm.visuals.building.BuildingType;
 	import com.potmo.util.math.StrictMath;
 
+	import flash.geom.Point;
+
 	public class Mine extends BuildingBase implements Building
 	{
 
@@ -24,12 +26,6 @@ package com.potmo.tdm.visuals.building.variant
 		public function getUpgrade( buildingFactory:BuildingFactory ):Building
 		{
 			return null;
-		}
-
-
-		public function getRadius():Number
-		{
-			return 40;
 		}
 
 
@@ -68,7 +64,19 @@ package com.potmo.tdm.visuals.building.variant
 
 			//TODO: Call building manager when mine is exhausted
 
+			if ( _resources <= 0 )
+			{
+				gameLogics.getBuildingManager().handleMinesResourcesExhausted( this );
+			}
+
 			return pickedUp;
 		}
+
+
+		public function getResoucesLeft():int
+		{
+			return _resources;
+		}
+
 	}
 }

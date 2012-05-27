@@ -20,5 +20,19 @@ package com.potmo.tdm.visuals.map
 			return "MapMovingDirection[" + _name + "]";
 		}
 
+
+		public static function getOpposite( direction:MapMovingDirection ):MapMovingDirection
+		{
+			if ( direction == RIGHT )
+			{
+				return LEFT;
+			}
+
+			if ( direction == LEFT )
+			{
+				return RIGHT;
+			}
+			throw new Error( "There is no direction: " + direction );
+		}
 	}
 }

@@ -15,7 +15,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 	{
 
 		private static const MAX_DISTANCE_TO_MINE:Number = StrictMath.sqr( 60 );
-		private var _unit:MovingToMineUnit;
+		private var _unit:MiningUnit;
 		private var _directions:MineDirections;
 
 
@@ -25,17 +25,16 @@ package com.potmo.tdm.visuals.unit.state.variant
 		}
 
 
-		public function enter( unit:MovingToMineUnit, gameLogics:GameLogics ):void
+		public function enter( unit:MiningUnit, gameLogics:GameLogics ):void
 		{
 			_unit = unit;
 
 			//find the best mine to move to
-			// TODO: Return best mine as well so we dont have to calculate distance to all mines
 			_directions = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
 			if ( !_directions )
 			{
-
+				Logger.info( "There are no mines so end this" );
 				handleNoMinesToMine( gameLogics );
 				return;
 			}
@@ -46,6 +45,13 @@ package com.potmo.tdm.visuals.unit.state.variant
 		public function visit( gameLogics:GameLogics ):void
 		{
 
+			// if the mine has no gold then search for a new one
+			if ( _directions.getMine().getResoucesLeft() == 0 )
+			{
+				this.enter( _unit, gameLogics );
+				return;
+			}
+
 			var distanceToMine:Number = StrictMath.distSquared( _unit.getX(), _unit.getY(), _directions.getX(), _directions.getY() );
 
 			if ( distanceToMine <= MAX_DISTANCE_TO_MINE )
@@ -54,8 +60,6 @@ package com.potmo.tdm.visuals.unit.state.variant
 				handleMovedCloseEnoughToMine( _unit.getX(), _unit.getY(), _directions.getDirection(), _directions.getMine(), gameLogics );
 				return;
 			}
-
-			//TODO: Check if mine still has gold. Otherwise select a new mine
 
 			var mapForce:Force = gameLogics.getMap().getMapPathForce( _unit.getX(), _unit.getY(), _directions.getDirection() );
 

@@ -92,6 +92,21 @@ package com.potmo.tdm.visuals.building.minefinder
 		public function handleClosedMine( mine:Mine ):void
 		{
 			//TODO: implement report closed mine
+			Logger.info( "Mine is exhausted and closed" );
+
+			for ( var i:int = entries.length - 1; i >= 0; i-- )
+			{
+				for ( var j:int = entries[ i ].length - 1; j >= 0; j-- )
+				{
+					if ( entries[ i ][ j ].getMine() == mine )
+					{
+						// remove direction for this mine
+						Logger.info( "Removed direction for min" );
+
+						entries[ i ].splice( j, 1 );
+					}
+				}
+			}
 		}
 
 	}
