@@ -91,7 +91,6 @@ package com.potmo.tdm.visuals.building.minefinder
 
 		public function handleClosedMine( mine:Mine ):void
 		{
-			//TODO: implement report closed mine
 			Logger.info( "Mine is exhausted and closed" );
 
 			for ( var i:int = entries.length - 1; i >= 0; i-- )

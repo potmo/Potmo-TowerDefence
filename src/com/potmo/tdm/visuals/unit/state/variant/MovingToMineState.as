@@ -29,21 +29,24 @@ package com.potmo.tdm.visuals.unit.state.variant
 		{
 			_unit = unit;
 
-			//find the best mine to move to
+			//find the best mine to move to (this can be null)
 			_directions = gameLogics.getBuildingManager().getDirectionToClosestMine( unit.getHomeBuilding() );
 
-			if ( !_directions )
-			{
-				Logger.info( "There are no mines so end this" );
-				handleNoMinesToMine( gameLogics );
-				return;
-			}
+			//TODO: When there is not mines the unit should walk back to the homebuilding
 
 		}
 
 
 		public function visit( gameLogics:GameLogics ):void
 		{
+
+			// check if there isn't any directions to move
+			// that will mean that there is no mines left
+			if ( !_directions )
+			{
+				handleNoMinesToMine( gameLogics );
+				return;
+			}
 
 			// if the mine has no gold then search for a new one
 			if ( _directions.getMine().getResoucesLeft() == 0 )

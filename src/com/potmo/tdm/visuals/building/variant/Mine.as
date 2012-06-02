@@ -15,6 +15,7 @@ package com.potmo.tdm.visuals.building.variant
 
 		private static const SEQUENCE_NAME:String = "mine";
 		private var _resources:int;
+		private var _isExhausted:Boolean = false;
 
 
 		public function Mine( spriteAtlas:SpriteAtlas )
@@ -38,12 +39,14 @@ package com.potmo.tdm.visuals.building.variant
 		public function init( gameLogics:GameLogics ):void
 		{
 			_resources = 5000;
+			_isExhausted = false;
 		}
 
 
 		public function reset( gameLogics:GameLogics ):void
 		{
 			_resources = 0;
+			_isExhausted = false;
 		}
 
 
@@ -59,14 +62,19 @@ package com.potmo.tdm.visuals.building.variant
 
 		public function extract( amount:int, gameLogics:GameLogics ):int
 		{
+
+			if ( _isExhausted )
+			{
+				return 0;
+			}
+
 			var pickedUp:int = StrictMath.min( amount, _resources );
 			_resources -= pickedUp;
 
-			//TODO: Call building manager when mine is exhausted
-
-			if ( _resources <= 0 )
+			if ( _resources <= 0 && !_isExhausted )
 			{
 				gameLogics.getBuildingManager().handleMinesResourcesExhausted( this );
+				_isExhausted = true;
 			}
 
 			return pickedUp;
