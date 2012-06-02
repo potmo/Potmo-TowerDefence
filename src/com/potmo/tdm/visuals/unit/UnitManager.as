@@ -6,7 +6,8 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
 	import com.potmo.tdm.visuals.map.MapBase;
-	import com.potmo.tdm.visuals.unit.quadtree.QuadTree;
+	import com.potmo.tdm.visuals.unit.lookup.grid.GridLookup;
+	import com.potmo.tdm.visuals.unit.lookup.quadtree.QuadTree;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.logger.Logger;
@@ -19,7 +20,7 @@ package com.potmo.tdm.visuals.unit
 	{
 		private static const MAX_NUMBER_OF_TARGETING_UNITS:int = 2;
 
-		private var _unitLookup:QuadTree;
+		private var _unitLookup:GridLookup;
 		private var _units:Vector.<Unit>;
 		private var _unitFactory:UnitFactory;
 		private var _unitStateFactory:UnitStateFactory;
@@ -30,7 +31,7 @@ package com.potmo.tdm.visuals.unit
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
 			this._units = new Vector.<Unit>();
-			this._unitLookup = new QuadTree( 0, 0, map.getMapWidth(), map.getMapHeight(), 20, 5 );
+			this._unitLookup = new GridLookup( map.getMapWidth(), map.getMapHeight() );
 		}
 
 
@@ -162,8 +163,8 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get all the close by units
-			//var unitsToSearch:Vector.<IUnit> = _unitLookup.retriveFromRect( x - radius, y - radius, radius * 2, radius * 2 );
-			var unitsToSearch:Vector.<Unit> = _units;
+			var unitsToSearch:Vector.<Unit> = _unitLookup.retriveFromRect( x - radius, y - radius, radius * 2, radius * 2 );
+			//var unitsToSearch:Vector.<Unit> = _units;
 
 			var maxDist:Number;
 			var output:Vector.<Unit> = new Vector.<Unit>();
@@ -279,7 +280,8 @@ package com.potmo.tdm.visuals.unit
 		{
 			BitmapUtil.fill( canvas, 0xFFFFFFFF );
 			BitmapUtil.fill( canvas, 0x55FFFFFF );
-			_unitLookup.draw( canvas, 1 );
+
+			//_unitLookup.draw( canvas, 1 );
 
 			for each ( var unit:Unit in _units )
 			{

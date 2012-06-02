@@ -1,4 +1,4 @@
-package com.potmo.tdm.visuals.unit.quadtree
+package com.potmo.tdm.visuals.unit.lookup.quadtree
 {
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.util.image.BitmapUtil;

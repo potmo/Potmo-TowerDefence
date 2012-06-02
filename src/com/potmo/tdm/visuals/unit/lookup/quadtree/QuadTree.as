@@ -1,4 +1,4 @@
-package com.potmo.tdm.visuals.unit.quadtree
+package com.potmo.tdm.visuals.unit.lookup.quadtree
 {
 	import com.potmo.tdm.visuals.unit.Unit;
 
@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.unit.quadtree
 	// from Mike Chambers JS QuadTree
 	//https://github.com/mikechambers/ExamplesByMesh/blob/master/JavaScript/QuadTree/src/QuadTree.js
 
+	//TODO: This is far too slow. Needs to optimize
 	public class QuadTree
 	{
 		private var root:Node;
