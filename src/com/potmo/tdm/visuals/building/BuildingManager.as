@@ -100,6 +100,9 @@ package com.potmo.tdm.visuals.building
 
 		public function demolishBuilding( building:Building, gameLogics:GameLogics ):void
 		{
+
+			//TODO: Refund player with some of the cost of building the building
+
 			// make all the units attack first
 			building.killAllUnits( gameLogics );
 
@@ -222,6 +225,7 @@ package com.potmo.tdm.visuals.building
 
 		public function handleMinesResourcesExhausted( mine:Mine ):void
 		{
+			//TODO: Swap the mine with some broken mine like when demolishing
 			_mineFinder.handleClosedMine( mine );
 		}
 

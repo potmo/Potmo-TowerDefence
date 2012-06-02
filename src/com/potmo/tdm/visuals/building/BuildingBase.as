@@ -118,15 +118,13 @@ package com.potmo.tdm.visuals.building
 
 		public function killAllUnits( gameLogics:GameLogics ):void
 		{
-			var i:int = 0;
-
-			for each ( var unit:UnitBase in units )
-			{
-				unit.kill( gameLogics );
-				i++;
-			}
 
 			// units will be removed from units when they die
+			for ( var i:int = units.length - 1; i >= 0; i-- )
+			{
+				units[ i ].kill( gameLogics );
+			}
+
 		}
 
 
