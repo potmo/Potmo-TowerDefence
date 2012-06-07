@@ -10,9 +10,9 @@ package com.potmo.tdm.visuals.hud
 	{
 
 		private var _building:Building;
-		private var _demolishButton:BasicRenderItem;
-		private var _deployFlagButton:BasicRenderItem;
-		private var _attackButton:BasicRenderItem;
+		private var _demolishButton:HudButton;
+		private var _deployFlagButton:HudButton;
+		private var _attackButton:HudButton;
 
 		private static const DEMOLISH_BUTTON_SEQUENCE:String = "demolishbutton";
 		private static const DEPLOY_FLAG_BUTTON_SEQUENCE:String = "deployareabutton";
@@ -34,15 +34,15 @@ package com.potmo.tdm.visuals.hud
 
 		protected function setupGui( spriteAtlas:SpriteAtlas ):void
 		{
-			_demolishButton = new BasicRenderItem( spriteAtlas.getSequenceByName( DEMOLISH_BUTTON_SEQUENCE ) );
+			_demolishButton = new HudButton( spriteAtlas.getSequenceByName( DEMOLISH_BUTTON_SEQUENCE ) );
 
 			addButtonLast( _demolishButton, false );
 
-			_deployFlagButton = new BasicRenderItem( spriteAtlas.getSequenceByName( DEPLOY_FLAG_BUTTON_SEQUENCE ) );
+			_deployFlagButton = new HudButton( spriteAtlas.getSequenceByName( DEPLOY_FLAG_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( _deployFlagButton, true );
 
-			_attackButton = new BasicRenderItem( spriteAtlas.getSequenceByName( ATTACK_BUTTON_SEQUENCE ) );
+			_attackButton = new HudButton( spriteAtlas.getSequenceByName( ATTACK_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( _attackButton, true );
 

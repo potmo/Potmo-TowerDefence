@@ -7,8 +7,11 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.visuals.building.minefinder.MineFinder;
 	import com.potmo.tdm.visuals.building.variant.ConstructionSite;
 	import com.potmo.tdm.visuals.building.variant.Mine;
+	import com.potmo.tdm.visuals.building.variant.settings.BuildingSettings;
+	import com.potmo.tdm.visuals.building.variant.settings.BuildingSettingsManager;
 	import com.potmo.tdm.visuals.map.MapBase;
 	import com.potmo.tdm.visuals.map.MapMovingDirection;
+	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	import flash.geom.Point;
@@ -18,11 +21,13 @@ package com.potmo.tdm.visuals.building
 		private var _buildings:Vector.<Building> = new Vector.<Building>();
 		private var _buildingFactory:BuildingFactory;
 		private var _mineFinder:MineFinder;
+		private var _buildingSettingsManager:BuildingSettingsManager;
 
 
-		public function BuildingManager( buildingFactory:BuildingFactory )
+		public function BuildingManager( buildingFactory:BuildingFactory, buildingSettingsManager:BuildingSettingsManager )
 		{
 			this._buildingFactory = buildingFactory;
+			this._buildingSettingsManager = buildingSettingsManager;
 		}
 
 
@@ -78,8 +83,26 @@ package com.potmo.tdm.visuals.building
 		public function buildBuildingOfTypeOnConstructionSite( type:BuildingType, constructionSite:ConstructionSite, gameLogics:GameLogics ):void
 		{
 
+			//TODO: Building a building should be validated before this. Also the player id should be in here to validate that he owns the building and that he sent the message
+
+			// check if player affords it
+			var settings:BuildingSettings = gameLogics.getBuildingManager().getBuildingSettingsManager().getSettingsForType( type );
+
+			var price:int = settings.getCost();
+			var player:Player = constructionSite.getOwningPlayer();
+			var affords:Boolean = player.canAffordTransaction( price );
+
+			if ( !affords )
+			{
+				Logger.warn( "Player: " + player + " does not afford to build " + type );
+				return;
+			}
+
 			var newBuilding:Building = constructionSite.buildBuildingOfType( type, _buildingFactory, gameLogics );
 			swapBuilding( constructionSite, newBuilding, gameLogics );
+
+			// pay
+			player.makeTransaction( -price );
 		}
 
 
@@ -220,6 +243,12 @@ package com.potmo.tdm.visuals.building
 		{
 
 			return _mineFinder.getDirectionToClosestMine( building );
+		}
+
+
+		public function getBuildingSettingsManager():BuildingSettingsManager
+		{
+			return _buildingSettingsManager;
 		}
 
 

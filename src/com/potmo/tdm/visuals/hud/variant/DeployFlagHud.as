@@ -7,6 +7,7 @@ package com.potmo.tdm.visuals.hud.variant
 	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.hud.HudBase;
+	import com.potmo.tdm.visuals.hud.HudButton;
 	import com.potmo.tdm.visuals.map.DeployFlag;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
@@ -22,8 +23,8 @@ package com.potmo.tdm.visuals.hud.variant
 		private var _flag:DeployFlag;
 		private var _building:Building;
 
-		private var _affirmButton:BasicRenderItem;
-		private var _cancelButton:BasicRenderItem;
+		private var _affirmButton:HudButton;
+		private var _cancelButton:HudButton;
 		private var _lastOkX:int;
 		private var _lastOkY:int;
 		private var _maxDistanceFromBuilding:Number;
@@ -40,8 +41,8 @@ package com.potmo.tdm.visuals.hud.variant
 
 		private function setupGui( spriteAtlas:SpriteAtlas ):void
 		{
-			_affirmButton = new BasicRenderItem( spriteAtlas.getSequenceByName( AFFIRM_BUTTON_SEQUENCE ) );
-			_cancelButton = new BasicRenderItem( spriteAtlas.getSequenceByName( CENCEL_BUTTON_SEQUENCE ) );
+			_affirmButton = new HudButton( spriteAtlas.getSequenceByName( AFFIRM_BUTTON_SEQUENCE ) );
+			_cancelButton = new HudButton( spriteAtlas.getSequenceByName( CENCEL_BUTTON_SEQUENCE ) );
 
 			addButtonFirst( _affirmButton );
 			addButtonFirst( _cancelButton, false );

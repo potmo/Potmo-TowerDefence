@@ -8,6 +8,7 @@ package com.potmo.tdm.player
 		private var id:uint;
 		private var name:String;
 		private var isDevicePlayer:Boolean;
+		private var balance:int;
 
 
 		public function Player( id:uint, name:String, color:PlayerColor, isDevicePlayer:Boolean )
@@ -16,6 +17,30 @@ package com.potmo.tdm.player
 			this.name = name;
 			this.color = color;
 			this.isDevicePlayer = isDevicePlayer;
+			this.balance = 400;
+		}
+
+
+		public function canAffordTransaction( amount:int ):Boolean
+		{
+			// balance must always be above 0. Adding money will make it always
+			return balance >= amount;
+		}
+
+
+		public function makeTransaction( amount:int ):Boolean
+		{
+			// negative amounts must be checked
+			if ( amount <= 0 && !canAffordTransaction( amount ) )
+			{
+				return false;
+			}
+
+			balance += amount;
+			//TODO: Notify gui somehow about balance change
+
+			return true;
+
 		}
 
 

@@ -46,7 +46,8 @@ package com.potmo.tdm.visuals.unit.state.variant
 			if ( dist <= _unit.getHomeBuilding().getRadius() )
 			{
 
-				//TODO: Leave everything picked up and cash in 
+				_unit.getOwningPlayer().makeTransaction( _pickedUp );
+				_pickedUp = 0;
 
 				_unit.handleEnteringHomeStateFinished( gameLogics );
 				return;

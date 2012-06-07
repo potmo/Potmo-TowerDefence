@@ -6,7 +6,6 @@ package com.potmo.tdm.visuals.hud
 	import com.potmo.tdm.display.RenderContainer;
 	import com.potmo.tdm.player.OrderManager;
 	import com.potmo.tdm.visuals.ScreenSize;
-	import com.potmo.util.logger.Logger;
 
 	public class HudBase extends RenderContainer
 	{
@@ -15,8 +14,8 @@ package com.potmo.tdm.visuals.hud
 		private static const BUTTON_RIGHT_PADDING:int = 20;
 		private static const BUTTON_BOTTOM_SPACING:int = 10;
 
-		private var leftButtons:Vector.<BasicRenderItem> = new Vector.<BasicRenderItem>();
-		private var rightButtons:Vector.<BasicRenderItem> = new Vector.<BasicRenderItem>();
+		private var leftButtons:Vector.<HudButton> = new Vector.<HudButton>();
+		private var rightButtons:Vector.<HudButton> = new Vector.<HudButton>();
 		private var xOffset:int = 0;
 
 
@@ -32,7 +31,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		protected function addButtonLast( button:BasicRenderItem, toLeft:Boolean = true ):void
+		protected function addButtonLast( button:HudButton, toLeft:Boolean = true ):void
 		{
 			if ( toLeft )
 			{
@@ -49,7 +48,7 @@ package com.potmo.tdm.visuals.hud
 		}
 
 
-		protected function addButtonFirst( button:BasicRenderItem, toLeft:Boolean = true ):void
+		protected function addButtonFirst( button:HudButton, toLeft:Boolean = true ):void
 		{
 			if ( toLeft )
 			{
@@ -70,14 +69,18 @@ package com.potmo.tdm.visuals.hud
 		{
 			var x:int;
 			var y:int;
-			var button:BasicRenderItem;
+			var button:HudButton;
 
 			x = xOffset + BUTTON_LEFT_PADDING;
 			//y = ScreenSize.HEIGHT - BUTTON_BOTTOM_SPACING;
 			y = 0 + BUTTON_BOTTOM_SPACING;
 
-			for each ( button in leftButtons )
+			var i:int = 0;
+			var leftButtonNum:int = leftButtons.length;
+
+			for ( i = 0; i < leftButtonNum; i++ )
 			{
+				button = leftButtons[ i ];
 				button.setX( x );
 				x += BUTTON_SPACING + button.getWidth();
 				button.setY( y );
@@ -86,8 +89,11 @@ package com.potmo.tdm.visuals.hud
 
 			x = xOffset + ScreenSize.WIDTH - BUTTON_RIGHT_PADDING;
 
-			for each ( button in rightButtons )
+			var rightButtonNum:int = rightButtons.length;
+
+			for ( i = 0; i < rightButtonNum; i++ )
 			{
+				button = rightButtons[ i ];
 				button.setX( x - button.getWidth() );
 				x += -BUTTON_SPACING - button.getWidth();
 				button.setY( y );
