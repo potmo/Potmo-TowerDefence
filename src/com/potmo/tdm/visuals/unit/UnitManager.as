@@ -9,6 +9,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.visuals.unit.lookup.grid.GridLookup;
 	import com.potmo.tdm.visuals.unit.lookup.quadtree.QuadTree;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettingsManager;
 	import com.potmo.util.image.BitmapUtil;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
@@ -24,14 +25,16 @@ package com.potmo.tdm.visuals.unit
 		private var _units:Vector.<Unit>;
 		private var _unitFactory:UnitFactory;
 		private var _unitStateFactory:UnitStateFactory;
+		private var _unitSettingsManager:UnitSettingsManager;
 
 
-		public function UnitManager( unitFactory:UnitFactory, unitStateFactory:UnitStateFactory, map:MapBase )
+		public function UnitManager( unitFactory:UnitFactory, unitStateFactory:UnitStateFactory, unitSettingsManager:UnitSettingsManager, map:MapBase )
 		{
 			this._unitFactory = unitFactory;
 			this._unitStateFactory = unitStateFactory;
 			this._units = new Vector.<Unit>();
 			this._unitLookup = new GridLookup( map.getMapWidth(), map.getMapHeight() );
+			this._unitSettingsManager = unitSettingsManager;
 		}
 
 
@@ -200,7 +203,7 @@ package com.potmo.tdm.visuals.unit
 		{
 
 			// get the range
-			var range:Number = unit.getSettings().targetingRange;
+			var range:Number = unit.getSettings().getTargetingRange();
 
 			// get all the close by units
 			var unitsToSearch:Vector.<Unit>;
@@ -286,7 +289,7 @@ package com.potmo.tdm.visuals.unit
 			for each ( var unit:Unit in _units )
 			{
 
-				var range:Number = unit.getSettings().targetingRange;
+				var range:Number = unit.getSettings().getTargetingRange();
 				var others:Vector.<Unit> = _unitLookup.retriveFromRect( unit.getX() - range, unit.getY() - range, range * 2, range * 2 );
 
 				BitmapUtil.drawRectangle( unit.getX() - range, unit.getY() - range, range * 2, range * 2, 0x0000FF, canvas );

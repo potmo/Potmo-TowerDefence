@@ -5,8 +5,11 @@ package com.potmo.tdm.visuals.building
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.display.ZSortableRenderable;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.building.variant.settings.BuildingSettings;
+	import com.potmo.tdm.visuals.building.variant.settings.BuildingSettingsManager;
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
+	import com.potmo.tdm.visuals.unit.UnitType;
 
 	import flash.geom.Point;
 
@@ -85,6 +88,21 @@ package com.potmo.tdm.visuals.building
 			unit.setHomeBuilding( this as Building );
 			unit.deploy( x, y, gameLogics );
 			unit.moveToFlag( gameLogics );
+		}
+
+
+		protected function deployNewUnit( gameLogics:GameLogics ):void
+		{
+			var settingsManager:BuildingSettingsManager = gameLogics.getBuildingManager().getBuildingSettingsManager();
+			var buildingSettings:BuildingSettings = settingsManager.getSettingsForType( this.getType() );
+			var unitType:UnitType = buildingSettings.getUnitType();
+
+			if ( !unitType )
+			{
+				throw new Error( "Buildings of type: " + getType() + " can not deploy units" );
+			}
+
+			gameLogics.getUnitManager().addUnit( unitType, this, gameLogics );
 		}
 
 

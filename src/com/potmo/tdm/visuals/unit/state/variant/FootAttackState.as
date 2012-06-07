@@ -30,7 +30,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 
 			this._enemy.targetedByEnemy();
 
-			_hitDelay = unit.getSettings().hitDelay;
+			_hitDelay = unit.getSettings().getHitDelay();
 		}
 
 
@@ -104,7 +104,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			var toEnemyForce:Force = new Force( dirX, dirY );
 
 			//scale so we do not walk faster than we can
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			var movingSpeed:Number = _unit.getSettings().getMovingSpeed();
 			toEnemyForce.normalize();
 			toEnemyForce.scale( movingSpeed );
 
@@ -127,7 +127,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			unwalkableAreaForce.add( unitCollisionForce );
 
 			//scale so we do not walk faster than we can
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			var movingSpeed:Number = _unit.getSettings().getMovingSpeed();
 			unwalkableAreaForce.normalize();
 			unwalkableAreaForce.scale( movingSpeed );
 
@@ -141,7 +141,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		 */
 		private function isEnemyTooFarAwayToAttack():Boolean
 		{
-			var attackingRange:int = _unit.getSettings().attackingRange;
+			var attackingRange:int = _unit.getSettings().getAttackingRange();
 
 			return !StrictMath.isCloseEnough( _unit.getX(), _unit.getY(), _enemy.getX(), _enemy.getY(), attackingRange, true );
 		}
@@ -152,7 +152,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 		 */
 		private function isEnemyTooFarAwayToTarget():Boolean
 		{
-			var targetRange:int = _unit.getSettings().targetingRange;
+			var targetRange:int = _unit.getSettings().getTargetingRange();
 
 			return !StrictMath.isCloseEnough( _unit.getX(), _unit.getY(), _enemy.getX(), _enemy.getY(), targetRange, true );
 
@@ -163,11 +163,11 @@ package com.potmo.tdm.visuals.unit.state.variant
 		{
 
 			// damage
-			var damage:int = _unit.getSettings().hitDamage;
+			var damage:int = _unit.getSettings().getHitDamage();
 			_enemy.damage( damage, gameLogics );
 
 			// reset hit delay
-			_hitDelay = _unit.getSettings().hitDelay;
+			_hitDelay = _unit.getSettings().getHitDelay();
 
 		}
 

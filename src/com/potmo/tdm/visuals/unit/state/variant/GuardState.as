@@ -56,7 +56,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			unwalkableAreaForce.add( unitCollisionForce );
 
 			//scale so we do not walk faster than we can
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			var movingSpeed:Number = _unit.getSettings().getMovingSpeed();
 			unwalkableAreaForce.normalize();
 			unwalkableAreaForce.scale( movingSpeed * 0.2 );
 

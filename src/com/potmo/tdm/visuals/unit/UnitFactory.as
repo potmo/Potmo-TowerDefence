@@ -3,6 +3,8 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.player.Player;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettingsManager;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettings;
 
 	public final class UnitFactory
 	{
@@ -12,11 +14,14 @@ package com.potmo.tdm.visuals.unit
 
 		//private var archerPool:Vector.<UnitBase> = new Vector.<UnitBase>();
 		private var _spriteAtlas:SpriteAtlas;
+		private var _settingsManager:UnitSettingsManager;
 
 
-		public function UnitFactory( spriteAtlas:SpriteAtlas )
+		public function UnitFactory( spriteAtlas:SpriteAtlas, settingsManager:UnitSettingsManager )
 		{
 			this._spriteAtlas = spriteAtlas;
+			this._settingsManager = settingsManager;
+
 			populatePool( knightPool, UnitType.KNIGHT, 10 );
 			populatePool( minerPool, UnitType.MINER, 10 );
 			//populatePool( archerPool, UnitType.ARCHER, 10 );
@@ -73,10 +78,11 @@ package com.potmo.tdm.visuals.unit
 		{
 			var unit:Unit;
 			var clazz:Class = type.getClass();
+			var settings:UnitSettings = _settingsManager.getSettingsForType( type );
 
 			while ( units > 0 )
 			{
-				unit = new clazz( _spriteAtlas );
+				unit = new clazz( _spriteAtlas, settings );
 				pool.push( unit );
 				units--;
 			}

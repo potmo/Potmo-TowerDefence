@@ -57,7 +57,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			mapForce.add( unitCollisionForce );
 
 			mapForce.normalize();
-			mapForce.scale( _unit.getSettings().movingSpeed );
+			mapForce.scale( _unit.getSettings().getMovingSpeed() );
 
 			// add force from map and unit collistion force
 			_unit.setVelX( _unit.getVelX() * 0.2 + mapForce.x );

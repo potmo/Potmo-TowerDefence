@@ -17,6 +17,7 @@ package com.potmo.tdm
 	import com.potmo.tdm.visuals.unit.UnitManager;
 	import com.potmo.tdm.visuals.unit.projectile.ProjectileFactory;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettingsManager;
 	import com.potmo.util.fpsCounter.FPSCounter;
 	import com.potmo.util.input.MouseManager;
 	import com.potmo.util.logger.Logger;
@@ -51,6 +52,7 @@ package com.potmo.tdm
 		private var _unitFactory:UnitFactory;
 		private var _projectileFactory:ProjectileFactory;
 		private var _unitManager:UnitManager;
+		private var _unitSettingsManager:UnitSettingsManager;
 		private var _buildingManager:BuildingManager;
 		private var _buildingFactory:BuildingFactory;
 		private var _buildingSettingsManager:BuildingSettingsManager;
@@ -138,13 +140,14 @@ package com.potmo.tdm
 			_gameView = new GameView( _camera );
 			_orderManager = new OrderManager();
 			_map = new MapBase( _spriteAtlas, "map0", assetLoader.getMapWalkmap(), assetLoader.getDijsktraMap() );
-			_unitStateFactory = new UnitStateFactory();
-			_unitFactory = new UnitFactory( _spriteAtlas );
 			_buildingFactory = new BuildingFactory( _spriteAtlas );
 			_projectileFactory = new ProjectileFactory( _spriteAtlas );
 			_buildingSettingsManager = new BuildingSettingsManager();
 
-			_unitManager = new UnitManager( _unitFactory, _unitStateFactory, _map );
+			_unitSettingsManager = new UnitSettingsManager();
+			_unitStateFactory = new UnitStateFactory();
+			_unitFactory = new UnitFactory( _spriteAtlas, _unitSettingsManager );
+			_unitManager = new UnitManager( _unitFactory, _unitStateFactory, _unitSettingsManager, _map );
 			_buildingManager = new BuildingManager( _buildingFactory, _buildingSettingsManager );
 			_hudManager = new HudManager( _spriteAtlas, _gameView );
 

@@ -5,7 +5,6 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitType;
-	import com.potmo.tdm.visuals.unit.settings.KnightSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargeState;
 	import com.potmo.tdm.visuals.unit.state.variant.ChargingUnit;
@@ -21,17 +20,15 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneState;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
+	import com.potmo.tdm.visuals.unit.variant.settings.KnightSettings;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettings;
 
 	public class Knight extends UnitBase implements UnitVariant, NoneingUnit, DeployingUnit, GuardingUnit, ChargingUnit, FootAttackingUnit, MovingToPositionUnit, FootDefendingUnit
 	{
-		//private static const ASSET:TextureAnimationCacheObject = new TextureAnimationCacheObject( new Knight_Asset() );
-		private static const SEQUENCE_NAME:String = "knight";
-		private static const SETTINGS:KnightSetting = new KnightSetting();
 
-
-		public function Knight( spriteAtlas:SpriteAtlas )
+		public function Knight( spriteAtlas:SpriteAtlas, settings:UnitSettings )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), UnitType.KNIGHT, SETTINGS );
+			super( spriteAtlas, settings );
 		}
 
 

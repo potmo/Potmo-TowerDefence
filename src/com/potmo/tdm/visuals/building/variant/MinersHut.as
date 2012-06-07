@@ -41,18 +41,11 @@ package com.potmo.tdm.visuals.building.variant
 
 				if ( _unitDeployCountdown == 0 )
 				{
-					//TODO: Deploy miners instead of knights
 					Logger.log( "Deploy Miner" );
 					_unitDeployCountdown = UNIT_DEPLOY_DELAY;
 					deployNewUnit( gameLogics );
 				}
 			}
-		}
-
-
-		private function deployNewUnit( gameLogics:GameLogics ):void
-		{
-			gameLogics.getUnitManager().addUnit( UnitType.MINER, this, gameLogics );
 		}
 
 

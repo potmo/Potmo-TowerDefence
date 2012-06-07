@@ -1,21 +1,21 @@
 package com.potmo.tdm.visuals.unit
 {
+	import com.potmo.p2d.atlas.animation.SpriteAtlas;
 	import com.potmo.p2d.atlas.animation.SpriteAtlasSequence;
 	import com.potmo.tdm.GameLogics;
 	import com.potmo.tdm.display.BasicRenderItem;
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.Building;
-	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettings;
 	import com.potmo.util.logger.Logger;
 	import com.potmo.util.math.StrictMath;
 
 	public class UnitBase extends BasicRenderItem implements Unit
 	{
-		private var _settings:UnitSetting;
+		private var _settings:UnitSettings;
 
 		protected var currentState:UnitState;
-		private var _type:UnitType;
 		private var _owningPlayer:Player;
 		private var _homeBuilding:Building;
 
@@ -24,9 +24,6 @@ package com.potmo.tdm.visuals.unit
 		private var _velx:Number = 0;
 		private var _vely:Number = 0;
 
-		private var _graphicSequence:SpriteAtlasSequence;
-		/*	private var _healthBarBackground:Quad;
-		   private var _healthBar:Quad;*/
 		private var _health:int;
 
 		private static const HEALTH_BAR_HEIGHT:int = 6;
@@ -39,15 +36,12 @@ package com.potmo.tdm.visuals.unit
 		private var _numberOfTargetingEnemies:int;
 
 
-		public function UnitBase( graphicSequence:SpriteAtlasSequence, type:UnitType, settings:UnitSetting )
+		public function UnitBase( spriteAtlas:SpriteAtlas, settings:UnitSettings )
 		{
-			super( graphicSequence );
+			super( spriteAtlas.getSequenceByName( settings.getSequenceName() ) );
 			this._settings = settings;
-			this._type = type;
 
-			_health = settings.maxHealth;
-
-			_graphicSequence = graphicSequence;
+			_health = settings.getMaxHealth();
 
 			_spawned = false;
 
@@ -92,7 +86,7 @@ package com.potmo.tdm.visuals.unit
 		final public function spawn( gameLogics:GameLogics ):void
 		{
 			_spawned = true;
-			setHealth( _settings.maxHealth );
+			setHealth( _settings.getMaxHealth() );
 		}
 
 
@@ -106,13 +100,13 @@ package com.potmo.tdm.visuals.unit
 			currentState.visit( gameLogics );
 
 			// update the frames
-			currentFrame = _graphicSequence.getNextFrame( currentFrame, false, true );
+			currentFrame = graphicsSequence.getNextFrame( currentFrame, false, true );
 		}
 
 
 		final public function setFrameFromName( name:String ):void
 		{
-			currentFrame = _graphicSequence.getFrameOfLabel( name );
+			currentFrame = graphicsSequence.getFrameOfLabel( name );
 		}
 
 
@@ -121,7 +115,7 @@ package com.potmo.tdm.visuals.unit
 		 */
 		final protected function setHealth( value:int ):void
 		{
-			var newHealth:int = StrictMath.clamp( value, 0, _settings.maxHealth );
+			var newHealth:int = StrictMath.clamp( value, 0, _settings.getMaxHealth() );
 
 			if ( newHealth != _health )
 			{
@@ -247,7 +241,7 @@ package com.potmo.tdm.visuals.unit
 
 		final public function getType():UnitType
 		{
-			return _type;
+			return _settings.getUnitType();
 		}
 
 
@@ -338,11 +332,11 @@ package com.potmo.tdm.visuals.unit
 
 		final public function getRadius():Number
 		{
-			return _settings.radius;
+			return _settings.getRadius();
 		}
 
 
-		final public function getSettings():UnitSetting
+		final public function getSettings():UnitSettings
 		{
 			return _settings;
 		}
@@ -419,7 +413,7 @@ package com.potmo.tdm.visuals.unit
 
 		public function toString():String
 		{
-			return "[" + _type.toString() + " p: " + ( _owningPlayer ? _owningPlayer.getColor().toString() : null ) + "]";
+			return "[" + getType().toString() + " p: " + ( _owningPlayer ? _owningPlayer.getColor().toString() : null ) + "]";
 		}
 
 	}

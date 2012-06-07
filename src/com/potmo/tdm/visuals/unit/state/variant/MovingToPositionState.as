@@ -60,7 +60,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			// sum up the forces and add them to units velocity
 			toPositionForce.add( unitCollisionForce );
 
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			var movingSpeed:Number = _unit.getSettings().getMovingSpeed();
 			toPositionForce.normalize();
 			toPositionForce.scale( movingSpeed );
 

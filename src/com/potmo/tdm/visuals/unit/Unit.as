@@ -6,7 +6,7 @@ package com.potmo.tdm.visuals.unit
 	import com.potmo.tdm.player.Player;
 	import com.potmo.tdm.visuals.building.Building;
 	import com.potmo.tdm.visuals.building.BuildingBase;
-	import com.potmo.tdm.visuals.unit.settings.UnitSetting;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettings;
 	import com.potmo.tdm.visuals.unit.state.UnitState;
 
 	public interface Unit extends ZSortableRenderable
@@ -42,7 +42,7 @@ package com.potmo.tdm.visuals.unit
 		function untargetedByEnemy():void;
 		function getNumberOfTargetingEnemies():int;
 
-		function getSettings():UnitSetting;
+		function getSettings():UnitSettings;
 
 		function getOldX():Number;
 		function getOldY():Number;

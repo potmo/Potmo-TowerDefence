@@ -64,7 +64,7 @@ package com.potmo.tdm.visuals.unit.state.variant
 			movingForce.addComponents( dirX, dirY );
 
 			//scale so we do not walk faster than we can
-			var movingSpeed:Number = _unit.getSettings().movingSpeed;
+			var movingSpeed:Number = _unit.getSettings().getMovingSpeed();
 			movingForce.normalize();
 			movingForce.scale( movingSpeed );
 

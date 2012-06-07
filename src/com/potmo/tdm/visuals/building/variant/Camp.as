@@ -68,13 +68,6 @@ package com.potmo.tdm.visuals.building.variant
 		}
 
 
-		private function deployNewUnit( gameLogics:GameLogics ):void
-		{
-			gameLogics.getUnitManager().addUnit( UnitType.KNIGHT, this, gameLogics );
-
-		}
-
-
 		public function init( gameLogics:GameLogics ):void
 		{
 			// create all units right up first

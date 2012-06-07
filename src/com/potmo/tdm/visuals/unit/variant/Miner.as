@@ -7,23 +7,21 @@ package com.potmo.tdm.visuals.unit.variant
 	import com.potmo.tdm.visuals.unit.Unit;
 	import com.potmo.tdm.visuals.unit.UnitBase;
 	import com.potmo.tdm.visuals.unit.UnitType;
-	import com.potmo.tdm.visuals.unit.settings.MinerSetting;
 	import com.potmo.tdm.visuals.unit.state.UnitStateFactory;
 	import com.potmo.tdm.visuals.unit.state.variant.DeployingUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MiningUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.MovingToPositionUnit;
 	import com.potmo.tdm.visuals.unit.state.variant.NoneingUnit;
+	import com.potmo.tdm.visuals.unit.variant.settings.MinerSettings;
+	import com.potmo.tdm.visuals.unit.variant.settings.UnitSettings;
 	import com.potmo.util.logger.Logger;
 
 	public class Miner extends UnitBase implements Unit, UnitVariant, DeployingUnit, NoneingUnit, MovingToPositionUnit, MiningUnit
 	{
-		private static const SEQUENCE_NAME:String = "knight";
-		private static const SETTINGS:MinerSetting = new MinerSetting();
 
-
-		public function Miner( spriteAtlas:SpriteAtlas )
+		public function Miner( spriteAtlas:SpriteAtlas, settings:UnitSettings )
 		{
-			super( spriteAtlas.getSequenceByName( SEQUENCE_NAME ), UnitType.MINER, SETTINGS );
+			super( spriteAtlas, settings );
 		}
 
 
