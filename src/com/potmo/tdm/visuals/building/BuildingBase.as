@@ -15,15 +15,17 @@ package com.potmo.tdm.visuals.building
 
 	public class BuildingBase extends BasicRenderItem implements ZSortableRenderable
 	{
-		//TODO: Do not hardcode this
+		//TODO: Do not hardcode max units. This should be in the unit settings
 		protected static const MAX_UNITS:uint = 3;
+
+		//TODO: Do not hardcode max distance to deployflag. Set in building settings instead or even in unit settings 
 		protected static const MAX_DISTANCE_TO_DEPLOYFLAG:Number = 200;
 
 		private var _uniqueId:uint;
 		private var _type:BuildingType;
 		private var _buildingId:uint;
 		protected var owningPlayer:Player;
-		//		protected var deployPerimiter:int = 100; // the length from the center it is possible to place the deployment flag
+
 		protected var _deployFlagX:int;
 		protected var _deployFlagY:int;
 
